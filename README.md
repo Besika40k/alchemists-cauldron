@@ -38,6 +38,7 @@ Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-schoo
 - TypeScript in strict mode, no frameworks and no runtime libraries
 - Vite for the development server and the production build
 - Plain CSS
+- ESLint, Prettier, Husky and commitlint for code quality
 
 ## Getting started
 
@@ -50,9 +51,25 @@ npm run dev
 
 ## Scripts
 
-| Script              | What it does                                               |
-| ------------------- | ---------------------------------------------------------- |
-| `npm run dev`       | Starts the development server with hot reload              |
-| `npm run build`     | Type-checks the code and makes a minified production build |
-| `npm run build:dev` | Makes an unminified build with source maps                 |
-| `npm run preview`   | Serves the production build from `dist/`                   |
+| Script                 | What it does                                               |
+| ---------------------- | ---------------------------------------------------------- |
+| `npm run dev`          | Starts the development server with hot reload              |
+| `npm run build`        | Type-checks the code and makes a minified production build |
+| `npm run build:dev`    | Makes an unminified build with source maps                 |
+| `npm run preview`      | Serves the production build from `dist/`                   |
+| `npm run lint`         | Checks the code with ESLint, warnings count as errors      |
+| `npm run lint:fix`     | Fixes the ESLint problems that can be fixed automatically  |
+| `npm run format`       | Formats every file with Prettier                           |
+| `npm run format:check` | Checks the formatting without changing files               |
+| `npm run typecheck`    | Type-checks the code without building it                   |
+
+## Code quality
+
+- **ESLint** uses the type-aware rules of typescript-eslint and the unicorn plugin. On top of
+  them it forbids `console`, `any`, `alert()`, `confirm()`, `setTimeout` and `setInterval`,
+  asks for explicit return types, and ignores disable comments in the code.
+- **Prettier** formats the code; ESLint leaves formatting to it.
+- **Husky** runs two Git hooks:
+  - `commit-msg` checks the message with commitlint against the
+    [RS School git convention](https://rs.school/docs/git-convention);
+  - `pre-push` runs the lint, format and type checks, and a failed check stops the push.
