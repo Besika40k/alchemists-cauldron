@@ -49,7 +49,7 @@ builds the game and publishes `dist/` on every push to the current story branch.
 
 ## Getting started
 
-Requirements: Node.js 22 or newer and npm.
+Requirements: Node.js 22.13 or newer (ESLint and commitlint need it) and npm.
 
 ```bash
 npm install
