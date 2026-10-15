@@ -24,12 +24,12 @@ cauldron are both empty. The best results go to a Top-10 leaderboard.
 The game is built in stages. Each stage is a story branch with its own task branches and
 pull requests.
 
-| Stage                      | What it adds                                                                   |
-| -------------------------- | ------------------------------------------------------------------------------ |
-| Precondition               | Repository, bundler, TypeScript, linting, formatting, Git hooks and structure |
-| Level 1: Basic             | Shelf and cauldron, parameter bars, recipe and brew check, timer, pause, Top-10 |
-| Level 2: Extended          | Difficulty selection, auto-save and Continue Game                              |
-| Level 3: Full game         | Drag and drop, tooltips, chemical reactions, Pour Out, effects, shortcuts      |
+| Stage              | What it adds                                                                    |
+| ------------------ | ------------------------------------------------------------------------------- |
+| Precondition       | Repository, bundler, TypeScript, linting, formatting, Git hooks and structure   |
+| Level 1: Basic     | Shelf and cauldron, parameter bars, recipe and brew check, timer, pause, Top-10 |
+| Level 2: Extended  | Difficulty selection, auto-save and Continue Game                               |
+| Level 3: Full game | Drag and drop, tooltips, chemical reactions, Pour Out, effects, shortcuts       |
 
 Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-school/qualifying-stage/blob/main/tasks/game-alchemists-cauldron/README.md)
 
