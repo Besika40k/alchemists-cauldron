@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "description": "Alchemist's Cauldron, a browser potion brewing game in vanilla TypeScript",
   "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
