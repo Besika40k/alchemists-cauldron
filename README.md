@@ -33,6 +33,13 @@ pull requests.
 
 Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-school/qualifying-stage/blob/main/tasks/game-alchemists-cauldron/README.md)
 
+## Deployment
+
+The game is deployed to GitHub Pages: https://besika40k.github.io/alchemists-cauldron/
+
+A GitHub Actions workflow (`.github/workflows/deploy.yml`) checks the lint and formatting,
+builds the game and publishes `dist/` on every push to the current story branch.
+
 ## Tech stack
 
 - TypeScript in strict mode, no frameworks and no runtime libraries
@@ -62,6 +69,26 @@ npm run dev
 | `npm run format`       | Formats every file with Prettier                           |
 | `npm run format:check` | Checks the formatting without changing files               |
 | `npm run typecheck`    | Type-checks the code without building it                   |
+
+## Project structure
+
+Game rules never touch the DOM, and the UI never decides a rule: the UI reads the state and
+calls the logic.
+
+```text
+public/          static files copied as they are (favicon)
+src/
+  main.ts        entry point
+  app/           starts the game and connects logic, state, storage and UI
+  assets/        icons and other files imported by the code
+  data/          fixed game data: ingredients, recipes, difficulty settings, reactions
+  logic/         pure game rules: cauldron values, brew check, stock, timer, leaderboard
+  state/         the one game state object and its updates
+  storage/       safe localStorage access: save, continue and leaderboard
+  types/         shared TypeScript types and interfaces
+  ui/            DOM rendering and user input
+  styles/        CSS
+```
 
 ## Code quality
 
