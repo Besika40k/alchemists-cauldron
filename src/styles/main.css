@@ -1,0 +1,32 @@
+:root {
+  color-scheme: dark;
+  --color-background: #0f0d14;
+  --color-text: #e8e2d0;
+  --color-accent: #8fe36b;
+  --font-family-base: system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+}
+
+.app {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+}
+
+.app__title {
+  margin: 0;
+  color: var(--color-accent);
+}
