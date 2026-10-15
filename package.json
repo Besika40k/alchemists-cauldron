@@ -10,7 +10,9 @@
     "build:dev": "tsc && vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint . --max-warnings=0",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
