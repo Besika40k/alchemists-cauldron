@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import prettierConfig from 'eslint-config-prettier/flat';
 import unicorn from 'eslint-plugin-unicorn';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
@@ -41,4 +42,6 @@ export default defineConfig([
       '@typescript-eslint/no-inferrable-types': 'off',
     },
   },
+  // last, so it turns off every style rule that Prettier already handles
+  prettierConfig,
 ]);
