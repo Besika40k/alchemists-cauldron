@@ -1,0 +1,68 @@
+.cauldron {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-4);
+}
+
+/* smaller on phones, so the shelf stays close below it */
+.cauldron__stage {
+  width: min(100%, 240px);
+}
+
+@media (width >= 768px) {
+  .cauldron__stage {
+    width: min(100%, 360px);
+  }
+}
+
+.cauldron-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 24px rgb(95 191 63 / 35%));
+}
+
+.cauldron-art__liquid {
+  fill: var(--color-accent-strong);
+}
+
+.cauldron-art__bubble {
+  fill: var(--color-accent);
+}
+
+/* one cell per place in the cauldron, the free places are dashed */
+.cauldron__contents {
+  display: grid;
+  grid-template-columns: repeat(var(--cauldron-capacity, 4), minmax(0, 1fr));
+  gap: var(--space-2);
+  width: min(100%, 480px);
+}
+
+.cauldron__item {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: var(--space-1);
+  min-height: 88px;
+  padding: var(--space-2) var(--space-1);
+  border: var(--border-width) solid var(--color-panel-border);
+  border-radius: var(--radius-medium);
+  background-color: rgb(0 0 0 / 25%);
+  font-size: var(--font-size-small);
+  text-align: center;
+}
+
+.cauldron__item--free {
+  border-style: dashed;
+  background-color: transparent;
+}
+
+.cauldron__item-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.cauldron__item-name {
+  overflow-wrap: anywhere;
+}
