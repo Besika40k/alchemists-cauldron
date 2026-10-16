@@ -132,6 +132,19 @@ export class ShelfView {
     );
   }
 
+  /**
+   * Moves the keyboard focus to the first ingredient that can still be used.
+   */
+  focusFirstCard(): void {
+    for (const card of this.#cards.values()) {
+      if (!card.button.disabled) {
+        card.button.focus();
+
+        return;
+      }
+    }
+  }
+
   render(state: IGameState): void {
     const shelf: readonly IIngredient[] = INGREDIENTS.filter(
       (ingredient: IIngredient): boolean => state.shelfStock[ingredient.id] !== undefined,

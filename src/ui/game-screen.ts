@@ -20,7 +20,13 @@ export class GameScreen {
   constructor(root: HTMLElement, handlers: IGameScreenHandlers) {
     this.#shelf = new ShelfView(handlers.onAddIngredient);
     this.#cauldron = new CauldronView();
-    this.#actions = new ActionsView({ onStart: handlers.onStart });
+    this.#actions = new ActionsView({
+      onStart: (): void => {
+        handlers.onStart();
+        // the Start Game button hides itself, so the focus moves on to the shelf
+        this.#shelf.focusFirstCard();
+      },
+    });
 
     root.replaceChildren(
       createElement('header', { className: 'game__header' }, [
