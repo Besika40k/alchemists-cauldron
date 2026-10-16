@@ -1,0 +1,52 @@
+/* one column on phones, the shelf beside the cauldron from tablet width */
+.game {
+  display: grid;
+  grid-template-areas:
+    'header'
+    'cauldron'
+    'shelf'
+    'actions';
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: var(--space-3);
+}
+
+.game__header {
+  grid-area: header;
+  text-align: center;
+}
+
+.game__title {
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: var(--font-size-title);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-shadow: var(--glow-accent);
+}
+
+.shelf {
+  grid-area: shelf;
+}
+
+.cauldron {
+  grid-area: cauldron;
+}
+
+.actions {
+  grid-area: actions;
+}
+
+@media (width >= 768px) {
+  .game {
+    grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+    grid-template-areas:
+      'header header'
+      'shelf cauldron'
+      'actions actions';
+    gap: var(--space-5);
+    padding: var(--space-5);
+  }
+}
