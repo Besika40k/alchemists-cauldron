@@ -1,0 +1,162 @@
+.shelf__placeholder {
+  padding-block: var(--space-5);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* two compact cards per row on phones, one wide card per row in the side column */
+.shelf__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--space-2);
+}
+
+@media (width >= 768px) {
+  .shelf__list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.shelf__slot {
+  container-type: inline-size;
+}
+
+.ingredient-card {
+  position: relative;
+  display: grid;
+  grid-template-areas:
+    'icon'
+    'name'
+    'stats';
+  justify-items: center;
+  gap: var(--space-1);
+  width: 100%;
+  height: 100%;
+  padding: var(--space-3) var(--space-2);
+  border: var(--border-width) solid var(--color-panel-border);
+  border-radius: var(--radius-medium);
+  background: linear-gradient(180deg, var(--color-panel), var(--color-panel-dark));
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast),
+    box-shadow var(--duration-fast),
+    opacity var(--duration-fast),
+    transform var(--duration-fast);
+
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    border-color: var(--color-accent);
+    box-shadow: var(--glow-accent);
+  }
+
+  &:active:not(:disabled, [aria-disabled='true']) {
+    transform: scale(0.98);
+  }
+
+  /* the cauldron is full: the card keeps its focus but ignores clicks */
+  &[aria-disabled='true'] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* stock 0: the slot stays in place, dimmed, without its icon */
+.ingredient-card--empty {
+  opacity: 0.4;
+  cursor: default;
+
+  & .ingredient-card__icon {
+    visibility: hidden;
+  }
+
+  & .ingredient-card__stock {
+    border-color: var(--color-text-muted);
+    color: var(--color-text-muted);
+  }
+}
+
+.ingredient-card__icon {
+  grid-area: icon;
+  width: 48px;
+  height: 48px;
+  filter: drop-shadow(0 2px 6px rgb(0 0 0 / 50%));
+}
+
+.ingredient-card__name {
+  grid-area: name;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.ingredient-card__stats {
+  display: flex;
+  flex-wrap: wrap;
+  grid-area: stats;
+  justify-content: center;
+  gap: 3px;
+}
+
+.ingredient-card__stock {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  display: grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  padding-inline: 6px;
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-round);
+  background-color: var(--color-panel-dark);
+  color: var(--color-accent);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+}
+
+/* a wide card puts the icon on the left and the stock badge on the right */
+@container (width >= 240px) {
+  .ingredient-card {
+    grid-template-columns: 48px minmax(0, 1fr);
+    grid-template-areas:
+      'icon name'
+      'icon stats';
+    align-items: center;
+    justify-items: start;
+    column-gap: var(--space-3);
+    padding: var(--space-2) 48px var(--space-2) var(--space-3);
+    text-align: left;
+  }
+
+  .ingredient-card__stats {
+    justify-content: flex-start;
+  }
+
+  .ingredient-card__stock {
+    top: 50%;
+    right: var(--space-3);
+    translate: 0 -50%;
+  }
+}
+
+/* the outline is a shadow, so it takes no room and three chips fit on a phone card */
+.stat {
+  padding: 1px 3px;
+  border-radius: var(--radius-small);
+  box-shadow: inset 0 0 0 var(--border-width) currentcolor;
+  background-color: rgb(0 0 0 / 25%);
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.stat--temperature {
+  color: var(--color-temperature);
+}
+
+.stat--density {
+  color: var(--color-density);
+}
+
+.stat--magic-power {
+  color: var(--color-magic-power);
+}

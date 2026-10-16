@@ -3,4 +3,5 @@
 @import './layout.css';
 @import './components/panel.css';
 @import './components/button.css';
+@import './components/shelf.css';
 @import './components/actions.css';
