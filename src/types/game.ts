@@ -1,0 +1,49 @@
+export type Difficulty = 'easy' | 'medium' | 'hard';
+
+export type GameStatus = 'menu' | 'playing' | 'paused' | 'game-over';
+
+export type IngredientId =
+  | 'dragon-tears'
+  | 'fairy-dust'
+  | 'frost-lotus'
+  | 'mandrake-root'
+  | 'caustic-acid'
+  | 'essence-of-the-void'
+  | 'phoenix-feather'
+  | 'toad-slime';
+
+export interface IIngredient {
+  readonly id: IngredientId;
+  readonly name: string;
+  readonly temperature: number;
+  readonly density: number;
+  readonly magicPower: number;
+}
+
+/**
+ * Portions left on the shelf for every ingredient of the current game.
+ */
+export type ShelfStock = Readonly<Partial<Record<IngredientId, number>>>;
+
+export interface IDifficultySettings {
+  readonly shelfSize: number;
+  readonly maxCauldronIngredients: number;
+  readonly startTimeSeconds: number;
+  readonly tolerance: number;
+  readonly lives: number;
+  readonly scorePerBrew: number;
+  readonly timeBonusSeconds: number;
+  readonly reactionCount: number;
+}
+
+export interface IGameState {
+  readonly status: GameStatus;
+  readonly difficulty: Difficulty;
+  readonly shelfStock: ShelfStock;
+  readonly cauldronIngredients: readonly IIngredient[];
+}
+
+/**
+ * Returns a number from 0 (inclusive) to 1 (exclusive), like Math.random.
+ */
+export type RandomSource = () => number;
