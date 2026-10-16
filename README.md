@@ -33,6 +33,27 @@ pull requests.
 
 Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-school/qualifying-stage/blob/main/tasks/game-alchemists-cauldron/README.md)
 
+## How to play
+
+1. Press **Start Game**. The shelf fills with the first 6 ingredients of the catalogue, and
+   each one gets a random stock from 2 to 15 (the number in the circle).
+2. Click an ingredient, or reach it with <kbd>Tab</kbd> and press <kbd>Enter</kbd> or
+   <kbd>Space</kbd>, to put one portion into the cauldron. Its stock drops by 1. The card
+   shows the ingredient's Temperature (T), Density (D) and Magic Power (MP).
+3. The cauldron holds up to 4 ingredients and keeps the order they went in. While it is full,
+   the shelf ignores new ingredients.
+4. An ingredient with no stock left becomes an empty, dimmed slot that cannot be used.
+
+## Implemented so far
+
+- [x] Precondition: repository, tooling, structure and deployment
+- [x] US 1.1 Ingredient shelf and cauldron
+- [ ] US 1.2 Cauldron parameter bars
+- [ ] US 1.3 Recipe and brewing check
+- [ ] US 1.4 Timer and game over
+- [ ] US 1.5 Pause
+- [ ] US 1.6 Leaderboard
+
 ## Deployment
 
 The game is deployed to GitHub Pages: https://besika40k.github.io/alchemists-cauldron/
