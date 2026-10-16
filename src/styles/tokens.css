@@ -1,0 +1,51 @@
+:root {
+  color-scheme: dark;
+
+  /* colors */
+  --color-background: #0d0b12;
+  --color-background-glow: #1f1730;
+  --color-panel: #1b1724;
+  --color-panel-dark: #13101a;
+  --color-panel-border: #3a3146;
+  --color-text: #ece6d6;
+  --color-text-muted: #a49cb2;
+  --color-gold: #d9b56a;
+  --color-accent: #8fe36b;
+  --color-accent-strong: #5fbf3f;
+  --color-accent-dark: #1f3a17;
+  --color-on-accent: #0f1a0b;
+  --color-temperature: #ff8a5c;
+  --color-density: #6cb6ff;
+  --color-magic-power: #c792ff;
+  --color-danger: #ff5a5a;
+
+  /* typography */
+  --font-display: 'Cinzel', 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-size-small: 0.75rem;
+  --font-size-body: 0.9375rem;
+  --font-size-large: 1.125rem;
+  --font-size-title: clamp(1.5rem, 1.1rem + 2vw, 2.5rem);
+
+  /* spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* shapes */
+  --radius-small: 6px;
+  --radius-medium: 10px;
+  --radius-large: 16px;
+  --radius-round: 999px;
+  --border-width: 1px;
+  --focus-ring-width: 3px;
+
+  /* effects */
+  --shadow-panel: 0 12px 32px rgb(0 0 0 / 45%);
+  --glow-accent: 0 0 18px rgb(143 227 107 / 45%);
+  --duration-fast: 150ms;
+  --duration-medium: 300ms;
+}
