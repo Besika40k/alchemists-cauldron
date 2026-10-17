@@ -3,6 +3,7 @@
   display: grid;
   grid-template-areas:
     'header'
+    'hud'
     'cauldron'
     'shelf'
     'actions';
@@ -27,6 +28,10 @@
   text-shadow: var(--glow-accent);
 }
 
+.hud {
+  grid-area: hud;
+}
+
 .shelf {
   grid-area: shelf;
 }
@@ -44,6 +49,7 @@
     grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
     grid-template-areas:
       'header header'
+      'hud hud'
       'shelf cauldron'
       'actions actions';
     gap: var(--space-5);

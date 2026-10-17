@@ -1,0 +1,45 @@
+.hud {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.hud__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--color-panel-border);
+  border-radius: var(--radius-round);
+  background-color: var(--color-panel-dark);
+}
+
+.hud__label {
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hud__value {
+  min-width: 3ch;
+  color: var(--color-accent);
+  font-size: var(--font-size-large);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud__hearts {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.hud__heart {
+  width: 24px;
+  height: 24px;
+  fill: var(--color-danger);
+  filter: drop-shadow(0 0 4px rgb(255 90 90 / 50%));
+}
