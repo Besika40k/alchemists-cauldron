@@ -9,6 +9,7 @@ import { type IngredientHandler, ShelfView } from './shelf-view';
 export interface IGameScreenHandlers {
   readonly onStart: () => void;
   readonly onAddIngredient: IngredientHandler;
+  readonly onBrew: () => void;
 }
 
 /**
@@ -30,6 +31,11 @@ export class GameScreen {
       onStart: (): void => {
         handlers.onStart();
         // the Start Game button hides itself, so the focus moves on to the shelf
+        this.#shelf.focusFirstCard();
+      },
+      onBrew: (): void => {
+        handlers.onBrew();
+        // Brew turns disabled with an empty cauldron, so the focus goes back to the shelf
         this.#shelf.focusFirstCard();
       },
     });

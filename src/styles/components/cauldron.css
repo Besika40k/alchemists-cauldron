@@ -66,3 +66,17 @@
 .cauldron__item-name {
   overflow-wrap: anywhere;
 }
+
+.cauldron__message {
+  min-height: 1.4em;
+  font-weight: 600;
+  text-align: center;
+}
+
+.cauldron__message--success {
+  color: var(--color-accent);
+}
+
+.cauldron__message--failure {
+  color: var(--color-danger);
+}
