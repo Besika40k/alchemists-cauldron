@@ -8,6 +8,7 @@ import type {
   IngredientId,
   RandomSource,
 } from '../types/game';
+import { pickRecipe } from './recipe-generator';
 import { createStock, getStock, takeFromStock } from './stock';
 
 export function getSettings(state: IGameState): IDifficultySettings {
@@ -22,19 +23,23 @@ export function getShelfIngredients(difficulty: Difficulty): readonly IIngredien
 }
 
 /**
- * The start screen: an empty shelf and an empty cauldron.
+ * The start screen: an empty shelf and cauldron, score 0, no lives and no recipe yet.
  */
 export function createMenuState(difficulty: Difficulty = DEFAULT_DIFFICULTY): IGameState {
   return {
     status: 'menu',
     difficulty,
+    score: 0,
+    lives: 0,
+    activeRecipe: undefined,
     shelfStock: {},
     cauldronIngredients: [],
+    lastBrew: undefined,
   };
 }
 
 /**
- * A new run: the shelf of the difficulty gets a fresh random stock.
+ * A new run: a fresh random stock, the lives of the difficulty and a random recipe.
  */
 export function startGame(
   difficulty: Difficulty = DEFAULT_DIFFICULTY,
@@ -43,8 +48,12 @@ export function startGame(
   return {
     status: 'playing',
     difficulty,
+    score: 0,
+    lives: DIFFICULTY_SETTINGS[difficulty].lives,
+    activeRecipe: pickRecipe(difficulty, random),
     shelfStock: createStock(getShelfIngredients(difficulty), random),
     cauldronIngredients: [],
+    lastBrew: undefined,
   };
 }
 

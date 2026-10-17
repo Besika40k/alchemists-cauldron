@@ -58,11 +58,24 @@ export interface IDifficultySettings {
   readonly reactionCount: number;
 }
 
+export interface IBrewResult {
+  /**
+   * Grows with every brew, so the screen can tell two results in a row apart.
+   */
+  readonly id: number;
+  readonly isSuccess: boolean;
+  readonly recipeName: string;
+}
+
 export interface IGameState {
   readonly status: GameStatus;
   readonly difficulty: Difficulty;
+  readonly score: number;
+  readonly lives: number;
+  readonly activeRecipe: IRecipe | undefined;
   readonly shelfStock: ShelfStock;
   readonly cauldronIngredients: readonly IIngredient[];
+  readonly lastBrew: IBrewResult | undefined;
 }
 
 /**
