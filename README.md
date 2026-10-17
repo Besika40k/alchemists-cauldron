@@ -36,20 +36,26 @@ Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-schoo
 ## How to play
 
 1. Press **Start Game**. The shelf fills with the first 6 ingredients of the catalogue, and
-   each one gets a random stock from 2 to 15 (the number in the circle).
+   each one gets a random stock from 2 to 15 (the number in the circle). The recipe panel
+   shows a random recipe, and you have 3 lives.
 2. Click an ingredient, or reach it with <kbd>Tab</kbd> and press <kbd>Enter</kbd> or
    <kbd>Space</kbd>, to put one portion into the cauldron. Its stock drops by 1. The card
    shows the ingredient's Temperature (T), Density (D) and Magic Power (MP).
-3. The cauldron holds up to 4 ingredients and keeps the order they went in. While it is full,
-   the shelf ignores new ingredients.
-4. An ingredient with no stock left becomes an empty, dimmed slot that cannot be used.
+3. The cauldron holds up to 4 ingredients and keeps the order they went in. The recipe
+   panel counts them (**Ingredients: 2 / 4**); at 4 / 4 the counter lights up and the shelf
+   ignores new ingredients.
+4. Press **Brew** (it needs at least one ingredient). Every cauldron value, the sum of the
+   added ingredients, must be inside the recipe range widened by the tolerance of ±8. A
+   good potion gives 200 score and a new recipe; a wrong mixture costs a life. Either way
+   the cauldron empties, and the used ingredients are spent.
+5. An ingredient with no stock left becomes an empty, dimmed slot that cannot be used.
 
 ## Implemented so far
 
 - [x] Precondition: repository, tooling, structure and deployment
 - [x] US 1.1 Ingredient shelf and cauldron
 - [ ] US 1.2 Cauldron parameter bars
-- [ ] US 1.3 Recipe and brewing check
+- [x] US 1.3 Recipe and brewing check (its time bonus arrives with the timer of US 1.4)
 - [ ] US 1.4 Timer and game over
 - [ ] US 1.5 Pause
 - [ ] US 1.6 Leaderboard
