@@ -1,7 +1,19 @@
+/* on phones and tablets the actions stay at the bottom of the screen while the shelf scrolls */
 .actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: var(--space-3);
-  padding-block: var(--space-2);
+  padding-block: var(--space-3);
+  background: linear-gradient(transparent, var(--color-background) 35%);
+}
+
+@media (width >= 1024px) {
+  .actions {
+    position: static;
+    background: none;
+  }
 }
