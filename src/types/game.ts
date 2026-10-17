@@ -12,12 +12,34 @@ export type IngredientId =
   | 'phoenix-feather'
   | 'toad-slime';
 
-export interface IIngredient {
+export interface IIngredient extends ICauldronValues {
   readonly id: IngredientId;
   readonly name: string;
+}
+
+/**
+ * The three values every ingredient adds to the cauldron.
+ */
+export interface ICauldronValues {
   readonly temperature: number;
   readonly density: number;
   readonly magicPower: number;
+}
+
+export type ParameterName = keyof ICauldronValues;
+
+export interface IRecipeRange {
+  readonly min: number;
+  readonly max: number;
+}
+
+export interface IRecipe {
+  readonly id: string;
+  readonly name: string;
+  readonly difficulty: Difficulty;
+  readonly temperature: IRecipeRange;
+  readonly density: IRecipeRange;
+  readonly magicPower: IRecipeRange;
 }
 
 /**
