@@ -225,3 +225,17 @@ export function createCauldronArt(): SVGSVGElement {
     CAULDRON_SHAPES.map((shape: IShape): SVGElement => createShape(shape)),
   );
 }
+
+const HEART_PATH: string =
+  'M12 21s-7.5-4.6-9.6-9.3C.9 8.3 2.8 4.5 6.4 4.1c2.2-.2 4 .9 5.6 2.9 1.6-2 3.4-3.1 5.6-2.9 3.6.4 5.5 4.2 4 7.6C19.5 16.4 12 21 12 21Z';
+
+/**
+ * One life in the HUD.
+ */
+export function createHeartIcon(className: string): SVGSVGElement {
+  return createSvgElement(
+    'svg',
+    { class: className, viewBox: '0 0 24 24', 'aria-hidden': 'true', focusable: 'false' },
+    [createSvgElement('path', { d: HEART_PATH })],
+  );
+}
