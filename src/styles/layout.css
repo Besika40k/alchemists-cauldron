@@ -1,9 +1,10 @@
-/* one column on phones, the shelf beside the cauldron from tablet width */
+/* one column on phones, two on tablets, shelf, cauldron and recipe side by side on desktops */
 .game {
   display: grid;
   grid-template-areas:
     'header'
     'hud'
+    'recipe'
     'cauldron'
     'shelf'
     'actions';
@@ -36,6 +37,10 @@
   grid-area: shelf;
 }
 
+.recipe {
+  grid-area: recipe;
+}
+
 .cauldron {
   grid-area: cauldron;
 }
@@ -50,9 +55,21 @@
     grid-template-areas:
       'header header'
       'hud hud'
+      'shelf recipe'
       'shelf cauldron'
       'actions actions';
     gap: var(--space-5);
     padding: var(--space-5);
+  }
+}
+
+@media (width >= 1024px) {
+  .game {
+    grid-template-columns: minmax(260px, 340px) minmax(0, 1fr) minmax(240px, 300px);
+    grid-template-areas:
+      'header header header'
+      'hud hud hud'
+      'shelf cauldron recipe'
+      'actions actions actions';
   }
 }
