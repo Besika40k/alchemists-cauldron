@@ -17,6 +17,9 @@ export function startApp(root: HTMLElement): void {
     onAddIngredient: (id: IngredientId): void => {
       controller.addIngredient(id);
     },
+    onBrew: (): void => {
+      controller.brew();
+    },
   });
 
   store.subscribe((state: IGameState): void => {

@@ -1,5 +1,5 @@
 import { DEFAULT_DIFFICULTY } from '../data/difficulty';
-import { addIngredient, startGame } from '../logic/game-rules';
+import { addIngredient, brew, startGame } from '../logic/game-rules';
 import type { GameStore } from '../state/game-store';
 import type { IngredientId, RandomSource } from '../types/game';
 
@@ -21,5 +21,9 @@ export class GameController {
 
   addIngredient(id: IngredientId): void {
     this.#store.setState(addIngredient(this.#store.state, id));
+  }
+
+  brew(): void {
+    this.#store.setState(brew(this.#store.state, this.#random));
   }
 }
