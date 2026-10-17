@@ -2,12 +2,16 @@ import { DEFAULT_DIFFICULTY, DIFFICULTY_SETTINGS } from '../data/difficulty';
 import { INGREDIENTS } from '../data/ingredients';
 import type {
   Difficulty,
+  IBrewResult,
   IDifficultySettings,
   IGameState,
   IIngredient,
   IngredientId,
+  IRecipe,
   RandomSource,
 } from '../types/game';
+import { isBrewSuccessful } from './brew-check';
+import { calculateCauldron } from './calculate-cauldron';
 import { pickRecipe } from './recipe-generator';
 import { createStock, getStock, takeFromStock } from './stock';
 
@@ -81,4 +85,54 @@ export function addIngredient(state: IGameState, id: IngredientId): IGameState {
         cauldronIngredients: [...state.cauldronIngredients, ingredient],
       }
     : state;
+}
+
+/**
+ * Empties the cauldron. The ingredients are spent: nothing goes back to the shelf.
+ */
+export function clearCauldron(state: IGameState): IGameState {
+  return { ...state, cauldronIngredients: [] };
+}
+
+export function canBrew(state: IGameState): boolean {
+  return (
+    state.status === 'playing' &&
+    state.activeRecipe !== undefined &&
+    state.cauldronIngredients.length > 0
+  );
+}
+
+/**
+ * Checks the mix against the recipe with the tolerance of the difficulty. A good
+ * potion adds score and brings a new recipe; a wrong one costs a life. Both empty
+ * the cauldron.
+ */
+export function brew(state: IGameState, random: RandomSource = Math.random): IGameState {
+  const recipe: IRecipe | undefined = state.activeRecipe;
+
+  if (!recipe || !canBrew(state)) {
+    return state;
+  }
+
+  const settings: IDifficultySettings = getSettings(state);
+  const isSuccess: boolean = isBrewSuccessful(
+    calculateCauldron(state.cauldronIngredients),
+    recipe,
+    settings.tolerance,
+  );
+  const lastBrew: IBrewResult = {
+    id: (state.lastBrew?.id ?? 0) + 1,
+    isSuccess,
+    recipeName: recipe.name,
+  };
+  const cleared: IGameState = clearCauldron(state);
+
+  return isSuccess
+    ? {
+        ...cleared,
+        score: state.score + settings.scorePerBrew,
+        activeRecipe: pickRecipe(state.difficulty, random),
+        lastBrew,
+      }
+    : { ...cleared, lives: Math.max(state.lives - 1, 0), lastBrew };
 }
