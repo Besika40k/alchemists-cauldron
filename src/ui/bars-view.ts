@@ -1,7 +1,15 @@
+import { widenRange } from '../logic/brew-check';
 import { calculateCauldron } from '../logic/calculate-cauldron';
-import type { ICauldronValues, IGameState, IRecipeRange, ParameterName } from '../types/game';
+import { getSettings } from '../logic/game-rules';
+import type {
+  ICauldronValues,
+  IGameState,
+  IRecipe,
+  IRecipeRange,
+  ParameterName,
+} from '../types/game';
 import { createElement } from './dom';
-import { formatNumber } from './format';
+import { formatNumber, formatRange } from './format';
 
 interface IBarDefinition {
   readonly parameter: ParameterName;
@@ -65,6 +73,8 @@ function createBar(definition: IBarDefinition): IBarParts {
       },
     },
     [
+      createElement('span', { className: 'bar__zone bar__zone--tolerance' }),
+      createElement('span', { className: 'bar__zone bar__zone--recipe' }),
       createElement('span', { className: 'bar__fill' }),
       createElement('span', { className: 'bar__zero' }),
       createElement('span', { className: 'bar__marker' }),
@@ -96,7 +106,8 @@ function createBar(definition: IBarDefinition): IBarParts {
 }
 
 /**
- * The three cauldron values as bars with a marker for the current value.
+ * The three cauldron values as bars with the recipe target zone and a marker for
+ * the current value.
  */
 export class BarsView {
   readonly #bars: Map<ParameterName, IBarParts> = new Map<ParameterName, IBarParts>();
@@ -123,32 +134,50 @@ export class BarsView {
     );
   }
 
-  #renderBar(bar: IBarParts, definition: IBarDefinition, value: number): void {
+  #renderBar(
+    bar: IBarParts,
+    definition: IBarDefinition,
+    value: number,
+    recipe: IRecipe | undefined,
+    tolerance: number,
+  ): void {
     const { scale } = definition;
     const valuePosition: number = toBarPosition(value, scale);
     const zeroPosition: number = toBarPosition(0, scale);
+    const target: IRecipeRange | undefined = recipe?.[definition.parameter];
+    const widened: IRecipeRange | undefined = target && widenRange(target, tolerance);
 
     setPosition(bar.track, '--value-position', valuePosition);
     // the fill grows from the 0 line to the value, to the left for negative values
     setPosition(bar.track, '--fill-start', Math.min(valuePosition, zeroPosition));
     setPosition(bar.track, '--fill-size', Math.abs(valuePosition - zeroPosition));
+    setPosition(bar.track, '--zone-start', target ? toBarPosition(target.min, scale) : 0);
+    setPosition(bar.track, '--zone-end', target ? toBarPosition(target.max, scale) : 0);
+    setPosition(bar.track, '--tolerance-start', widened ? toBarPosition(widened.min, scale) : 0);
+    setPosition(bar.track, '--tolerance-end', widened ? toBarPosition(widened.max, scale) : 0);
 
+    bar.root.classList.toggle('bar--has-target', target !== undefined);
     bar.value.textContent = formatNumber(value);
     // a meter value has to stay inside its range; the text keeps the exact number
     const meterValue: number = Math.min(Math.max(value, scale.min), scale.max);
 
     bar.track.setAttribute('aria-valuenow', String(meterValue));
-    bar.track.setAttribute('aria-valuetext', formatNumber(value));
+    bar.track.setAttribute(
+      'aria-valuetext',
+      target ? `${formatNumber(value)}, target ${formatRange(target)}` : formatNumber(value),
+    );
   }
 
   render(state: IGameState): void {
     const values: ICauldronValues = calculateCauldron(state.cauldronIngredients);
+    const recipe: IRecipe | undefined = state.activeRecipe;
+    const tolerance: number = getSettings(state).tolerance;
 
     for (const definition of BAR_DEFINITIONS) {
       const bar: IBarParts | undefined = this.#bars.get(definition.parameter);
 
       if (bar) {
-        this.#renderBar(bar, definition, values[definition.parameter]);
+        this.#renderBar(bar, definition, values[definition.parameter], recipe, tolerance);
       }
     }
   }
