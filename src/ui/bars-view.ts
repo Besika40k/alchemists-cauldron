@@ -1,4 +1,4 @@
-import { widenRange } from '../logic/brew-check';
+import { isInRange, widenRange } from '../logic/brew-check';
 import { calculateCauldron } from '../logic/calculate-cauldron';
 import { getSettings } from '../logic/game-rules';
 import type {
@@ -106,8 +106,8 @@ function createBar(definition: IBarDefinition): IBarParts {
 }
 
 /**
- * The three cauldron values as bars with the recipe target zone and a marker for
- * the current value.
+ * The three cauldron values as bars with the recipe target zone, a marker for the
+ * current value and a green glow while the value is inside the recipe range.
  */
 export class BarsView {
   readonly #bars: Map<ParameterName, IBarParts> = new Map<ParameterName, IBarParts>();
@@ -157,6 +157,7 @@ export class BarsView {
     setPosition(bar.track, '--tolerance-end', widened ? toBarPosition(widened.max, scale) : 0);
 
     bar.root.classList.toggle('bar--has-target', target !== undefined);
+    bar.root.classList.toggle('bar--in-range', target !== undefined && isInRange(value, target));
     bar.value.textContent = formatNumber(value);
     // a meter value has to stay inside its range; the text keeps the exact number
     const meterValue: number = Math.min(Math.max(value, scale.min), scale.max);

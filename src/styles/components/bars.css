@@ -105,6 +105,22 @@
   box-shadow: 0 0 6px rgb(0 0 0 / 60%);
 }
 
+/* inside the recipe range: the bar glows green */
+.bar--in-range {
+  & .bar__track {
+    box-shadow: var(--glow-accent);
+  }
+
+  & .bar__marker {
+    background-color: var(--color-accent);
+    box-shadow: 0 0 10px var(--color-accent);
+  }
+
+  & .bar__value {
+    color: var(--color-accent);
+  }
+}
+
 .bar__scale {
   display: flex;
   justify-content: space-between;
