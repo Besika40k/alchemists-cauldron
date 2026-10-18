@@ -6,6 +6,7 @@
     'hud'
     'recipe'
     'cauldron'
+    'bars'
     'shelf'
     'actions';
   gap: var(--space-4);
@@ -41,6 +42,10 @@
   grid-area: recipe;
 }
 
+.bars {
+  grid-area: bars;
+}
+
 .cauldron {
   grid-area: cauldron;
 }
@@ -57,6 +62,7 @@
       'hud hud'
       'shelf recipe'
       'shelf cauldron'
+      'shelf bars'
       'actions actions';
     gap: var(--space-5);
     padding: var(--space-5);
@@ -70,6 +76,7 @@
       'header header header'
       'hud hud hud'
       'shelf cauldron recipe'
+      'shelf bars bars'
       'actions actions actions';
   }
 }

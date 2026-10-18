@@ -1,0 +1,96 @@
+/* the bars sit side by side when there is room and stack when there is not */
+.bars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.bar {
+  --bar-color: var(--color-text);
+
+  display: grid;
+  gap: var(--space-2);
+}
+
+.bar--temperature {
+  --bar-color: var(--color-temperature);
+}
+
+.bar--density {
+  --bar-color: var(--color-density);
+}
+
+.bar--magic-power {
+  --bar-color: var(--color-magic-power);
+}
+
+.bar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.bar__label {
+  color: var(--bar-color);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.bar__value {
+  font-size: var(--font-size-large);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.bar__track {
+  position: relative;
+  height: 18px;
+  border: var(--border-width) solid var(--color-panel-border);
+  border-radius: var(--radius-round);
+  background-color: var(--color-panel-dark);
+}
+
+/* every part of the track is placed by a 0..1 position from bars-view.ts */
+.bar__fill,
+.bar__zero,
+.bar__marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.bar__fill {
+  left: calc(var(--fill-start, 0) * 100%);
+  width: calc(var(--fill-size, 0) * 100%);
+  border-radius: var(--radius-round);
+  background-color: var(--bar-color);
+  opacity: 0.55;
+}
+
+.bar__zero {
+  left: calc(var(--zero-position, 0) * 100%);
+  width: 2px;
+  translate: -50% 0;
+  background-color: var(--color-text-muted);
+}
+
+.bar__marker {
+  top: -5px;
+  bottom: -5px;
+  left: calc(var(--value-position, 0) * 100%);
+  width: 6px;
+  translate: -50% 0;
+  border-radius: var(--radius-small);
+  background-color: var(--color-text);
+  box-shadow: 0 0 6px rgb(0 0 0 / 60%);
+}
+
+.bar__scale {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+  font-variant-numeric: tabular-nums;
+}
