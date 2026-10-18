@@ -44,17 +44,22 @@ Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-schoo
 3. The cauldron holds up to 4 ingredients and keeps the order they went in. The recipe
    panel counts them (**Ingredients: 2 / 4**); at 4 / 4 the counter lights up and the shelf
    ignores new ingredients.
-4. Press **Brew** (it needs at least one ingredient). Every cauldron value, the sum of the
+4. Watch the three bars under the cauldron: **Temperature**, **Density** and **Magic Power**
+   start at 0 and move with every ingredient. Temperature and Density can go below 0, so
+   their 0 line is in the middle. The green band on each bar is the recipe range, the faint
+   band around it the tolerance, and a bar glows green while its value is inside the
+   recipe range.
+5. Press **Brew** (it needs at least one ingredient). Every cauldron value, the sum of the
    added ingredients, must be inside the recipe range widened by the tolerance of ±8. A
    good potion gives 200 score and a new recipe; a wrong mixture costs a life. Either way
    the cauldron empties, and the used ingredients are spent.
-5. An ingredient with no stock left becomes an empty, dimmed slot that cannot be used.
+6. An ingredient with no stock left becomes an empty, dimmed slot that cannot be used.
 
 ## Implemented so far
 
 - [x] Precondition: repository, tooling, structure and deployment
 - [x] US 1.1 Ingredient shelf and cauldron
-- [ ] US 1.2 Cauldron parameter bars
+- [x] US 1.2 Cauldron parameter bars
 - [x] US 1.3 Recipe and brewing check (its time bonus arrives with the timer of US 1.4)
 - [ ] US 1.4 Timer and game over
 - [ ] US 1.5 Pause
