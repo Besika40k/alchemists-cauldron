@@ -1,5 +1,6 @@
 import type { IGameState } from '../types/game';
 import { ActionsView } from './actions-view';
+import { BarsView } from './bars-view';
 import { CauldronView } from './cauldron-view';
 import { createElement } from './dom';
 import { HudView } from './hud-view';
@@ -20,6 +21,7 @@ export class GameScreen {
   readonly #shelf: ShelfView;
   readonly #cauldron: CauldronView;
   readonly #recipe: RecipeView;
+  readonly #bars: BarsView;
   readonly #actions: ActionsView;
 
   constructor(root: HTMLElement, handlers: IGameScreenHandlers) {
@@ -27,6 +29,7 @@ export class GameScreen {
     this.#shelf = new ShelfView(handlers.onAddIngredient);
     this.#cauldron = new CauldronView();
     this.#recipe = new RecipeView();
+    this.#bars = new BarsView();
     this.#actions = new ActionsView({
       onStart: (): void => {
         handlers.onStart();
@@ -48,6 +51,7 @@ export class GameScreen {
       this.#shelf.element,
       this.#cauldron.element,
       this.#recipe.element,
+      this.#bars.element,
       this.#actions.element,
     );
   }
@@ -57,6 +61,7 @@ export class GameScreen {
     this.#shelf.render(state);
     this.#cauldron.render(state);
     this.#recipe.render(state);
+    this.#bars.render(state);
     this.#actions.render(state);
   }
 }
