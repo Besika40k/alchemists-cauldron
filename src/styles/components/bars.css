@@ -53,12 +53,30 @@
 }
 
 /* every part of the track is placed by a 0..1 position from bars-view.ts */
+.bar__zone,
 .bar__fill,
 .bar__zero,
 .bar__marker {
   position: absolute;
   top: 0;
   bottom: 0;
+}
+
+.bar__zone--tolerance {
+  left: calc(var(--tolerance-start, 0) * 100%);
+  width: calc((var(--tolerance-end, 0) - var(--tolerance-start, 0)) * 100%);
+  background-color: rgb(143 227 107 / 14%);
+}
+
+.bar__zone--recipe {
+  left: calc(var(--zone-start, 0) * 100%);
+  width: calc((var(--zone-end, 0) - var(--zone-start, 0)) * 100%);
+  border-inline: 2px solid var(--color-accent);
+  background-color: rgb(143 227 107 / 30%);
+}
+
+.bar:not(.bar--has-target) .bar__zone {
+  display: none;
 }
 
 .bar__fill {
