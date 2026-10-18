@@ -7,6 +7,7 @@
 
 .bar {
   --bar-color: var(--color-text);
+  --bar-duration: 400ms;
 
   display: grid;
   gap: var(--space-2);
@@ -50,6 +51,7 @@
   border: var(--border-width) solid var(--color-panel-border);
   border-radius: var(--radius-round);
   background-color: var(--color-panel-dark);
+  transition: box-shadow var(--duration-medium);
 }
 
 /* every part of the track is placed by a 0..1 position from bars-view.ts */
@@ -85,6 +87,9 @@
   border-radius: var(--radius-round);
   background-color: var(--bar-color);
   opacity: 0.55;
+  transition:
+    left var(--bar-duration) ease-out,
+    width var(--bar-duration) ease-out;
 }
 
 .bar__zero {
@@ -103,6 +108,10 @@
   border-radius: var(--radius-small);
   background-color: var(--color-text);
   box-shadow: 0 0 6px rgb(0 0 0 / 60%);
+  transition:
+    left var(--bar-duration) ease-out,
+    background-color var(--duration-medium),
+    box-shadow var(--duration-medium);
 }
 
 /* inside the recipe range: the bar glows green */
