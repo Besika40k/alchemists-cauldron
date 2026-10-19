@@ -3,6 +3,7 @@ import { ActionsView } from './actions-view';
 import { BarsView } from './bars-view';
 import { CauldronView } from './cauldron-view';
 import { createElement } from './dom';
+import { GameOverDialog } from './game-over-dialog';
 import { HudView } from './hud-view';
 import { RecipeView } from './recipe-view';
 import { type IngredientHandler, ShelfView } from './shelf-view';
@@ -11,6 +12,8 @@ export interface IGameScreenHandlers {
   readonly onStart: () => void;
   readonly onAddIngredient: IngredientHandler;
   readonly onBrew: () => void;
+  readonly onPlayAgain: () => void;
+  readonly onShowMenu: () => void;
 }
 
 /**
@@ -22,6 +25,7 @@ export class GameScreen {
   readonly #cauldron: CauldronView;
   readonly #recipe: RecipeView;
   readonly #bars: BarsView;
+  readonly #gameOver: GameOverDialog;
   readonly #actions: ActionsView;
 
   constructor(root: HTMLElement, handlers: IGameScreenHandlers) {
@@ -30,6 +34,13 @@ export class GameScreen {
     this.#cauldron = new CauldronView();
     this.#recipe = new RecipeView();
     this.#bars = new BarsView();
+    this.#gameOver = new GameOverDialog({
+      onPlayAgain: (): void => {
+        handlers.onPlayAgain();
+        this.#shelf.focusFirstCard();
+      },
+      onDismiss: handlers.onShowMenu,
+    });
     this.#actions = new ActionsView({
       onStart: (): void => {
         handlers.onStart();
@@ -53,6 +64,7 @@ export class GameScreen {
       this.#recipe.element,
       this.#bars.element,
       this.#actions.element,
+      this.#gameOver.element,
     );
   }
 
@@ -63,5 +75,6 @@ export class GameScreen {
     this.#recipe.render(state);
     this.#bars.render(state);
     this.#actions.render(state);
+    this.#gameOver.render(state);
   }
 }

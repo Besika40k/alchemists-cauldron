@@ -1,5 +1,5 @@
 import { DEFAULT_DIFFICULTY } from '../data/difficulty';
-import { addIngredient, brew, startGame, tick } from '../logic/game-rules';
+import { addIngredient, brew, createMenuState, startGame, tick } from '../logic/game-rules';
 import type { GameStore } from '../state/game-store';
 import type { Clock, IGameState, IngredientId, RandomSource } from '../types/game';
 
@@ -49,5 +49,12 @@ export class GameController {
 
   brew(): void {
     this.#store.setState(brew(this.#store.state, this.#random, this.#clock()));
+  }
+
+  /**
+   * Leaves the finished game for the start screen.
+   */
+  showMenu(): void {
+    this.#store.setState(createMenuState(this.#store.state.difficulty));
   }
 }

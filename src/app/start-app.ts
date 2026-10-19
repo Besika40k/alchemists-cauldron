@@ -20,6 +20,12 @@ export function startApp(root: HTMLElement): void {
     onBrew: (): void => {
       controller.brew();
     },
+    onPlayAgain: (): void => {
+      controller.startGame();
+    },
+    onShowMenu: (): void => {
+      controller.showMenu();
+    },
   });
 
   store.subscribe((state: IGameState): void => {
