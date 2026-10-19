@@ -63,3 +63,29 @@
     transform 1s linear,
     background-color var(--duration-medium);
 }
+
+/* under 15 seconds: red and pulsing */
+.hud__item--low {
+  border-color: var(--color-danger);
+  animation: time-pulse 0.8s ease-in-out infinite alternate;
+
+  & .hud__time {
+    color: var(--color-danger);
+  }
+
+  & .hud__time-fill {
+    background-color: var(--color-danger);
+  }
+}
+
+@keyframes time-pulse {
+  from {
+    box-shadow: 0 0 0 rgb(255 90 90 / 0%);
+    scale: 1;
+  }
+
+  to {
+    box-shadow: 0 0 18px rgb(255 90 90 / 60%);
+    scale: 1.06;
+  }
+}
