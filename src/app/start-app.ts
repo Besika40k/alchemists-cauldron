@@ -34,6 +34,13 @@ export function startApp(root: HTMLElement): void {
     },
   });
 
+  // a hidden tab pauses the game, so no time runs out unseen
+  document.addEventListener('visibilitychange', (): void => {
+    if (document.hidden) {
+      controller.pause();
+    }
+  });
+
   store.subscribe((state: IGameState): void => {
     screen.render(state);
   });
