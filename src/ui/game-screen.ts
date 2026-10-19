@@ -30,9 +30,11 @@ export class GameScreen {
   readonly #bars: BarsView;
   readonly #gameOver: GameOverDialog;
   readonly #pause: PauseDialog;
+  readonly #root: HTMLElement;
   readonly #actions: ActionsView;
 
   constructor(root: HTMLElement, handlers: IGameScreenHandlers) {
+    this.#root = root;
     this.#hud = new HudView();
     this.#shelf = new ShelfView(handlers.onAddIngredient);
     this.#cauldron = new CauldronView();
@@ -90,5 +92,7 @@ export class GameScreen {
     this.#actions.render(state);
     this.#gameOver.render(state);
     this.#pause.render(state);
+    // the paused field is blurred, so the player cannot plan the next moves
+    this.#root.classList.toggle('game--paused', state.status === 'paused');
   }
 }
