@@ -5,6 +5,7 @@ import { CauldronView } from './cauldron-view';
 import { createElement } from './dom';
 import { GameOverDialog } from './game-over-dialog';
 import { HudView } from './hud-view';
+import { PauseDialog } from './pause-dialog';
 import { RecipeView } from './recipe-view';
 import { type IngredientHandler, ShelfView } from './shelf-view';
 
@@ -14,6 +15,8 @@ export interface IGameScreenHandlers {
   readonly onBrew: () => void;
   readonly onPlayAgain: () => void;
   readonly onShowMenu: () => void;
+  readonly onPause: () => void;
+  readonly onResume: () => void;
 }
 
 /**
@@ -26,6 +29,7 @@ export class GameScreen {
   readonly #recipe: RecipeView;
   readonly #bars: BarsView;
   readonly #gameOver: GameOverDialog;
+  readonly #pause: PauseDialog;
   readonly #actions: ActionsView;
 
   constructor(root: HTMLElement, handlers: IGameScreenHandlers) {
@@ -52,6 +56,14 @@ export class GameScreen {
         // Brew turns disabled with an empty cauldron, so the focus goes back to the shelf
         this.#shelf.focusFirstCard();
       },
+      onPause: handlers.onPause,
+    });
+    this.#pause = new PauseDialog({
+      onResume: handlers.onResume,
+      onExit: (): void => {
+        handlers.onShowMenu();
+        this.#actions.focusStartButton();
+      },
     });
 
     root.replaceChildren(
@@ -65,6 +77,7 @@ export class GameScreen {
       this.#bars.element,
       this.#actions.element,
       this.#gameOver.element,
+      this.#pause.element,
     );
   }
 
@@ -76,5 +89,6 @@ export class GameScreen {
     this.#bars.render(state);
     this.#actions.render(state);
     this.#gameOver.render(state);
+    this.#pause.render(state);
   }
 }

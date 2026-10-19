@@ -26,6 +26,12 @@ export function startApp(root: HTMLElement): void {
     onShowMenu: (): void => {
       controller.showMenu();
     },
+    onPause: (): void => {
+      controller.pause();
+    },
+    onResume: (): void => {
+      controller.resume();
+    },
   });
 
   store.subscribe((state: IGameState): void => {
