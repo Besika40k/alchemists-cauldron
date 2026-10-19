@@ -2,6 +2,7 @@ import { DEFAULT_DIFFICULTY, DIFFICULTY_SETTINGS } from '../data/difficulty';
 import { INGREDIENTS } from '../data/ingredients';
 import type {
   Difficulty,
+  GameOverReason,
   IBrewResult,
   IDifficultySettings,
   IGameState,
@@ -13,8 +14,8 @@ import type {
 import { isBrewSuccessful } from './brew-check';
 import { calculateCauldron } from './calculate-cauldron';
 import { pickRecipe } from './recipe-generator';
-import { createStock, getStock, takeFromStock } from './stock';
-import { secondsToMilliseconds } from './timer';
+import { createStock, getStock, isShelfEmpty, takeFromStock } from './stock';
+import { getRemainingTime, secondsToMilliseconds, toDisplaySeconds } from './timer';
 
 export function getSettings(state: IGameState): IDifficultySettings {
   return DIFFICULTY_SETTINGS[state.difficulty];
@@ -112,6 +113,55 @@ export function canBrew(state: IGameState): boolean {
     state.activeRecipe !== undefined &&
     state.cauldronIngredients.length > 0
   );
+}
+
+/**
+ * Why a running game has to end, if it has to: no lives, no time, or nothing
+ * left on the shelf and in the cauldron.
+ */
+export function getGameOverReason(state: IGameState): GameOverReason | undefined {
+  if (state.lives <= 0) {
+    return 'lives';
+  }
+
+  if (state.timeLeft <= 0) {
+    return 'time';
+  }
+
+  return isShelfEmpty(state.shelfStock) && state.cauldronIngredients.length === 0
+    ? 'ingredients'
+    : undefined;
+}
+
+/**
+ * Turns a running game into a finished one when one of the end conditions is met.
+ */
+export function endGameIfOver(state: IGameState): IGameState {
+  const reason: GameOverReason | undefined = getGameOverReason(state);
+
+  return reason
+    ? { ...state, status: 'game-over', endTime: undefined, gameOverReason: reason }
+    : state;
+}
+
+/**
+ * Follows the clock: updates the time left once per shown second and ends the
+ * game at 00:00. Returns the same state between two seconds, so nothing redraws.
+ */
+export function tick(state: IGameState, now: number = Date.now()): IGameState {
+  if (state.status !== 'playing' || state.endTime === undefined) {
+    return state;
+  }
+
+  const timeLeft: number = getRemainingTime(state.endTime, now);
+
+  if (timeLeft === 0) {
+    return endGameIfOver({ ...state, timeLeft });
+  }
+
+  return toDisplaySeconds(timeLeft) === toDisplaySeconds(state.timeLeft)
+    ? state
+    : { ...state, timeLeft };
 }
 
 /**
