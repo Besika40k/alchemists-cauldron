@@ -37,7 +37,8 @@ Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-schoo
 
 1. Press **Start Game**. The shelf fills with the first 6 ingredients of the catalogue, and
    each one gets a random stock from 2 to 15 (the number in the circle). The recipe panel
-   shows a random recipe, and you have 3 lives.
+   shows a random recipe, you have 3 lives, and the clock starts at 02:30. The time bar
+   shrinks with it, and under 15 seconds the timer turns red and pulses.
 2. Click an ingredient, or reach it with <kbd>Tab</kbd> and press <kbd>Enter</kbd> or
    <kbd>Space</kbd>, to put one portion into the cauldron. Its stock drops by 1. The card
    shows the ingredient's Temperature (T), Density (D) and Magic Power (MP).
@@ -51,17 +52,25 @@ Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-schoo
    recipe range.
 5. Press **Brew** (it needs at least one ingredient). Every cauldron value, the sum of the
    added ingredients, must be inside the recipe range widened by the tolerance of ±8. A
-   good potion gives 200 score and a new recipe; a wrong mixture costs a life. Either way
-   the cauldron empties, and the used ingredients are spent.
+   good potion gives 200 score, 10 extra seconds (never above the start time of 02:30)
+   and a new recipe; a wrong mixture costs a life. Either way the cauldron empties, and
+   the used ingredients are spent.
 6. An ingredient with no stock left becomes an empty, dimmed slot that cannot be used.
+7. The game ends at 00:00, when no lives are left, or when the shelf and the cauldron are
+   both empty (**Out of ingredients**). The Game Over screen shows the reason and the final
+   score; **Play again** starts a new game, and <kbd>Esc</kbd> goes back to the start
+   screen.
+
+The timer is computed from `Date.now()` timestamps, not by counting ticks, so it stays
+right when the browser slows down a background tab.
 
 ## Implemented so far
 
 - [x] Precondition: repository, tooling, structure and deployment
 - [x] US 1.1 Ingredient shelf and cauldron
 - [x] US 1.2 Cauldron parameter bars
-- [x] US 1.3 Recipe and brewing check (its time bonus arrives with the timer of US 1.4)
-- [ ] US 1.4 Timer and game over
+- [x] US 1.3 Recipe and brewing check
+- [x] US 1.4 Timer and game over
 - [ ] US 1.5 Pause
 - [ ] US 1.6 Leaderboard
 
