@@ -54,6 +54,13 @@
   grid-area: actions;
 }
 
+/* while paused the field is blurred, so the player cannot plan the next moves */
+.game--paused :is(.shelf, .cauldron, .recipe, .bars) {
+  filter: blur(8px);
+  pointer-events: none;
+  user-select: none;
+}
+
 @media (width >= 768px) {
   .game {
     grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
