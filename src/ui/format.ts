@@ -1,3 +1,4 @@
+import { toDisplaySeconds } from '../logic/timer';
 import type { IRecipeRange } from '../types/game';
 
 // U+2212, wider than a hyphen and read as "minus" by screen readers
@@ -22,4 +23,17 @@ export function formatSignedNumber(value: number): string {
  */
 export function formatRange(range: IRecipeRange): string {
   return `${formatNumber(range.min)}..${formatNumber(range.max)}`;
+}
+
+const SECONDS_IN_MINUTE: number = 60;
+
+/**
+ * The countdown label MM:SS; 150 000 ms reads as 02:30.
+ */
+export function formatTime(milliseconds: number): string {
+  const totalSeconds: number = toDisplaySeconds(Math.max(milliseconds, 0));
+  const minutes: string = String(Math.floor(totalSeconds / SECONDS_IN_MINUTE)).padStart(2, '0');
+  const seconds: string = String(totalSeconds % SECONDS_IN_MINUTE).padStart(2, '0');
+
+  return `${minutes}:${seconds}`;
 }
