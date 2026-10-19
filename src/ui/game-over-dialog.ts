@@ -1,4 +1,5 @@
 import type { GameOverReason, IGameState } from '../types/game';
+import { setDialogOpen } from './dialog';
 import { createElement } from './dom';
 
 export interface IGameOverHandlers {
@@ -73,19 +74,11 @@ export class GameOverDialog {
   render(state: IGameState): void {
     this.#isGameOver = state.status === 'game-over';
 
-    if (!this.#isGameOver) {
-      if (this.element.open) {
-        this.element.close();
-      }
-
-      return;
+    if (this.#isGameOver) {
+      this.#reason.textContent = state.gameOverReason ? REASON_TEXTS[state.gameOverReason] : '';
+      this.#score.textContent = String(state.score);
     }
 
-    this.#reason.textContent = state.gameOverReason ? REASON_TEXTS[state.gameOverReason] : '';
-    this.#score.textContent = String(state.score);
-
-    if (!this.element.open) {
-      this.element.showModal();
-    }
+    setDialogOpen(this.element, this.#isGameOver);
   }
 }
