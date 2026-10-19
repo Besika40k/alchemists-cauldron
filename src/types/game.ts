@@ -2,6 +2,8 @@ export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export type GameStatus = 'menu' | 'playing' | 'paused' | 'game-over';
 
+export type GameOverReason = 'time' | 'lives' | 'ingredients';
+
 export type IngredientId =
   | 'dragon-tears'
   | 'fairy-dust'
@@ -72,6 +74,16 @@ export interface IGameState {
   readonly difficulty: Difficulty;
   readonly score: number;
   readonly lives: number;
+  /**
+   * Milliseconds left. While the game runs, `endTime` is the source of truth and
+   * this value follows it once per second.
+   */
+  readonly timeLeft: number;
+  /**
+   * The `Date.now()` timestamp when the time runs out; set only while playing.
+   */
+  readonly endTime: number | undefined;
+  readonly gameOverReason: GameOverReason | undefined;
   readonly activeRecipe: IRecipe | undefined;
   readonly shelfStock: ShelfStock;
   readonly cauldronIngredients: readonly IIngredient[];
@@ -82,3 +94,8 @@ export interface IGameState {
  * Returns a number from 0 (inclusive) to 1 (exclusive), like Math.random.
  */
 export type RandomSource = () => number;
+
+/**
+ * Returns the current time in milliseconds, like Date.now.
+ */
+export type Clock = () => number;
