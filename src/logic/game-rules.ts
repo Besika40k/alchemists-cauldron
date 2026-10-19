@@ -14,6 +14,7 @@ import { isBrewSuccessful } from './brew-check';
 import { calculateCauldron } from './calculate-cauldron';
 import { pickRecipe } from './recipe-generator';
 import { createStock, getStock, takeFromStock } from './stock';
+import { secondsToMilliseconds } from './timer';
 
 export function getSettings(state: IGameState): IDifficultySettings {
   return DIFFICULTY_SETTINGS[state.difficulty];
@@ -27,7 +28,8 @@ export function getShelfIngredients(difficulty: Difficulty): readonly IIngredien
 }
 
 /**
- * The start screen: an empty shelf and cauldron, score 0, no lives and no recipe yet.
+ * The start screen: an empty shelf and cauldron, score and time 0, no lives and no
+ * recipe yet.
  */
 export function createMenuState(difficulty: Difficulty = DEFAULT_DIFFICULTY): IGameState {
   return {
@@ -35,6 +37,9 @@ export function createMenuState(difficulty: Difficulty = DEFAULT_DIFFICULTY): IG
     difficulty,
     score: 0,
     lives: 0,
+    timeLeft: 0,
+    endTime: undefined,
+    gameOverReason: undefined,
     activeRecipe: undefined,
     shelfStock: {},
     cauldronIngredients: [],
@@ -43,17 +48,24 @@ export function createMenuState(difficulty: Difficulty = DEFAULT_DIFFICULTY): IG
 }
 
 /**
- * A new run: a fresh random stock, the lives of the difficulty and a random recipe.
+ * A new run: a fresh random stock, the lives and time of the difficulty and a
+ * random recipe. The countdown starts at `now`.
  */
 export function startGame(
   difficulty: Difficulty = DEFAULT_DIFFICULTY,
   random: RandomSource = Math.random,
+  now: number = Date.now(),
 ): IGameState {
+  const timeLeft: number = secondsToMilliseconds(DIFFICULTY_SETTINGS[difficulty].startTimeSeconds);
+
   return {
     status: 'playing',
     difficulty,
     score: 0,
     lives: DIFFICULTY_SETTINGS[difficulty].lives,
+    timeLeft,
+    endTime: now + timeLeft,
+    gameOverReason: undefined,
     activeRecipe: pickRecipe(difficulty, random),
     shelfStock: createStock(getShelfIngredients(difficulty), random),
     cauldronIngredients: [],
