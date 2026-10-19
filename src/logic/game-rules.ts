@@ -15,7 +15,7 @@ import { isBrewSuccessful } from './brew-check';
 import { calculateCauldron } from './calculate-cauldron';
 import { pickRecipe } from './recipe-generator';
 import { createStock, getStock, isShelfEmpty, takeFromStock } from './stock';
-import { getRemainingTime, secondsToMilliseconds, toDisplaySeconds } from './timer';
+import { addTimeBonus, getRemainingTime, secondsToMilliseconds, toDisplaySeconds } from './timer';
 
 export function getSettings(state: IGameState): IDifficultySettings {
   return DIFFICULTY_SETTINGS[state.difficulty];
@@ -166,10 +166,14 @@ export function tick(state: IGameState, now: number = Date.now()): IGameState {
 
 /**
  * Checks the mix against the recipe with the tolerance of the difficulty. A good
- * potion adds score and brings a new recipe; a wrong one costs a life. Both empty
- * the cauldron.
+ * potion adds score and time and brings a new recipe; a wrong one costs a life.
+ * Both empty the cauldron, and either can end the game.
  */
-export function brew(state: IGameState, random: RandomSource = Math.random): IGameState {
+export function brew(
+  state: IGameState,
+  random: RandomSource = Math.random,
+  now: number = Date.now(),
+): IGameState {
   const recipe: IRecipe | undefined = state.activeRecipe;
 
   if (!recipe || !canBrew(state)) {
@@ -177,6 +181,13 @@ export function brew(state: IGameState, random: RandomSource = Math.random): IGa
   }
 
   const settings: IDifficultySettings = getSettings(state);
+  const timeLeft: number =
+    state.endTime === undefined ? state.timeLeft : getRemainingTime(state.endTime, now);
+
+  if (timeLeft === 0) {
+    return endGameIfOver({ ...state, timeLeft });
+  }
+
   const isSuccess: boolean = isBrewSuccessful(
     calculateCauldron(state.cauldronIngredients),
     recipe,
@@ -188,13 +199,22 @@ export function brew(state: IGameState, random: RandomSource = Math.random): IGa
     recipeName: recipe.name,
   };
   const cleared: IGameState = clearCauldron(state);
+  const bonusTime: number = addTimeBonus(
+    timeLeft,
+    settings.timeBonusSeconds,
+    settings.startTimeSeconds,
+  );
 
-  return isSuccess
-    ? {
-        ...cleared,
-        score: state.score + settings.scorePerBrew,
-        activeRecipe: pickRecipe(state.difficulty, random),
-        lastBrew,
-      }
-    : { ...cleared, lives: Math.max(state.lives - 1, 0), lastBrew };
+  return endGameIfOver(
+    isSuccess
+      ? {
+          ...cleared,
+          score: state.score + settings.scorePerBrew,
+          timeLeft: bonusTime,
+          endTime: now + bonusTime,
+          activeRecipe: pickRecipe(state.difficulty, random),
+          lastBrew,
+        }
+      : { ...cleared, lives: Math.max(state.lives - 1, 0), timeLeft, lastBrew },
+  );
 }
