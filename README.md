@@ -56,7 +56,10 @@ Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-schoo
    and a new recipe; a wrong mixture costs a life. Either way the cauldron empties, and
    the used ingredients are spent.
 6. An ingredient with no stock left becomes an empty, dimmed slot that cannot be used.
-7. The game ends at 00:00, when no lives are left, or when the shelf and the cauldron are
+7. **Pause** stops the clock, blurs the play field and opens a dialog: **Resume** (or
+   <kbd>Esc</kbd>) continues the same game, **Exit to Menu** leaves it for the start screen.
+   The game also pauses by itself when the browser tab is hidden.
+8. The game ends at 00:00, when no lives are left, or when the shelf and the cauldron are
    both empty (**Out of ingredients**). The Game Over screen shows the reason and the final
    score; **Play again** starts a new game, and <kbd>Esc</kbd> goes back to the start
    screen.
@@ -71,7 +74,7 @@ right when the browser slows down a background tab.
 - [x] US 1.2 Cauldron parameter bars
 - [x] US 1.3 Recipe and brewing check
 - [x] US 1.4 Timer and game over
-- [ ] US 1.5 Pause
+- [x] US 1.5 Pause
 - [ ] US 1.6 Leaderboard
 
 ## Deployment
