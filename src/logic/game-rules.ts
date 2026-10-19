@@ -165,6 +165,31 @@ export function tick(state: IGameState, now: number = Date.now()): IGameState {
 }
 
 /**
+ * Stops the countdown: the time left is frozen and the game ignores every action
+ * until it resumes.
+ */
+export function pauseGame(state: IGameState, now: number = Date.now()): IGameState {
+  if (state.status !== 'playing' || state.endTime === undefined) {
+    return state;
+  }
+
+  const timeLeft: number = getRemainingTime(state.endTime, now);
+
+  return timeLeft === 0
+    ? endGameIfOver({ ...state, timeLeft })
+    : { ...state, status: 'paused', timeLeft, endTime: undefined };
+}
+
+/**
+ * Continues the same game: the countdown restarts from the frozen time left.
+ */
+export function resumeGame(state: IGameState, now: number = Date.now()): IGameState {
+  return state.status === 'paused'
+    ? { ...state, status: 'playing', endTime: now + state.timeLeft }
+    : state;
+}
+
+/**
  * Checks the mix against the recipe with the tolerance of the difficulty. A good
  * potion adds score and time and brings a new recipe; a wrong one costs a life.
  * Both empty the cauldron, and either can end the game.
