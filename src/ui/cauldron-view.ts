@@ -16,6 +16,7 @@ function describeBrew(brewResult: IBrewResult, scorePerBrew: number): string {
 export class CauldronView {
   readonly #contents: HTMLOListElement;
   readonly #message: HTMLParagraphElement;
+  #shownIngredients: readonly IIngredient[] | undefined;
   readonly element: HTMLElement;
 
   constructor() {
@@ -52,6 +53,13 @@ export class CauldronView {
       : '';
     this.#message.classList.toggle('cauldron__message--success', brewResult?.isSuccess === true);
     this.#message.classList.toggle('cauldron__message--failure', brewResult?.isSuccess === false);
+
+    // the timer redraws the screen every second; the contents change only with ingredients
+    if (state.cauldronIngredients === this.#shownIngredients) {
+      return;
+    }
+
+    this.#shownIngredients = state.cauldronIngredients;
 
     const capacity: number = getSettings(state).maxCauldronIngredients;
     const freeSlots: number = Math.max(capacity - state.cauldronIngredients.length, 0);
