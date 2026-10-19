@@ -39,3 +39,10 @@ export function getStock(stock: ShelfStock, id: IngredientId): number {
 export function takeFromStock(stock: ShelfStock, id: IngredientId): ShelfStock {
   return { ...stock, [id]: Math.max(getStock(stock, id) - 1, 0) };
 }
+
+/**
+ * True when no ingredient on the shelf has a portion left.
+ */
+export function isShelfEmpty(stock: ShelfStock): boolean {
+  return Object.values(stock).every((portions: number): boolean => portions === 0);
+}
