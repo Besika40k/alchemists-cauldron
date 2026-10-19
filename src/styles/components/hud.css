@@ -1,8 +1,33 @@
+/* phones: score and lives side by side, the time in a full row under them */
 .hud {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas:
+    'score lives'
+    'time time';
   gap: var(--space-2);
+}
+
+.hud__item--score {
+  grid-area: score;
+}
+
+.hud__item--time {
+  grid-area: time;
+  justify-content: center;
+}
+
+.hud__item--lives {
+  grid-area: lives;
+  justify-content: flex-end;
+}
+
+@media (width >= 560px) {
+  .hud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
 }
 
 .hud__item {
