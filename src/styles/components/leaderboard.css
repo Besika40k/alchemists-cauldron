@@ -1,4 +1,53 @@
-/* the Top-10 table */
+/* the name form on Game Over and the Top-10 table */
+.name-form {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  text-align: left;
+}
+
+.name-form__label {
+  font-weight: 600;
+}
+
+.name-form__input {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width) solid var(--color-panel-border);
+  border-radius: var(--radius-medium);
+  background-color: var(--color-panel-dark);
+  color: var(--color-text);
+  font: inherit;
+
+  &[aria-invalid='true'] {
+    border-color: var(--color-danger);
+  }
+}
+
+.name-form__hint {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}
+
+.name-form__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-small);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.game-over__saved {
+  margin-top: var(--space-3);
+  color: var(--color-accent);
+  font-weight: 600;
+
+  &:empty {
+    display: none;
+  }
+}
+
 .leaderboard {
   width: min(100% - 2 * var(--space-4), 640px);
 }

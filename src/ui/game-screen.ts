@@ -21,6 +21,8 @@ export interface IGameScreenHandlers {
   readonly onResume: () => void;
   readonly getLeaderboard: () => readonly ILeaderboardEntry[];
   readonly clearLeaderboard: () => void;
+  readonly canEnterLeaderboard: () => boolean;
+  readonly onSaveScore: (name: string) => number;
 }
 
 /**
@@ -57,6 +59,11 @@ export class GameScreen {
         this.#shelf.focusFirstCard();
       },
       onDismiss: handlers.onShowMenu,
+      onShowLeaderboard: (): void => {
+        this.#leaderboard.open();
+      },
+      canEnterLeaderboard: handlers.canEnterLeaderboard,
+      onSaveScore: handlers.onSaveScore,
     });
     this.#actions = new ActionsView({
       onStart: (): void => {
