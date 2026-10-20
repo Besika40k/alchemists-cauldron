@@ -50,3 +50,13 @@
   font-weight: 700;
   letter-spacing: 0.06em;
 }
+
+/* for actions that delete something, like Clear Leaderboard */
+.button--danger {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+
+  &:hover:not(:disabled) {
+    background-color: rgb(255 90 90 / 15%);
+  }
+}
