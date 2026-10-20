@@ -29,16 +29,16 @@ export function getShelfIngredients(difficulty: Difficulty): readonly IIngredien
 }
 
 /**
- * The start screen: an empty shelf and cauldron, score and time 0, no lives and no
- * recipe yet.
+ * The start screen: an empty shelf and cauldron, score 0 and no recipe yet. The
+ * time and the lives show what the next game starts with.
  */
 export function createMenuState(difficulty: Difficulty = DEFAULT_DIFFICULTY): IGameState {
   return {
     status: 'menu',
     difficulty,
     score: 0,
-    lives: 0,
-    timeLeft: 0,
+    lives: DIFFICULTY_SETTINGS[difficulty].lives,
+    timeLeft: secondsToMilliseconds(DIFFICULTY_SETTINGS[difficulty].startTimeSeconds),
     endTime: undefined,
     gameOverReason: undefined,
     activeRecipe: undefined,
