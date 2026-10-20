@@ -1,10 +1,12 @@
-import type { IGameState } from '../types/game';
+import type { IGameState, ILeaderboardEntry } from '../types/game';
 import { ActionsView } from './actions-view';
 import { BarsView } from './bars-view';
 import { CauldronView } from './cauldron-view';
+import { ConfirmDialog } from './confirm-dialog';
 import { createElement } from './dom';
 import { GameOverDialog } from './game-over-dialog';
 import { HudView } from './hud-view';
+import { LeaderboardDialog } from './leaderboard-dialog';
 import { PauseDialog } from './pause-dialog';
 import { RecipeView } from './recipe-view';
 import { type IngredientHandler, ShelfView } from './shelf-view';
@@ -17,6 +19,8 @@ export interface IGameScreenHandlers {
   readonly onShowMenu: () => void;
   readonly onPause: () => void;
   readonly onResume: () => void;
+  readonly getLeaderboard: () => readonly ILeaderboardEntry[];
+  readonly clearLeaderboard: () => void;
 }
 
 /**
@@ -30,6 +34,8 @@ export class GameScreen {
   readonly #bars: BarsView;
   readonly #gameOver: GameOverDialog;
   readonly #pause: PauseDialog;
+  readonly #confirm: ConfirmDialog;
+  readonly #leaderboard: LeaderboardDialog;
   readonly #root: HTMLElement;
   readonly #actions: ActionsView;
 
@@ -40,6 +46,11 @@ export class GameScreen {
     this.#cauldron = new CauldronView();
     this.#recipe = new RecipeView();
     this.#bars = new BarsView();
+    this.#confirm = new ConfirmDialog();
+    this.#leaderboard = new LeaderboardDialog(
+      { getEntries: handlers.getLeaderboard, clear: handlers.clearLeaderboard },
+      this.#confirm,
+    );
     this.#gameOver = new GameOverDialog({
       onPlayAgain: (): void => {
         handlers.onPlayAgain();
@@ -59,6 +70,9 @@ export class GameScreen {
         this.#shelf.focusFirstCard();
       },
       onPause: handlers.onPause,
+      onShowLeaderboard: (): void => {
+        this.#leaderboard.open();
+      },
     });
     this.#pause = new PauseDialog({
       onResume: handlers.onResume,
@@ -80,6 +94,8 @@ export class GameScreen {
       this.#actions.element,
       this.#gameOver.element,
       this.#pause.element,
+      this.#leaderboard.element,
+      this.#confirm.element,
     );
   }
 
