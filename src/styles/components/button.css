@@ -1,62 +1,65 @@
+/* inked buttons with an offset shadow that presses down on a click */
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
   min-height: 44px;
-  padding: 10px 20px;
-  border: var(--border-width) solid var(--color-panel-border);
+  padding: 8px 20px;
+  border: var(--border-ink);
   border-radius: var(--radius-medium);
-  background-color: var(--color-panel);
-  font-weight: 600;
+  background-color: var(--color-paper);
+  box-shadow: var(--shadow-ink);
+  color: var(--color-ink);
+  font-family: var(--font-heading);
+  font-size: 1.0625rem;
+  font-weight: 700;
   cursor: pointer;
   transition:
     background-color var(--duration-fast),
     box-shadow var(--duration-fast),
-    transform var(--duration-fast);
+    translate var(--duration-fast);
 
   &:hover:not(:disabled) {
-    background-color: var(--color-panel-border);
+    background-color: var(--color-paper-dark);
+    box-shadow: 4px 4px 0 var(--color-ink);
+    translate: -1px -1px;
   }
 
   &:active:not(:disabled) {
-    transform: translateY(1px);
+    box-shadow: 1px 1px 0 var(--color-ink);
+    translate: 2px 2px;
   }
 
   &:disabled {
     box-shadow: none;
-    filter: grayscale(1);
-    opacity: 0.45;
+    filter: grayscale(0.6);
+    opacity: 0.5;
     cursor: not-allowed;
   }
 }
 
 .button--primary {
-  border-color: transparent;
-  background: linear-gradient(180deg, var(--color-accent), var(--color-accent-strong));
-  box-shadow: var(--glow-accent);
-  color: var(--color-on-accent);
+  background-color: var(--color-mustard);
 
   &:hover:not(:disabled) {
-    background: linear-gradient(180deg, var(--color-accent), var(--color-accent));
+    background-color: var(--color-mustard-light);
   }
 }
 
 .button--large {
   min-height: 56px;
   padding-inline: 40px;
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
 }
 
 /* for actions that delete something, like Clear Leaderboard */
 .button--danger {
-  border-color: var(--color-danger);
   color: var(--color-danger);
 
   &:hover:not(:disabled) {
-    background-color: rgb(255 90 90 / 15%);
+    background-color: #efd2c2;
   }
 }
