@@ -6,17 +6,20 @@
 
 html {
   min-width: 320px;
-  background-color: var(--color-background);
+  background-color: var(--color-stone);
 }
 
+/* a stone floor deep in a dungeon, lit by a torch above and a campfire below */
 body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(ellipse at 50% 0%, var(--color-background-glow), transparent 60%),
-    radial-gradient(ellipse at 50% 100%, rgb(95 191 63 / 12%), transparent 55%),
-    var(--color-background);
-  color: var(--color-text);
+    radial-gradient(ellipse at 50% -10%, rgb(232 161 74 / 28%), transparent 55%),
+    radial-gradient(ellipse at 50% 110%, rgb(232 161 74 / 16%), transparent 50%),
+    repeating-linear-gradient(0deg, transparent 0 46px, rgb(0 0 0 / 22%) 46px 48px),
+    repeating-linear-gradient(90deg, transparent 0 94px, rgb(0 0 0 / 16%) 94px 96px),
+    var(--color-stone);
+  color: var(--color-paper);
   font-family: var(--font-body);
   font-size: var(--font-size-body);
   line-height: 1.4;
@@ -43,8 +46,8 @@ button {
 }
 
 :focus-visible {
-  outline: var(--focus-ring-width) solid var(--color-accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 3px;
 }
 
 [hidden] {

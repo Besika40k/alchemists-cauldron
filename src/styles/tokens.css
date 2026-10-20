@@ -1,23 +1,33 @@
 :root {
   color-scheme: dark;
 
-  /* colors */
-  --color-background: #0d0b12;
-  --color-background-glow: #1f1730;
-  --color-panel: #1b1724;
-  --color-panel-dark: #13101a;
-  --color-panel-border: #3a3146;
-  --color-text: #ece6d6;
-  --color-text-muted: #a49cb2;
-  --color-gold: #d9b56a;
-  --color-accent: #8fe36b;
-  --color-accent-strong: #5fbf3f;
-  --color-accent-dark: #1f3a17;
-  --color-on-accent: #0f1a0b;
-  --color-temperature: #ff8a5c;
-  --color-density: #6cb6ff;
-  --color-magic-power: #c792ff;
-  --color-danger: #ff5a5a;
+  /* palette: torch-lit stone, cookbook paper, warm ink and earthy food colors */
+  --color-stone: #2b2420;
+  --color-stone-light: #3a2f28;
+  --color-torch: #e8a14a;
+  --color-paper: #f3e7cf;
+  --color-paper-dark: #e6d4b0;
+  --color-paper-edge: #c9b28a;
+  --color-card: #faf3e3;
+  --color-ink: #2a211b;
+  --color-ink-soft: #5b4a3c;
+  --color-brick: #b5523b;
+  --color-teal: #4f7f8a;
+  --color-plum: #7a5a8c;
+  --color-moss: #7d8a3c;
+  --color-leaf: #5f8a2e;
+  --color-mustard: #d4a537;
+  --color-mustard-light: #e2b955;
+
+  /* text on paper: every one reaches 4.5:1 */
+  --color-text: var(--color-ink);
+  --color-text-muted: var(--color-ink-soft);
+  --color-temperature: #9a3f2a;
+  --color-density: #386069;
+  --color-magic-power: #6a4c7c;
+  --color-success: #4a7023;
+  --color-danger: #9a3f2a;
+  --color-focus: #c4572f;
 
   /* typography */
   --font-display: 'Cinzel', 'Times New Roman', serif;
@@ -35,17 +45,40 @@
   --space-5: 24px;
   --space-6: 32px;
 
-  /* shapes */
-  --radius-small: 6px;
-  --radius-medium: 10px;
-  --radius-large: 16px;
+  /* shapes: uneven corners look drawn by hand */
+  --radius-small: 5px 7px 4px 6px;
+  --radius-medium: 9px 12px 8px 11px;
+  --radius-large: 8px 13px 9px 12px;
   --radius-round: 999px;
-  --border-width: 1px;
+  --border-width: 2px;
+  --border-ink: 2.5px solid var(--color-ink);
   --focus-ring-width: 3px;
 
   /* effects */
-  --shadow-panel: 0 12px 32px rgb(0 0 0 / 45%);
-  --glow-accent: 0 0 18px rgb(143 227 107 / 45%);
+  --shadow-ink: 3px 3px 0 var(--color-ink);
+  --shadow-panel: 4px 5px 0 rgb(0 0 0 / 35%);
+  --glow-success: 0 0 0 3px var(--color-leaf), 0 0 16px 4px rgb(95 138 46 / 60%);
   --duration-fast: 150ms;
   --duration-medium: 300ms;
+
+  /* procedural paper grain: SVG noise, no image file */
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' seed='8'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.25 0 0 0 0 0.12 0 0 0 0.32 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+
+  /* manga screentone: halftone dots */
+  --screentone: radial-gradient(var(--color-ink) 22%, transparent 24%) 0 0 / 6px 6px;
+
+  /* the previous theme, until every part uses the cookbook palette */
+  --color-background: #0d0b12;
+  --color-background-glow: #1f1730;
+  --color-panel: #1b1724;
+  --color-panel-dark: #13101a;
+  --color-panel-border: #3a3146;
+  --color-gold: #d9b56a;
+  --color-accent: #8fe36b;
+  --color-accent-strong: #5fbf3f;
+  --color-accent-dark: #1f3a17;
+  --color-on-accent: #0f1a0b;
+  --glow-accent: 0 0 18px rgb(143 227 107 / 45%);
+  --color-text: #ece6d6;
+  --color-text-muted: #a49cb2;
 }
