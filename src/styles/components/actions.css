@@ -8,7 +8,7 @@
   justify-content: center;
   gap: var(--space-3);
   padding-block: var(--space-3);
-  background: linear-gradient(transparent, var(--color-background) 35%);
+  background: linear-gradient(transparent, var(--color-stone) 35%);
 }
 
 @media (width >= 1024px) {
