@@ -181,53 +181,119 @@ export function createIngredientIcon(id: IngredientId, className: string): SVGSV
   );
 }
 
+const INK: string = '#2a211b';
+
+/**
+ * A stick, a log or a rope: a wide ink line under a narrower colored one, which
+ * gives it an outline.
+ */
+function createInkedLine(d: string, color: string, width: number): readonly IShape[] {
+  const line: Readonly<Record<string, string>> = { d, fill: 'none', 'stroke-linecap': 'round' };
+
+  return [
+    { tag: 'path', attributes: { ...line, stroke: INK, 'stroke-width': String(width + 5) } },
+    { tag: 'path', attributes: { ...line, stroke: color, 'stroke-width': String(width) } },
+  ];
+}
+
+/**
+ * A shape with the warm ink outline of the cookbook drawings.
+ */
+function createInkedShape(
+  tag: IShape['tag'],
+  attributes: Readonly<Record<string, string>>,
+): IShape {
+  return {
+    tag,
+    attributes: { stroke: INK, 'stroke-width': '3', 'stroke-linejoin': 'round', ...attributes },
+  };
+}
+
+const FLAME_OUTER: string =
+  'M120 212c-24 0-34-14-30-30 3 8 8 11 12 11-3-14 3-28 14-38 0 12 6 18 10 22 2-8 6-14 12-18-2 12 4 20 8 28 4 14-4 25-26 25Z';
+const FLAME_INNER: string =
+  'M120 210c-12 0-18-8-15-18 3 4 6 5 8 5-1-8 2-14 7-19 1 7 4 10 7 13 3-4 5-6 8-8 0 8 2 12 2 16 0 7-7 11-17 11Z';
+const STEAM_PATHS: readonly string[] = [
+  'M84 62c-7-6-7-12 0-17s7-12 0-17',
+  'M150 58c-7-6-7-12 0-17s7-12 0-17',
+  'M174 64c-6-5-6-10 0-14s6-10 0-14',
+];
+
+/**
+ * A camp pot hanging from a tripod over a small fire, drawn back to front.
+ */
 const CAULDRON_SHAPES: readonly IShape[] = [
+  ...createInkedLine('M120 10L30 214', '#8a5a34', 7),
+  ...createInkedLine('M120 10L210 214', '#8a5a34', 7),
+  createInkedShape('path', { class: 'cauldron-art__flame', d: FLAME_OUTER }),
+  createInkedShape('path', {
+    class: 'cauldron-art__flame cauldron-art__flame--inner',
+    d: FLAME_INNER,
+    'stroke-width': '2',
+  }),
+  ...createInkedLine('M74 204l92 10', '#7a4f2e', 11),
+  ...createInkedLine('M166 204l-92 10', '#6a4428', 11),
+  ...createInkedLine('M120 14v30', '#a0703f', 2.5),
   {
     tag: 'path',
-    attributes: { d: 'M58 150l-12 24m136-24l12 24', stroke: '#2b2733', 'stroke-width': '10' },
+    attributes: { d: 'M44 82C44 30 196 30 196 82', fill: 'none', stroke: INK, 'stroke-width': '4' },
   },
-  {
-    tag: 'path',
-    attributes: { d: 'M28 62c0 64 40 100 92 100s92-36 92-100Z', fill: '#2b2733' },
-  },
+  createInkedShape('path', { d: 'M36 80c0 58 34 92 84 92s84-34 84-92Z', fill: '#3b3330' }),
   {
     tag: 'path',
     attributes: {
-      d: 'M48 78c4 34 22 56 46 64',
+      d: 'M54 96c4 28 18 48 38 56',
       fill: 'none',
-      stroke: '#4a4357',
+      stroke: '#5e514a',
       'stroke-width': '6',
       'stroke-linecap': 'round',
     },
   },
-  {
-    tag: 'ellipse',
-    attributes: { class: 'cauldron-art__liquid', cx: '120', cy: '58', rx: '90', ry: '15' },
-  },
-  {
-    tag: 'ellipse',
-    attributes: {
-      cx: '120',
-      cy: '58',
-      rx: '98',
-      ry: '20',
-      fill: 'none',
-      stroke: '#3b3446',
-      'stroke-width': '9',
-    },
-  },
-  { tag: 'circle', attributes: { class: 'cauldron-art__bubble', cx: '92', cy: '52', r: '6' } },
-  { tag: 'circle', attributes: { class: 'cauldron-art__bubble', cx: '140', cy: '56', r: '4' } },
-  { tag: 'circle', attributes: { class: 'cauldron-art__bubble', cx: '118', cy: '46', r: '3' } },
+  createInkedShape('circle', { cx: '42', cy: '84', r: '6', fill: '#3b3330' }),
+  createInkedShape('circle', { cx: '198', cy: '84', r: '6', fill: '#3b3330' }),
+  createInkedShape('ellipse', { cx: '120', cy: '80', rx: '88', ry: '17', fill: '#4a403b' }),
+  createInkedShape('ellipse', {
+    class: 'cauldron-art__liquid',
+    cx: '120',
+    cy: '78',
+    rx: '76',
+    ry: '11',
+    'stroke-width': '2',
+  }),
+  createInkedShape('circle', {
+    class: 'cauldron-art__bubble',
+    cx: '96',
+    cy: '76',
+    r: '5',
+    'stroke-width': '1.5',
+  }),
+  createInkedShape('circle', {
+    class: 'cauldron-art__bubble',
+    cx: '140',
+    cy: '79',
+    r: '3.5',
+    'stroke-width': '1.5',
+  }),
+  createInkedShape('circle', {
+    class: 'cauldron-art__bubble',
+    cx: '118',
+    cy: '72',
+    r: '3',
+    'stroke-width': '1.5',
+  }),
+  ...STEAM_PATHS.map((d: string): IShape => ({
+    tag: 'path',
+    attributes: { class: 'cauldron-art__steam', d },
+  })),
 ];
 
 /**
- * The cauldron drawing; the liquid and bubble colors come from CSS.
+ * The cauldron drawing; the stew, bubble, flame and steam colors come from CSS.
  */
 export function createCauldronArt(): SVGSVGElement {
   return createSvgElement(
     'svg',
-    { class: 'cauldron-art', viewBox: '0 0 240 180', 'aria-hidden': 'true', focusable: 'false' },
+    { class: 'cauldron-art', viewBox: '0 0 240 224', 'aria-hidden': 'true', focusable: 'false' },
     CAULDRON_SHAPES.map((shape: IShape): SVGElement => createShape(shape)),
   );
 }
