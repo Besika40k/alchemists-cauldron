@@ -69,17 +69,4 @@
 
   /* manga screentone: halftone dots */
   --screentone: radial-gradient(var(--color-ink) 22%, transparent 24%) 0 0 / 6px 6px;
-
-  /* the previous theme, until every part uses the cookbook palette */
-  --color-background: #0d0b12;
-  --color-background-glow: #1f1730;
-  --color-panel: #1b1724;
-  --color-panel-dark: #13101a;
-  --color-panel-border: #3a3146;
-  --color-gold: #d9b56a;
-  --color-accent: #8fe36b;
-  --color-accent-strong: #5fbf3f;
-  --color-accent-dark: #1f3a17;
-  --color-on-accent: #0f1a0b;
-  --glow-accent: 0 0 18px rgb(143 227 107 / 45%);
 }
