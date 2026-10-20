@@ -1,6 +1,8 @@
 .shelf__placeholder {
   padding-block: var(--space-5);
   color: var(--color-text-muted);
+  font-family: var(--font-note);
+  font-size: var(--font-size-large);
   text-align: center;
 }
 
@@ -8,7 +10,7 @@
 .shelf__list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 @media (width >= 768px) {
@@ -32,24 +34,28 @@
   gap: var(--space-1);
   width: 100%;
   height: 100%;
-  padding: var(--space-3) var(--space-2);
-  border: var(--border-width) solid var(--color-panel-border);
+  padding: var(--space-3) 6px;
+  border: var(--border-width) solid var(--color-ink);
   border-radius: var(--radius-medium);
-  background: linear-gradient(180deg, var(--color-panel), var(--color-panel-dark));
+  background-color: var(--color-card);
+  box-shadow: 2px 3px 0 rgb(42 33 27 / 35%);
+  color: var(--color-ink);
   text-align: center;
   cursor: pointer;
   transition:
-    border-color var(--duration-fast),
+    background-color var(--duration-fast),
     box-shadow var(--duration-fast),
     opacity var(--duration-fast),
     transform var(--duration-fast);
 
   &:hover:not(:disabled, [aria-disabled='true']) {
-    border-color: var(--color-accent);
-    box-shadow: var(--glow-accent);
+    background-color: #fff8e8;
+    box-shadow: 4px 5px 0 rgb(42 33 27 / 45%);
+    transform: translate(-1px, -2px);
   }
 
   &:active:not(:disabled, [aria-disabled='true']) {
+    box-shadow: 1px 1px 0 rgb(42 33 27 / 45%);
     transform: scale(0.98);
   }
 
@@ -70,8 +76,8 @@
   }
 
   & .ingredient-card__stock {
-    border-color: var(--color-text-muted);
-    color: var(--color-text-muted);
+    background-color: var(--color-paper-dark);
+    color: var(--color-ink-soft);
   }
 }
 
@@ -79,13 +85,14 @@
   grid-area: icon;
   width: 48px;
   height: 48px;
-  filter: drop-shadow(0 2px 6px rgb(0 0 0 / 50%));
 }
 
 .ingredient-card__name {
   grid-area: name;
-  font-weight: 600;
-  line-height: 1.2;
+  font-family: var(--font-heading);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.15;
 }
 
 .ingredient-card__stats {
@@ -96,21 +103,25 @@
   gap: 3px;
 }
 
+/* the stock is a little price sticker on the card */
 .ingredient-card__stock {
   position: absolute;
-  top: var(--space-2);
-  right: var(--space-2);
+  top: 6px;
+  right: 6px;
   display: grid;
   place-items: center;
-  min-width: 28px;
-  height: 28px;
-  padding-inline: 6px;
-  border: 2px solid var(--color-accent);
+  min-width: 30px;
+  height: 30px;
+  padding-inline: 5px;
+  border: var(--border-width) solid var(--color-ink);
   border-radius: var(--radius-round);
-  background-color: var(--color-panel-dark);
-  color: var(--color-accent);
-  font-size: var(--font-size-small);
+  background-color: var(--color-mustard);
+  color: var(--color-ink);
+  font-family: var(--font-number);
+  font-size: 0.9375rem;
   font-weight: 700;
+  line-height: 1;
+  rotate: -8deg;
 }
 
 /* a wide card puts the icon on the left and the stock badge on the right */
@@ -138,14 +149,16 @@
   }
 }
 
-/* the outline is a shadow, so it takes no room and three chips fit on a phone card */
+/* hand-drawn tags; the outline is a shadow, so it takes no room and three tags fit on a phone card */
 .stat {
-  padding: 1px 3px;
+  padding: 0 3px;
   border-radius: var(--radius-small);
-  box-shadow: inset 0 0 0 var(--border-width) currentcolor;
-  background-color: rgb(0 0 0 / 25%);
+  box-shadow: inset 0 0 0 1.5px currentcolor;
+  background-color: rgb(255 255 255 / 45%);
+  font-family: var(--font-number);
   font-size: var(--font-size-small);
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1.5;
   white-space: nowrap;
 }
 
