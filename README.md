@@ -63,6 +63,14 @@ Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-schoo
    both empty (**Out of ingredients**). The Game Over screen shows the reason and the final
    score; **Play again** starts a new game, and <kbd>Esc</kbd> goes back to the start
    screen.
+9. A score that makes the Top-10 asks for your name on the Game Over screen (2–15
+   characters: letters, digits, space, `_` and `-`). The **Leaderboard**, open from the
+   start screen and from Game Over, lists rank, name, score and date (`DD.MM.YYYY HH:MM`),
+   higher scores first; on equal scores the earlier result stays higher. **Clear
+   Leaderboard** asks first in the game's own dialog.
+
+The Top-10 lives in `localStorage`. Every read goes through `try/catch` and a check of
+each entry, so broken or edited data is dropped instead of crashing the game.
 
 The timer is computed from `Date.now()` timestamps, not by counting ticks, so it stays
 right when the browser slows down a background tab.
@@ -75,7 +83,7 @@ right when the browser slows down a background tab.
 - [x] US 1.3 Recipe and brewing check
 - [x] US 1.4 Timer and game over
 - [x] US 1.5 Pause
-- [ ] US 1.6 Leaderboard
+- [x] US 1.6 Leaderboard
 
 ## Deployment
 
