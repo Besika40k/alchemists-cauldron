@@ -86,3 +86,28 @@
 .leaderboard__table th:nth-child(2) {
   text-align: left;
 }
+
+/* phones: tighter cells, and the date wraps into date and time, so all four columns fit */
+@media (width < 560px) {
+  .leaderboard {
+    padding-inline: var(--space-3);
+  }
+
+  .leaderboard__table {
+    font-size: var(--font-size-small);
+
+    & th,
+    & td {
+      padding: var(--space-2) 6px;
+    }
+  }
+
+  .leaderboard__date {
+    white-space: normal;
+  }
+}
+
+.leaderboard__empty {
+  padding-block: var(--space-4);
+  color: var(--color-text-muted);
+}
