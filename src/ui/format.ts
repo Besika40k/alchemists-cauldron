@@ -37,3 +37,17 @@ export function formatTime(milliseconds: number): string {
 
   return `${minutes}:${seconds}`;
 }
+
+function twoDigits(value: number): string {
+  return String(value).padStart(2, '0');
+}
+
+/**
+ * A result date as DD.MM.YYYY HH:MM in local time.
+ */
+export function formatDate(timestamp: number): string {
+  const date: Date = new Date(timestamp);
+  const day: string = `${twoDigits(date.getDate())}.${twoDigits(date.getMonth() + 1)}.${String(date.getFullYear())}`;
+
+  return `${day} ${twoDigits(date.getHours())}:${twoDigits(date.getMinutes())}`;
+}
