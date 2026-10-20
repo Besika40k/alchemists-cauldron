@@ -7,17 +7,20 @@
 }
 
 .name-form__label {
-  font-weight: 600;
+  font-family: var(--font-note);
+  font-size: var(--font-size-large);
 }
 
 .name-form__input {
   min-height: 44px;
   padding: var(--space-2) var(--space-3);
-  border: var(--border-width) solid var(--color-panel-border);
+  border: var(--border-ink);
   border-radius: var(--radius-medium);
-  background-color: var(--color-panel-dark);
+  background-color: var(--color-card);
   color: var(--color-text);
   font: inherit;
+  font-family: var(--font-number);
+  font-size: 1.125rem;
 
   &[aria-invalid='true'] {
     border-color: var(--color-danger);
@@ -40,8 +43,9 @@
 
 .game-over__saved {
   margin-top: var(--space-3);
-  color: var(--color-accent);
-  font-weight: 600;
+  color: var(--color-success);
+  font-family: var(--font-note);
+  font-size: var(--font-size-large);
 
   &:empty {
     display: none;
@@ -65,14 +69,25 @@
   & th,
   & td {
     padding: var(--space-2) var(--space-3);
-    border-bottom: var(--border-width) solid var(--color-panel-border);
+    border-bottom: var(--border-width) dashed var(--color-paper-edge);
     white-space: nowrap;
   }
 
   & th {
-    color: var(--color-gold);
-    font-family: var(--font-display);
-    font-weight: 600;
+    border-bottom: var(--border-ink);
+    color: var(--color-text-muted);
+    font-family: var(--font-note);
+    font-size: var(--font-size-large);
+    font-weight: 400;
+  }
+
+  & td {
+    font-family: var(--font-number);
+  }
+
+  & .leaderboard__name {
+    font-family: var(--font-heading);
+    font-weight: 700;
   }
 }
 
@@ -110,4 +125,6 @@
 .leaderboard__empty {
   padding-block: var(--space-4);
   color: var(--color-text-muted);
+  font-family: var(--font-note);
+  font-size: var(--font-size-large);
 }
