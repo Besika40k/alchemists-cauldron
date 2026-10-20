@@ -8,8 +8,22 @@ import {
   startGame,
   tick,
 } from '../logic/game-rules';
+import {
+  type ILeaderboardInsert,
+  insertEntry,
+  isLeaderboardScore,
+  isValidPlayerName,
+  normalizePlayerName,
+} from '../logic/leaderboard';
 import type { GameStore } from '../state/game-store';
-import type { Clock, IGameState, IngredientId, RandomSource } from '../types/game';
+import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from '../storage/leaderboard-storage';
+import type {
+  Clock,
+  IGameState,
+  ILeaderboardEntry,
+  IngredientId,
+  RandomSource,
+} from '../types/game';
 
 /**
  * Turns the player's actions into new states through the game rules, and keeps
@@ -73,5 +87,49 @@ export class GameController {
    */
   showMenu(): void {
     this.#store.setState(createMenuState(this.#store.state.difficulty));
+  }
+
+  getLeaderboard(): readonly ILeaderboardEntry[] {
+    return loadLeaderboard();
+  }
+
+  /**
+   * True when the finished game's score makes the Top-10.
+   */
+  canEnterLeaderboard(): boolean {
+    const state: IGameState = this.#store.state;
+
+    return state.status === 'game-over' && isLeaderboardScore(loadLeaderboard(), state.score);
+  }
+
+  /**
+   * Saves the finished game's score under the name. Returns the place, 1 to 10, or
+   * 0 when the name is not valid, the score does not qualify or the storage refused it.
+   */
+  saveScore(name: string): number {
+    if (!isValidPlayerName(name) || !this.canEnterLeaderboard()) {
+      return 0;
+    }
+
+    const entry: ILeaderboardEntry = {
+      name: normalizePlayerName(name),
+      score: this.#store.state.score,
+      date: this.#clock(),
+    };
+    const result: ILeaderboardInsert = insertEntry(loadLeaderboard(), entry);
+
+    saveLeaderboard(result.entries);
+
+    // reading it back tells whether the browser really kept it
+    const isKept: boolean = loadLeaderboard().some(
+      (saved: ILeaderboardEntry): boolean =>
+        saved.date === entry.date && saved.name === entry.name && saved.score === entry.score,
+    );
+
+    return isKept ? result.rank : 0;
+  }
+
+  clearLeaderboard(): void {
+    clearLeaderboard();
   }
 }
