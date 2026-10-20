@@ -35,8 +35,9 @@ Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-schoo
 
 ## How to play
 
-1. Press **Start Game**. The shelf fills with the first 6 ingredients of the catalogue, and
-   each one gets a random stock from 2 to 15 (the number in the circle). The recipe panel
+1. The start screen shows what a game starts with: 02:30 on the clock and 3 lives. Press
+   **Start Game**. The shelf fills with the first 6 ingredients of the catalogue, and each
+   one gets a random stock from 2 to 15 (the number on the round sticker). The recipe panel
    shows a random recipe, you have 3 lives, and the clock starts at 02:30. The time bar
    shrinks with it, and under 15 seconds the timer turns red and pulses.
 2. Click an ingredient, or reach it with <kbd>Tab</kbd> and press <kbd>Enter</kbd> or
@@ -47,9 +48,9 @@ Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-schoo
    ignores new ingredients.
 4. Watch the three bars under the cauldron: **Temperature**, **Density** and **Magic Power**
    start at 0 and move with every ingredient. Temperature and Density can go below 0, so
-   their 0 line is in the middle. The green band on each bar is the recipe range, the faint
-   band around it the tolerance, and a bar glows green while its value is inside the
-   recipe range.
+   their 0 line is in the middle. Each bar is a ruler: the hatched green zone is the recipe
+   range, the lighter hatching around it the tolerance, an arrow marks the current value,
+   and a ruler glows green while its value is inside the recipe range.
 5. Press **Brew** (it needs at least one ingredient). Every cauldron value, the sum of the
    added ingredients, must be inside the recipe range widened by the tolerance of ±8. A
    good potion gives 200 score, 10 extra seconds (never above the start time of 02:30)
@@ -75,15 +76,46 @@ each entry, so broken or edited data is dropped instead of crashing the game.
 The timer is computed from `Date.now()` timestamps, not by counting ticks, so it stays
 right when the browser slows down a background tab.
 
+## Controls
+
+| Action              | Mouse or touch              | Keyboard                                                              |
+| ------------------- | --------------------------- | --------------------------------------------------------------------- |
+| Start a game        | **Start Game**              | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
+| Add an ingredient   | Click its card              | <kbd>Tab</kbd> to the card, <kbd>Enter</kbd> or <kbd>Space</kbd>      |
+| Brew the potion     | **Brew**                    | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
+| Pause and resume    | **Pause**, then **Resume**  | <kbd>Tab</kbd> to **Pause**, <kbd>Enter</kbd>; <kbd>Esc</kbd> resumes |
+| Leave a paused game | **Exit to Menu**            | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
+| Leave Game Over     | **Play again**              | <kbd>Esc</kbd> goes to the start screen                               |
+| Save a Top-10 score | Type a name, **Save score** | Type a name, <kbd>Enter</kbd>                                         |
+
+## Look and feel
+
+The game looks like a field cookbook kept by adventurers deep in a dungeon: cream paper
+pages with hand-drawn ink borders on a torch-lit stone floor, a camp pot hanging over a
+small fire, and ink-outlined ingredient drawings in earthy colors.
+
+- Every picture is our own and every game element is its own drawing: the ingredients,
+  the cauldron and the hearts are inline SVG made in code (`src/ui/icons.ts`). There are
+  no image files and no icon sets.
+- The paper grain, the wobbly ink border and the screentone dots are procedural: SVG noise
+  filters and CSS gradients.
+- Fonts from Google Fonts under the SIL Open Font License: IM Fell English SC for titles,
+  Alegreya and Alegreya Sans for text, Patrick Hand for notes and Kalam for numbers.
+- Text on paper has a contrast of at least 4.5:1. The steam and the fire rest when the
+  system asks for reduced motion.
+
 ## Implemented so far
 
 - [x] Precondition: repository, tooling, structure and deployment
-- [x] US 1.1 Ingredient shelf and cauldron
-- [x] US 1.2 Cauldron parameter bars
-- [x] US 1.3 Recipe and brewing check
-- [x] US 1.4 Timer and game over
-- [x] US 1.5 Pause
-- [x] US 1.6 Leaderboard
+- [x] Level 1: Basic, complete
+  - [x] US 1.1 Ingredient shelf and cauldron
+  - [x] US 1.2 Cauldron parameter bars
+  - [x] US 1.3 Recipe and brewing check
+  - [x] US 1.4 Timer and game over
+  - [x] US 1.5 Pause
+  - [x] US 1.6 Leaderboard
+- [ ] Level 2: Extended
+- [ ] Level 3: Full game
 
 ## Deployment
 
@@ -96,7 +128,7 @@ builds the game and publishes `dist/` on every push to the current story branch.
 
 - TypeScript in strict mode, no frameworks and no runtime libraries
 - Vite for the development server and the production build
-- Plain CSS
+- Plain CSS with custom properties and native nesting, fonts from Google Fonts
 - ESLint, Prettier, Husky and commitlint for code quality
 
 ## Getting started
