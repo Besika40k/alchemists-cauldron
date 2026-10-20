@@ -90,6 +90,15 @@ export interface IGameState {
   readonly lastBrew: IBrewResult | undefined;
 }
 
+export interface ILeaderboardEntry {
+  readonly name: string;
+  readonly score: number;
+  /**
+   * When the result was saved, a `Date.now()` timestamp.
+   */
+  readonly date: number;
+}
+
 /**
  * Returns a number from 0 (inclusive) to 1 (exclusive), like Math.random.
  */
