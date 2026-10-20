@@ -1,0 +1,39 @@
+/* the Top-10 table */
+.leaderboard {
+  width: min(100% - 2 * var(--space-4), 640px);
+}
+
+/* narrow screens scroll the table sideways inside the dialog, never the page */
+.leaderboard__scroll {
+  overflow-x: auto;
+}
+
+.leaderboard__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+
+  & th,
+  & td {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: var(--border-width) solid var(--color-panel-border);
+    white-space: nowrap;
+  }
+
+  & th {
+    color: var(--color-gold);
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+}
+
+.leaderboard__rank,
+.leaderboard__score,
+.leaderboard__table th:is(:first-child, :nth-child(3)) {
+  text-align: right;
+}
+
+.leaderboard__name,
+.leaderboard__table th:nth-child(2) {
+  text-align: left;
+}

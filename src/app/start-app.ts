@@ -32,6 +32,10 @@ export function startApp(root: HTMLElement): void {
     onResume: (): void => {
       controller.resume();
     },
+    getLeaderboard: () => controller.getLeaderboard(),
+    clearLeaderboard: (): void => {
+      controller.clearLeaderboard();
+    },
   });
 
   // a hidden tab pauses the game, so no time runs out unseen
