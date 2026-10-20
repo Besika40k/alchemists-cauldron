@@ -1,0 +1,8 @@
+/* our own ingredient drawings get a warm ink outline around every filled shape */
+.ingredient-icon :is(path, circle, ellipse)[fill]:not([fill='none']) {
+  stroke: var(--color-ink);
+  stroke-width: 2.2px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  vector-effect: non-scaling-stroke;
+}
