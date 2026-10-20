@@ -17,6 +17,12 @@
     <title>Alchemist's Cauldron</title>
   </head>
   <body>
+    <svg class="svg-filters" aria-hidden="true" focusable="false">
+      <filter id="ink-wobble">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="3" />
+        <feDisplacementMap in="SourceGraphic" scale="2.4" />
+      </filter>
+    </svg>
     <main id="app" class="game"></main>
     <script type="module" src="/src/main.ts"></script>
   </body>

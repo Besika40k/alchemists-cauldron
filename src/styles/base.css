@@ -62,3 +62,11 @@ button {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* holds the SVG filters that CSS uses, like the hand-drawn ink border */
+.svg-filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
