@@ -21,13 +21,17 @@
   text-align: center;
 }
 
+/* the title of an old printed cookbook, lit by the torch */
 .game__title {
-  color: var(--color-accent);
+  color: var(--color-paper);
   font-family: var(--font-display);
   font-size: var(--font-size-title);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-shadow: var(--glow-accent);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  text-shadow:
+    0 2px 0 var(--color-ink),
+    0 0 24px rgb(232 161 74 / 45%);
 }
 
 .hud {

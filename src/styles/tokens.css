@@ -30,12 +30,15 @@
   --color-focus: #c4572f;
 
   /* typography */
-  --font-display: 'Cinzel', 'Times New Roman', serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-size-small: 0.75rem;
-  --font-size-body: 0.9375rem;
-  --font-size-large: 1.125rem;
-  --font-size-title: clamp(1.5rem, 1.1rem + 2vw, 2.5rem);
+  --font-display: 'IM Fell English SC', 'Times New Roman', serif;
+  --font-heading: 'Alegreya', Georgia, serif;
+  --font-body: 'Alegreya Sans', system-ui, sans-serif;
+  --font-note: 'Patrick Hand', 'Comic Sans MS', cursive;
+  --font-number: 'Kalam', 'Comic Sans MS', cursive;
+  --font-size-small: 0.8125rem;
+  --font-size-body: 1rem;
+  --font-size-large: 1.25rem;
+  --font-size-title: clamp(1.75rem, 1.2rem + 2.4vw, 3rem);
 
   /* spacing */
   --space-1: 4px;
