@@ -35,9 +35,10 @@ Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-schoo
 
 ## How to play
 
-1. The start screen shows what a game starts with: 02:30 on the clock and 3 lives. Press
-   **Start Game**. The shelf fills with the first 6 ingredients of the catalogue, and each
-   one gets a random stock from 2 to 15 (the number on the round sticker). The recipe panel
+1. Before the first run the shelf and the cauldron are empty, the score and the time are 0
+   and there are no lives yet. Press **Start Game** in the center. The shelf fills with the
+   first 6 ingredients of the catalogue, and each one gets a random stock from 2 to 15 (the
+   number on the round sticker). The recipe panel
    shows a random recipe, you have 3 lives, and the clock starts at 02:30. The time bar
    shrinks with it, and under 15 seconds the timer turns red and pulses.
 2. Click an ingredient, or reach it with <kbd>Tab</kbd> and press <kbd>Enter</kbd> or
