@@ -37,6 +37,17 @@ export const DIFFICULTY_SETTINGS: Readonly<Record<Difficulty, IDifficultySetting
 };
 
 /**
- * Level 1 always plays the Medium rules.
+ * The difficulty before the player picks one: Medium, the Level 1 rule set.
  */
 export const DEFAULT_DIFFICULTY: Difficulty = 'medium';
+
+/**
+ * The difficulties in the order the menu, the help and the leaderboard show them.
+ */
+export const DIFFICULTIES: readonly Difficulty[] = ['easy', 'medium', 'hard'];
+
+export const DIFFICULTY_LABELS: Readonly<Record<Difficulty, string>> = {
+  easy: 'Easy',
+  medium: 'Medium',
+  hard: 'Hard',
+};

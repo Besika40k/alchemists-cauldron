@@ -1,13 +1,14 @@
-import { DEFAULT_DIFFICULTY } from '../data/difficulty';
 import {
   addIngredient,
   brew,
   createMenuState,
   pauseGame,
   resumeGame,
+  selectDifficulty,
   startGame,
   tick,
 } from '../logic/game-rules';
+import { createGameSave, restoreGame } from '../logic/game-save';
 import {
   type ILeaderboardInsert,
   insertEntry,
@@ -16,9 +17,12 @@ import {
   normalizePlayerName,
 } from '../logic/leaderboard';
 import type { GameStore } from '../state/game-store';
+import { clearSave, loadGame, saveGame } from '../storage/game-save-storage';
 import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from '../storage/leaderboard-storage';
 import type {
   Clock,
+  Difficulty,
+  IGameSave,
   IGameState,
   ILeaderboardEntry,
   IngredientId,
@@ -26,8 +30,8 @@ import type {
 } from '../types/game';
 
 /**
- * Turns the player's actions into new states through the game rules, and keeps
- * the countdown running while a game is on.
+ * Turns the player's actions into new states through the game rules, keeps the
+ * countdown running while a game is on and saves the unfinished game.
  */
 export class GameController {
   readonly #store: GameStore;
@@ -39,6 +43,37 @@ export class GameController {
     this.#store = store;
     this.#random = random;
     this.#clock = clock;
+    store.subscribe((state: IGameState): void => {
+      this.#saveProgress(state);
+    });
+  }
+
+  /**
+   * Keeps the save in step with the game: every change of a running or paused game
+   * is saved, and a finished game deletes it, so it is never offered again.
+   */
+  #saveProgress(state: IGameState): void {
+    const save: IGameSave | undefined = createGameSave(state, this.#clock());
+
+    if (save) {
+      saveGame(save);
+    } else if (state.status === 'game-over') {
+      clearSave();
+    }
+  }
+
+  /**
+   * The saved unfinished game, paused. A save that is broken, edited or already
+   * finished is deleted, so the game starts normally.
+   */
+  #loadSavedGame(): IGameState | undefined {
+    const savedGame: IGameState | undefined = restoreGame(loadGame());
+
+    if (!savedGame) {
+      clearSave();
+    }
+
+    return savedGame;
   }
 
   /**
@@ -60,9 +95,35 @@ export class GameController {
     this.#frameId = requestAnimationFrame(step);
   }
 
+  /**
+   * A new game on the difficulty chosen on the start screen; Play again keeps it.
+   */
   startGame(): void {
-    this.#store.setState(startGame(DEFAULT_DIFFICULTY, this.#random, this.#clock()));
+    this.#store.setState(startGame(this.#store.state.difficulty, this.#random, this.#clock()));
     this.#runTimer();
+  }
+
+  /**
+   * True on the start screen while a valid unfinished game is saved.
+   */
+  canContinue(): boolean {
+    return this.#store.state.status === 'menu' && this.#loadSavedGame() !== undefined;
+  }
+
+  /**
+   * Opens the saved game paused, with its stock as it was saved; Resume starts the clock.
+   */
+  continueGame(): void {
+    const savedGame: IGameState | undefined =
+      this.#store.state.status === 'menu' ? this.#loadSavedGame() : undefined;
+
+    if (savedGame) {
+      this.#store.setState(savedGame);
+    }
+  }
+
+  selectDifficulty(difficulty: Difficulty): void {
+    this.#store.setState(selectDifficulty(this.#store.state, difficulty));
   }
 
   addIngredient(id: IngredientId): void {
@@ -83,23 +144,28 @@ export class GameController {
   }
 
   /**
-   * Leaves the game, running, paused or finished, for the start screen.
+   * Leaves the game, running, paused or finished, for the start screen. Exit to Menu
+   * gives the game up, so its save is deleted.
    */
   showMenu(): void {
+    clearSave();
     this.#store.setState(createMenuState(this.#store.state.difficulty));
   }
 
-  getLeaderboard(): readonly ILeaderboardEntry[] {
-    return loadLeaderboard();
+  getLeaderboard(difficulty: Difficulty): readonly ILeaderboardEntry[] {
+    return loadLeaderboard(difficulty);
   }
 
   /**
-   * True when the finished game's score makes the Top-10.
+   * True when the finished game's score makes the Top-10 of its difficulty.
    */
   canEnterLeaderboard(): boolean {
     const state: IGameState = this.#store.state;
 
-    return state.status === 'game-over' && isLeaderboardScore(loadLeaderboard(), state.score);
+    return (
+      state.status === 'game-over' &&
+      isLeaderboardScore(loadLeaderboard(state.difficulty), state.score)
+    );
   }
 
   /**
@@ -111,17 +177,19 @@ export class GameController {
       return 0;
     }
 
+    const { difficulty, score }: IGameState = this.#store.state;
     const entry: ILeaderboardEntry = {
       name: normalizePlayerName(name),
-      score: this.#store.state.score,
+      score,
+      difficulty,
       date: this.#clock(),
     };
-    const result: ILeaderboardInsert = insertEntry(loadLeaderboard(), entry);
+    const result: ILeaderboardInsert = insertEntry(loadLeaderboard(difficulty), entry);
 
-    saveLeaderboard(result.entries);
+    saveLeaderboard(difficulty, result.entries);
 
     // reading it back tells whether the browser really kept it
-    const isKept: boolean = loadLeaderboard().some(
+    const isKept: boolean = loadLeaderboard(difficulty).some(
       (saved: ILeaderboardEntry): boolean =>
         saved.date === entry.date && saved.name === entry.name && saved.score === entry.score,
     );
@@ -129,7 +197,7 @@ export class GameController {
     return isKept ? result.rank : 0;
   }
 
-  clearLeaderboard(): void {
-    clearLeaderboard();
+  clearLeaderboard(difficulty: Difficulty): void {
+    clearLeaderboard(difficulty);
   }
 }

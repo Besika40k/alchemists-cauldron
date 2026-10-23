@@ -82,7 +82,7 @@
 
 @media (width >= 1024px) {
   .game {
-    grid-template-columns: minmax(260px, 340px) minmax(0, 1fr) minmax(240px, 300px);
+    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr) minmax(220px, 260px);
     grid-template-areas:
       'header header header'
       'hud hud hud'

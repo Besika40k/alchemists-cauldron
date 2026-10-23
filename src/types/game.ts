@@ -90,9 +90,27 @@ export interface IGameState {
   readonly lastBrew: IBrewResult | undefined;
 }
 
+/**
+ * An unfinished game as it is saved, so a reload can continue it.
+ */
+export interface IGameSave {
+  readonly difficulty: Difficulty;
+  readonly status: 'playing' | 'paused';
+  readonly score: number;
+  readonly timeLeft: number;
+  readonly lives: number;
+  readonly activeRecipe: IRecipe;
+  readonly cauldronIngredients: readonly IIngredient[];
+  readonly shelfStock: ShelfStock;
+}
+
 export interface ILeaderboardEntry {
   readonly name: string;
   readonly score: number;
+  /**
+   * Every difficulty keeps its own Top-10 list.
+   */
+  readonly difficulty: Difficulty;
   /**
    * When the result was saved, a `Date.now()` timestamp.
    */

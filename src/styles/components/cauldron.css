@@ -98,11 +98,12 @@
 .cauldron__contents {
   display: grid;
   grid-template-columns: repeat(var(--cauldron-capacity, 4), minmax(0, 1fr));
-  gap: var(--space-2);
+  gap: 6px;
   width: min(100%, 480px);
 }
 
 .cauldron__item {
+  container-type: inline-size;
   display: grid;
   align-content: start;
   justify-items: center;
@@ -135,6 +136,13 @@
 .cauldron__item-name {
   overflow-wrap: anywhere;
   hyphens: auto;
+}
+
+/* five places on Hard make the cells narrow, so the names get a little smaller */
+@container (width < 54px) {
+  .cauldron__item-name {
+    font-size: 0.6875rem;
+  }
 }
 
 .cauldron__message {

@@ -1,0 +1,60 @@
+/* the start screen menu: the difficulty of the next game, a new game and the leaderboard */
+.menu__heading {
+  margin-bottom: var(--space-2);
+  color: var(--color-text-muted);
+  font-family: var(--font-note);
+  font-size: var(--font-size-large);
+  font-weight: 400;
+}
+
+.difficulty-options {
+  display: grid;
+  gap: var(--space-2);
+}
+
+/* a recipe card for every difficulty; the pressed one is the next game's */
+.difficulty-option {
+  display: grid;
+  gap: 2px;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-medium);
+  background-color: var(--color-card);
+  box-shadow: 2px 3px 0 rgb(42 33 27 / 35%);
+  color: var(--color-ink);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast),
+    box-shadow var(--duration-fast),
+    translate var(--duration-fast);
+
+  &:hover {
+    background-color: #fff8e8;
+    box-shadow: 4px 5px 0 rgb(42 33 27 / 45%);
+    translate: -1px -1px;
+  }
+
+  &[aria-pressed='true'] {
+    border-width: 3px;
+    background-color: var(--color-mustard);
+  }
+}
+
+.difficulty-option__name {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-large);
+  font-weight: 800;
+  line-height: 1.2;
+
+  /* a check mark in ink next to the chosen difficulty */
+  [aria-pressed='true'] > &::after {
+    content: ' ✓';
+  }
+}
+
+.difficulty-option__details {
+  font-family: var(--font-number);
+  font-size: 0.9375rem;
+}

@@ -1,11 +1,16 @@
-import { canBrew } from '../logic/game-rules';
+import { DIFFICULTY_LABELS } from '../data/difficulty';
+import { canBrew, getSettings } from '../logic/game-rules';
 import type { IGameState } from '../types/game';
 import { createElement } from './dom';
+import { describeDifficulty } from './format';
 
 export interface IActionHandlers {
   readonly onStart: () => void;
+  readonly onContinue: () => void;
   readonly onBrew: () => void;
   readonly onPause: () => void;
+  readonly onShowHelp: () => void;
+  readonly onShowMenu: () => void;
   readonly onShowLeaderboard: () => void;
 }
 
@@ -27,9 +32,12 @@ function createActionButton(
 
 /**
  * The action bar under the play field. Before the first run Start Game sits alone in
- * the center, with Leaderboard in a row under it; during a run Pause and Brew.
+ * the center with the chosen difficulty under it, Continue Game above it when a game
+ * is saved, and Help, Menu and Leaderboard in a row below; during a run Pause and Brew.
  */
 export class ActionsView {
+  readonly #continueRow: HTMLDivElement;
+  readonly #difficultyNote: HTMLParagraphElement;
   readonly #menuRow: HTMLDivElement;
   readonly #startButton: HTMLButtonElement;
   readonly #pauseButton: HTMLButtonElement;
@@ -40,15 +48,23 @@ export class ActionsView {
     this.#startButton = createActionButton('Start Game', handlers.onStart);
     this.#pauseButton = createActionButton('Pause', handlers.onPause, 'button button--large');
     this.#brewButton = createActionButton('Brew', handlers.onBrew);
+    this.#continueRow = createElement('div', { className: 'actions__row' }, [
+      createActionButton('Continue Game', handlers.onContinue),
+    ]);
+    this.#difficultyNote = createElement('p', { className: 'actions__note' });
     this.#menuRow = createElement('div', { className: 'actions__row' }, [
-      createActionButton('Leaderboard', handlers.onShowLeaderboard, 'button button--large'),
+      createActionButton('Help', handlers.onShowHelp, 'button'),
+      createActionButton('Menu', handlers.onShowMenu, 'button'),
+      createActionButton('Leaderboard', handlers.onShowLeaderboard, 'button'),
     ]);
     this.element = createElement('div', { className: 'actions' }, [
+      this.#continueRow,
       createElement('div', { className: 'actions__row' }, [
         this.#startButton,
         this.#pauseButton,
         this.#brewButton,
       ]),
+      this.#difficultyNote,
       this.#menuRow,
     ]);
   }
@@ -60,10 +76,13 @@ export class ActionsView {
     this.#startButton.focus();
   }
 
-  render(state: IGameState): void {
+  render(state: IGameState, canContinue: boolean): void {
     const isMenu: boolean = state.status === 'menu';
 
+    this.#continueRow.hidden = !canContinue;
     this.#menuRow.hidden = !isMenu;
+    this.#difficultyNote.hidden = !isMenu;
+    this.#difficultyNote.textContent = `${DIFFICULTY_LABELS[state.difficulty]}: ${describeDifficulty(getSettings(state))}`;
     this.#startButton.hidden = !isMenu;
     this.#pauseButton.hidden = state.status !== 'playing' && state.status !== 'paused';
     this.#brewButton.hidden = isMenu;
