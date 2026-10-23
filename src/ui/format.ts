@@ -1,5 +1,5 @@
 import { toDisplaySeconds } from '../logic/timer';
-import type { IRecipeRange } from '../types/game';
+import type { IDifficultySettings, IRecipeRange } from '../types/game';
 
 // U+2212, wider than a hyphen and read as "minus" by screen readers
 const MINUS_SIGN: string = '−';
@@ -50,4 +50,16 @@ export function formatDate(timestamp: number): string {
   const day: string = `${twoDigits(date.getDate())}.${twoDigits(date.getMonth() + 1)}.${String(date.getFullYear())}`;
 
   return `${day} ${twoDigits(date.getHours())}:${twoDigits(date.getMinutes())}`;
+}
+
+/**
+ * The short line of a difficulty, built from its settings: "6 ingredients · 150 s · 3 lives · ±8".
+ */
+export function describeDifficulty(settings: IDifficultySettings): string {
+  return [
+    `${String(settings.shelfSize)} ingredients`,
+    `${String(settings.startTimeSeconds)} s`,
+    `${String(settings.lives)} lives`,
+    `±${String(settings.tolerance)}`,
+  ].join(' · ');
 }
