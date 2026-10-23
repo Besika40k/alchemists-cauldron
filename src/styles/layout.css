@@ -1,0 +1,93 @@
+/* one column on phones, two on tablets, shelf, cauldron and recipe side by side on desktops */
+.game {
+  display: grid;
+  grid-template-areas:
+    'header'
+    'hud'
+    'recipe'
+    'cauldron'
+    'bars'
+    'shelf'
+    'actions';
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: var(--space-3);
+}
+
+.game__header {
+  grid-area: header;
+  text-align: center;
+}
+
+/* the title of an old printed cookbook, lit by the torch */
+.game__title {
+  color: var(--color-paper);
+  font-family: var(--font-display);
+  font-size: var(--font-size-title);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  text-shadow:
+    0 2px 0 var(--color-ink),
+    0 0 24px rgb(232 161 74 / 45%);
+}
+
+.hud {
+  grid-area: hud;
+}
+
+.shelf {
+  grid-area: shelf;
+}
+
+.recipe {
+  grid-area: recipe;
+}
+
+.bars {
+  grid-area: bars;
+}
+
+.cauldron {
+  grid-area: cauldron;
+}
+
+.actions {
+  grid-area: actions;
+}
+
+/* while paused the field is blurred, so the player cannot plan the next moves */
+.game--paused :is(.shelf, .cauldron, .recipe, .bars) {
+  filter: blur(8px);
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (width >= 768px) {
+  .game {
+    grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+    grid-template-areas:
+      'header header'
+      'hud hud'
+      'shelf recipe'
+      'shelf cauldron'
+      'shelf bars'
+      'actions actions';
+    gap: var(--space-5);
+    padding: var(--space-5);
+  }
+}
+
+@media (width >= 1024px) {
+  .game {
+    grid-template-columns: minmax(260px, 340px) minmax(0, 1fr) minmax(240px, 300px);
+    grid-template-areas:
+      'header header header'
+      'hud hud hud'
+      'shelf cauldron recipe'
+      'shelf bars bars'
+      'actions actions actions';
+  }
+}

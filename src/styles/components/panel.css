@@ -1,0 +1,57 @@
+/*
+ * A page of the cookbook: cream paper with a grain, an ink border drawn by hand and
+ * a little manga screentone in the corner.
+ */
+.panel {
+  position: relative;
+  isolation: isolate;
+  padding: var(--space-3);
+  border-radius: var(--radius-large);
+  background: var(--paper-grain), var(--color-paper);
+  box-shadow: var(--shadow-panel);
+  color: var(--color-text);
+
+  /* the screentone stays behind the content */
+  &::before {
+    content: '';
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: -1;
+    width: 72px;
+    height: 52px;
+    background: var(--screentone);
+    opacity: 0.18;
+    mask-image: linear-gradient(135deg, transparent 35%, #000 80%);
+    pointer-events: none;
+  }
+
+  /* the wobble filter sits on this thin border layer only, never on the content */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: var(--border-ink);
+    border-radius: inherit;
+    filter: url('#ink-wobble');
+    pointer-events: none;
+  }
+}
+
+.panel__title {
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-1);
+  border-bottom: var(--border-width) dashed var(--color-paper-edge);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+
+@media (width >= 768px) {
+  .panel {
+    padding: var(--space-4);
+  }
+}

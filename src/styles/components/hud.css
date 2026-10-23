@@ -1,0 +1,132 @@
+/* phones: score and lives side by side, the time in a full row under them */
+.hud {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas:
+    'score lives'
+    'time time';
+  gap: var(--space-2);
+}
+
+.hud__item--score {
+  grid-area: score;
+}
+
+.hud__item--time {
+  grid-area: time;
+  justify-content: center;
+}
+
+.hud__item--lives {
+  grid-area: lives;
+  justify-content: flex-end;
+}
+
+@media (width >= 560px) {
+  .hud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+/* paper tags pinned above the play field */
+.hud__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: var(--space-1) var(--space-4);
+  border: var(--border-ink);
+  border-radius: var(--radius-medium);
+  background: var(--paper-grain), var(--color-paper);
+  box-shadow: var(--shadow-panel);
+  color: var(--color-ink);
+}
+
+.hud__label {
+  color: var(--color-text-muted);
+  font-family: var(--font-note);
+  font-size: var(--font-size-large);
+}
+
+.hud__value {
+  min-width: 3ch;
+  font-family: var(--font-number);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud__hearts {
+  display: flex;
+  gap: var(--space-1);
+}
+
+/* little hearts drawn in ink, each one a bit crooked */
+.hud__heart {
+  width: 26px;
+  height: 26px;
+  overflow: visible;
+  fill: var(--color-brick);
+  stroke: var(--color-ink);
+  stroke-width: 1.8px;
+  stroke-linejoin: round;
+  rotate: -6deg;
+
+  &:nth-child(even) {
+    rotate: 5deg;
+  }
+}
+
+.hud__time-bar {
+  overflow: hidden;
+  width: 96px;
+  height: 12px;
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-small);
+  background-color: var(--color-paper-dark);
+}
+
+/* the state changes once per second, the transition makes the bar shrink smoothly */
+.hud__time-fill {
+  display: block;
+  height: 100%;
+  background-color: var(--color-moss);
+  transform: scaleX(var(--time-share, 0));
+  transform-origin: left;
+  transition:
+    transform 1s linear,
+    background-color var(--duration-medium);
+}
+
+/* under 15 seconds: red and pulsing */
+.hud__item--low {
+  background: var(--paper-grain), #f6d5c5;
+  animation: time-pulse 0.8s ease-in-out infinite alternate;
+
+  & .hud__time {
+    color: var(--color-danger);
+  }
+
+  & .hud__time-fill {
+    background-color: var(--color-brick);
+  }
+}
+
+@keyframes time-pulse {
+  from {
+    box-shadow:
+      var(--shadow-panel),
+      0 0 0 rgb(181 82 59 / 0%);
+    scale: 1;
+  }
+
+  to {
+    box-shadow:
+      var(--shadow-panel),
+      0 0 18px 4px rgb(181 82 59 / 75%);
+    scale: 1.06;
+  }
+}

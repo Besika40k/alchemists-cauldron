@@ -1,0 +1,72 @@
+:root {
+  color-scheme: dark;
+
+  /* palette: torch-lit stone, cookbook paper, warm ink and earthy food colors */
+  --color-stone: #2b2420;
+  --color-stone-light: #3a2f28;
+  --color-torch: #e8a14a;
+  --color-paper: #f3e7cf;
+  --color-paper-dark: #e6d4b0;
+  --color-paper-edge: #c9b28a;
+  --color-card: #faf3e3;
+  --color-ink: #2a211b;
+  --color-ink-soft: #5b4a3c;
+  --color-brick: #b5523b;
+  --color-teal: #4f7f8a;
+  --color-plum: #7a5a8c;
+  --color-moss: #7d8a3c;
+  --color-leaf: #5f8a2e;
+  --color-mustard: #d4a537;
+  --color-mustard-light: #e2b955;
+
+  /* text on paper: every one reaches 4.5:1 */
+  --color-text: var(--color-ink);
+  --color-text-muted: var(--color-ink-soft);
+  --color-temperature: #9a3f2a;
+  --color-density: #386069;
+  --color-magic-power: #6a4c7c;
+  --color-success: #4a7023;
+  --color-danger: #9a3f2a;
+  --color-focus: #c4572f;
+
+  /* typography */
+  --font-display: 'IM Fell English SC', 'Times New Roman', serif;
+  --font-heading: 'Alegreya', Georgia, serif;
+  --font-body: 'Alegreya Sans', system-ui, sans-serif;
+  --font-note: 'Patrick Hand', 'Comic Sans MS', cursive;
+  --font-number: 'Kalam', 'Comic Sans MS', cursive;
+  --font-size-small: 0.8125rem;
+  --font-size-body: 1rem;
+  --font-size-large: 1.25rem;
+  --font-size-title: clamp(1.75rem, 1.2rem + 2.4vw, 3rem);
+
+  /* spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* shapes: uneven corners look drawn by hand */
+  --radius-small: 5px 7px 4px 6px;
+  --radius-medium: 9px 12px 8px 11px;
+  --radius-large: 8px 13px 9px 12px;
+  --radius-round: 999px;
+  --border-width: 2px;
+  --border-ink: 2.5px solid var(--color-ink);
+  --focus-ring-width: 3px;
+
+  /* effects */
+  --shadow-ink: 3px 3px 0 var(--color-ink);
+  --shadow-panel: 4px 5px 0 rgb(0 0 0 / 35%);
+  --glow-success: 0 0 0 3px var(--color-leaf), 0 0 16px 4px rgb(95 138 46 / 60%);
+  --duration-fast: 150ms;
+  --duration-medium: 300ms;
+
+  /* procedural paper grain: SVG noise, no image file */
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' seed='8'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.25 0 0 0 0 0.12 0 0 0 0.32 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+
+  /* manga screentone: halftone dots */
+  --screentone: radial-gradient(var(--color-ink) 22%, transparent 24%) 0 0 / 6px 6px;
+}

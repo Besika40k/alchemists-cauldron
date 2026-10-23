@@ -1,0 +1,167 @@
+/* the bars sit side by side when there is room and stack when there is not */
+.bars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4) var(--space-5);
+}
+
+.bar {
+  --bar-color: var(--color-ink);
+  --bar-text-color: var(--color-ink);
+  --bar-duration: 400ms;
+
+  display: grid;
+  gap: var(--space-1);
+}
+
+.bar--temperature {
+  --bar-color: var(--color-brick);
+  --bar-text-color: var(--color-temperature);
+}
+
+.bar--density {
+  --bar-color: var(--color-teal);
+  --bar-text-color: var(--color-density);
+}
+
+.bar--magic-power {
+  --bar-color: var(--color-plum);
+  --bar-text-color: var(--color-magic-power);
+}
+
+.bar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.bar__label {
+  color: var(--bar-text-color);
+  font-family: var(--font-note);
+  font-size: var(--font-size-large);
+}
+
+.bar__value {
+  font-family: var(--font-number);
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.2;
+  transition: color var(--duration-medium);
+}
+
+/* a measuring ruler: ink ticks along the bottom edge, every tenth of the scale */
+.bar__track {
+  position: relative;
+  height: 26px;
+  margin-top: 10px;
+  border: var(--border-ink);
+  border-radius: var(--radius-small);
+  background:
+    repeating-linear-gradient(90deg, var(--color-ink) 0 2px, transparent 2px 10%) 0 100% / 100% 35%
+      no-repeat,
+    var(--color-paper-dark);
+  transition: box-shadow var(--duration-medium);
+}
+
+/* every part of the track is placed by a 0..1 position from bars-view.ts */
+.bar__zone,
+.bar__fill,
+.bar__zero,
+.bar__marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+/* the target zone is hatched in moss green, the tolerance around it more lightly */
+.bar__zone--tolerance {
+  left: calc(var(--tolerance-start, 0) * 100%);
+  width: calc((var(--tolerance-end, 0) - var(--tolerance-start, 0)) * 100%);
+  background: repeating-linear-gradient(-45deg, rgb(125 138 60 / 35%) 0 2px, transparent 2px 7px);
+}
+
+.bar__zone--recipe {
+  left: calc(var(--zone-start, 0) * 100%);
+  width: calc((var(--zone-end, 0) - var(--zone-start, 0)) * 100%);
+  border-inline: 2.5px solid var(--color-moss);
+  background: repeating-linear-gradient(-45deg, var(--color-moss) 0 3px, transparent 3px 7px);
+}
+
+.bar:not(.bar--has-target) .bar__zone {
+  display: none;
+}
+
+.bar__fill {
+  left: calc(var(--fill-start, 0) * 100%);
+  width: calc(var(--fill-size, 0) * 100%);
+  background-color: color-mix(in srgb, var(--bar-color) 45%, transparent);
+  transition:
+    left var(--bar-duration) ease-out,
+    width var(--bar-duration) ease-out;
+}
+
+.bar__zero {
+  left: calc(var(--zero-position, 0) * 100%);
+  width: 2px;
+  translate: -50% 0;
+  background-color: var(--color-ink);
+}
+
+/* the current value: an ink line with an arrow head above the ruler */
+.bar__marker {
+  top: -12px;
+  bottom: -4px;
+  left: calc(var(--value-position, 0) * 100%);
+  width: 3px;
+  translate: -50% 0;
+  background-color: var(--color-ink);
+  transition: left var(--bar-duration) ease-out;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 18px;
+    height: 13px;
+    translate: -50% 0;
+    background-color: var(--color-ink);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2.5px;
+    left: 50%;
+    width: 11px;
+    height: 8px;
+    translate: -50% 0;
+    background-color: var(--bar-color);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transition: background-color var(--duration-medium);
+  }
+}
+
+/* inside the recipe range: the ruler glows green */
+.bar--in-range {
+  & .bar__track {
+    box-shadow: var(--glow-success);
+  }
+
+  & .bar__marker::after {
+    background-color: var(--color-leaf);
+  }
+
+  & .bar__value {
+    color: var(--color-success);
+  }
+}
+
+.bar__scale {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-text-muted);
+  font-family: var(--font-number);
+  font-size: var(--font-size-small);
+}

@@ -1,0 +1,25 @@
+/* on phones and tablets the actions stay at the bottom of the screen while the shelf scrolls */
+.actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: grid;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+  background: linear-gradient(transparent, var(--color-stone) 35%);
+}
+
+/* the main action alone in the center, the menu buttons in a row under it */
+.actions__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+@media (width >= 1024px) {
+  .actions {
+    position: static;
+    background: none;
+  }
+}

@@ -1,0 +1,67 @@
+/* the game dialogs: Game Over and Pause, the leaderboard later */
+.dialog {
+  width: min(100% - 2 * var(--space-4), 440px);
+  padding: var(--space-5);
+  border: 3px solid var(--color-ink);
+  border-radius: var(--radius-large);
+  background: var(--paper-grain), var(--color-paper);
+  box-shadow: 6px 7px 0 rgb(0 0 0 / 45%);
+  color: var(--color-text);
+  text-align: center;
+
+  &::backdrop {
+    background-color: rgb(20 14 10 / 70%);
+    backdrop-filter: blur(3px);
+  }
+}
+
+/* a cookbook page heading with a hand-drawn rule under it */
+.dialog__title {
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--border-width) dashed var(--color-paper-edge);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.dialog__lead {
+  margin-bottom: var(--space-4);
+  color: var(--color-text-muted);
+  font-family: var(--font-note);
+  font-size: 1.375rem;
+}
+
+.game-over .dialog__lead {
+  color: var(--color-danger);
+}
+
+.dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.dialog__actions--column {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.game-over__score-line {
+  display: grid;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+  font-family: var(--font-note);
+  font-size: var(--font-size-large);
+}
+
+.game-over__score {
+  color: var(--color-ink);
+  font-family: var(--font-number);
+  font-size: 3.5rem;
+  line-height: 1;
+}

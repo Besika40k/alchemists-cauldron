@@ -1,0 +1,72 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background-color: var(--color-stone);
+}
+
+/* a stone floor deep in a dungeon, lit by a torch above and a campfire below */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgb(232 161 74 / 28%), transparent 55%),
+    radial-gradient(ellipse at 50% 110%, rgb(232 161 74 / 16%), transparent 50%),
+    repeating-linear-gradient(0deg, transparent 0 46px, rgb(0 0 0 / 22%) 46px 48px),
+    repeating-linear-gradient(90deg, transparent 0 94px, rgb(0 0 0 / 16%) 94px 96px),
+    var(--color-stone);
+  color: var(--color-paper);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  line-height: 1.4;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* holds the SVG filters that CSS uses, like the hand-drawn ink border */
+.svg-filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
