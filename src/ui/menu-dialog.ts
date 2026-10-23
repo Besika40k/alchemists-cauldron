@@ -6,6 +6,7 @@ import { describeDifficulty } from './format';
 export interface IMenuHandlers {
   readonly onSelectDifficulty: (difficulty: Difficulty) => void;
   readonly onStart: () => void;
+  readonly onContinue: () => void;
   readonly onShowLeaderboard: () => void;
 }
 
@@ -22,10 +23,12 @@ function createMenuButton(text: string, className: string, onClick: () => void):
 }
 
 /**
- * The menu of the start screen: the difficulty of the next game, a new game and the
- * leaderboard. A running game closes it, so its difficulty cannot change.
+ * The menu of the start screen: the difficulty of the next game, Continue Game when
+ * a game is saved, a new game and the leaderboard. A running game closes it, so its
+ * difficulty cannot change.
  */
 export class MenuDialog {
+  readonly #continueButton: HTMLButtonElement;
   readonly #difficultyButtons: Map<Difficulty, HTMLButtonElement> = new Map<
     Difficulty,
     HTMLButtonElement
@@ -33,6 +36,15 @@ export class MenuDialog {
   readonly element: HTMLDialogElement;
 
   constructor(handlers: IMenuHandlers) {
+    this.#continueButton = createMenuButton(
+      'Continue Game',
+      'button button--primary button--large',
+      (): void => {
+        this.element.close();
+        handlers.onContinue();
+      },
+    );
+
     const options: HTMLDivElement = createElement(
       'div',
       {
@@ -60,6 +72,7 @@ export class MenuDialog {
         }),
         options,
         createElement('div', { className: 'dialog__actions dialog__actions--column' }, [
+          this.#continueButton,
           createMenuButton('Start Game', 'button button--primary button--large', (): void => {
             this.element.close();
             handlers.onStart();
@@ -111,7 +124,9 @@ export class MenuDialog {
     this.element.showModal();
   }
 
-  render(state: IGameState): void {
+  render(state: IGameState, canContinue: boolean): void {
+    this.#continueButton.hidden = !canContinue;
+
     for (const [difficulty, button] of this.#difficultyButtons) {
       button.setAttribute('aria-pressed', String(difficulty === state.difficulty));
     }

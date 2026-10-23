@@ -6,6 +6,7 @@ import { describeDifficulty } from './format';
 
 export interface IActionHandlers {
   readonly onStart: () => void;
+  readonly onContinue: () => void;
   readonly onBrew: () => void;
   readonly onPause: () => void;
   readonly onShowHelp: () => void;
@@ -31,10 +32,11 @@ function createActionButton(
 
 /**
  * The action bar under the play field. Before the first run Start Game sits alone in
- * the center with the chosen difficulty under it, and Help, Menu and Leaderboard in a
- * row below; during a run Pause and Brew.
+ * the center with the chosen difficulty under it, Continue Game above it when a game
+ * is saved, and Help, Menu and Leaderboard in a row below; during a run Pause and Brew.
  */
 export class ActionsView {
+  readonly #continueRow: HTMLDivElement;
   readonly #difficultyNote: HTMLParagraphElement;
   readonly #menuRow: HTMLDivElement;
   readonly #startButton: HTMLButtonElement;
@@ -46,6 +48,9 @@ export class ActionsView {
     this.#startButton = createActionButton('Start Game', handlers.onStart);
     this.#pauseButton = createActionButton('Pause', handlers.onPause, 'button button--large');
     this.#brewButton = createActionButton('Brew', handlers.onBrew);
+    this.#continueRow = createElement('div', { className: 'actions__row' }, [
+      createActionButton('Continue Game', handlers.onContinue),
+    ]);
     this.#difficultyNote = createElement('p', { className: 'actions__note' });
     this.#menuRow = createElement('div', { className: 'actions__row' }, [
       createActionButton('Help', handlers.onShowHelp, 'button'),
@@ -53,6 +58,7 @@ export class ActionsView {
       createActionButton('Leaderboard', handlers.onShowLeaderboard, 'button'),
     ]);
     this.element = createElement('div', { className: 'actions' }, [
+      this.#continueRow,
       createElement('div', { className: 'actions__row' }, [
         this.#startButton,
         this.#pauseButton,
@@ -70,9 +76,10 @@ export class ActionsView {
     this.#startButton.focus();
   }
 
-  render(state: IGameState): void {
+  render(state: IGameState, canContinue: boolean): void {
     const isMenu: boolean = state.status === 'menu';
 
+    this.#continueRow.hidden = !canContinue;
     this.#menuRow.hidden = !isMenu;
     this.#difficultyNote.hidden = !isMenu;
     this.#difficultyNote.textContent = `${DIFFICULTY_LABELS[state.difficulty]}: ${describeDifficulty(getSettings(state))}`;

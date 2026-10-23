@@ -14,6 +14,10 @@ export function startApp(root: HTMLElement): void {
     onStart: (): void => {
       controller.startGame();
     },
+    onContinue: (): void => {
+      controller.continueGame();
+    },
+    canContinue: (): boolean => controller.canContinue(),
     onAddIngredient: (id: IngredientId): void => {
       controller.addIngredient(id);
     },

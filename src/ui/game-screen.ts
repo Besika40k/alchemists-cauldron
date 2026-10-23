@@ -16,6 +16,8 @@ import { type IngredientHandler, ShelfView } from './shelf-view';
 
 export interface IGameScreenHandlers {
   readonly onStart: () => void;
+  readonly onContinue: () => void;
+  readonly canContinue: () => boolean;
   readonly onAddIngredient: IngredientHandler;
   readonly onBrew: () => void;
   readonly onPlayAgain: () => void;
@@ -46,10 +48,12 @@ export class GameScreen {
   readonly #menu: MenuDialog;
   readonly #root: HTMLElement;
   readonly #actions: ActionsView;
+  readonly #handlers: IGameScreenHandlers;
   #difficulty: Difficulty = DEFAULT_DIFFICULTY;
 
   constructor(root: HTMLElement, handlers: IGameScreenHandlers) {
     this.#root = root;
+    this.#handlers = handlers;
     this.#hud = new HudView();
     this.#shelf = new ShelfView(handlers.onAddIngredient);
     this.#cauldron = new CauldronView();
@@ -82,12 +86,14 @@ export class GameScreen {
     this.#menu = new MenuDialog({
       onSelectDifficulty: handlers.onSelectDifficulty,
       onStart: startGame,
+      onContinue: handlers.onContinue,
       onShowLeaderboard: (): void => {
         this.#leaderboard.open(this.#difficulty);
       },
     });
     this.#actions = new ActionsView({
       onStart: startGame,
+      onContinue: handlers.onContinue,
       onBrew: (): void => {
         handlers.onBrew();
         // Brew turns disabled with an empty cauldron, so the focus goes back to the shelf
@@ -132,16 +138,19 @@ export class GameScreen {
   }
 
   render(state: IGameState): void {
+    // Continue Game is offered on the start screen while a valid unfinished game is saved
+    const canContinue: boolean = state.status === 'menu' && this.#handlers.canContinue();
+
     this.#difficulty = state.difficulty;
     this.#hud.render(state);
     this.#shelf.render(state);
     this.#cauldron.render(state);
     this.#recipe.render(state);
     this.#bars.render(state);
-    this.#actions.render(state);
+    this.#actions.render(state, canContinue);
     this.#gameOver.render(state);
     this.#pause.render(state);
-    this.#menu.render(state);
+    this.#menu.render(state, canContinue);
     // the paused field is blurred, so the player cannot plan the next moves
     this.#root.classList.toggle('game--paused', state.status === 'paused');
   }
