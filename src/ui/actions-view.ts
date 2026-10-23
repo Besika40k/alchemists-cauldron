@@ -26,30 +26,30 @@ function createActionButton(
 }
 
 /**
- * The action bar under the play field: Start Game and Leaderboard before the first
- * run, Pause and Brew during it.
+ * The action bar under the play field. Before the first run Start Game sits alone in
+ * the center, with Leaderboard in a row under it; during a run Pause and Brew.
  */
 export class ActionsView {
-  readonly #leaderboardButton: HTMLButtonElement;
+  readonly #menuRow: HTMLDivElement;
   readonly #startButton: HTMLButtonElement;
   readonly #pauseButton: HTMLButtonElement;
   readonly #brewButton: HTMLButtonElement;
   readonly element: HTMLElement;
 
   constructor(handlers: IActionHandlers) {
-    this.#leaderboardButton = createActionButton(
-      'Leaderboard',
-      handlers.onShowLeaderboard,
-      'button button--large',
-    );
     this.#startButton = createActionButton('Start Game', handlers.onStart);
     this.#pauseButton = createActionButton('Pause', handlers.onPause, 'button button--large');
     this.#brewButton = createActionButton('Brew', handlers.onBrew);
+    this.#menuRow = createElement('div', { className: 'actions__row' }, [
+      createActionButton('Leaderboard', handlers.onShowLeaderboard, 'button button--large'),
+    ]);
     this.element = createElement('div', { className: 'actions' }, [
-      this.#leaderboardButton,
-      this.#startButton,
-      this.#pauseButton,
-      this.#brewButton,
+      createElement('div', { className: 'actions__row' }, [
+        this.#startButton,
+        this.#pauseButton,
+        this.#brewButton,
+      ]),
+      this.#menuRow,
     ]);
   }
 
@@ -63,7 +63,7 @@ export class ActionsView {
   render(state: IGameState): void {
     const isMenu: boolean = state.status === 'menu';
 
-    this.#leaderboardButton.hidden = !isMenu;
+    this.#menuRow.hidden = !isMenu;
     this.#startButton.hidden = !isMenu;
     this.#pauseButton.hidden = state.status !== 'playing' && state.status !== 'paused';
     this.#brewButton.hidden = isMenu;
