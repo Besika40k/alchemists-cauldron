@@ -71,7 +71,7 @@ export class HudView {
       return;
     }
 
-    // the hearts are redrawn only when a life is lost or a new game starts
+    // the start screen has no life icons yet
     this.#shownLives = state.lives;
     this.#hearts.replaceChildren(
       ...Array.from({ length: state.lives }, (): SVGSVGElement => createHeartIcon('hud__heart')),
