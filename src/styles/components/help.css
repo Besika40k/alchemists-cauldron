@@ -1,0 +1,65 @@
+/* the rules of the game and the difficulty table */
+.help {
+  width: min(100% - 2 * var(--space-4), 600px);
+  text-align: left;
+}
+
+.help .dialog__title,
+.help .dialog__lead {
+  text-align: center;
+}
+
+.help__rules {
+  display: grid;
+  gap: var(--space-2);
+  padding-left: var(--space-5);
+  list-style: decimal;
+
+  & ::marker {
+    font-family: var(--font-number);
+    font-weight: 700;
+  }
+}
+
+.help__heading {
+  margin-block: var(--space-4) var(--space-2);
+  color: var(--color-text-muted);
+  font-family: var(--font-note);
+  font-size: var(--font-size-large);
+  font-weight: 400;
+  text-align: center;
+}
+
+/* narrow screens scroll the table sideways inside the dialog, never the page */
+.help__table-scroll {
+  overflow-x: auto;
+}
+
+.help__table {
+  width: 100%;
+  border-collapse: collapse;
+
+  & th,
+  & td {
+    padding: var(--space-1) var(--space-2);
+    border-bottom: var(--border-width) dashed var(--color-paper-edge);
+    text-align: center;
+  }
+
+  & thead th {
+    border-bottom: var(--border-ink);
+    font-family: var(--font-heading);
+    font-weight: 800;
+  }
+
+  & tbody th {
+    font-weight: 500;
+    text-align: left;
+  }
+
+  & td {
+    font-family: var(--font-number);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+}
