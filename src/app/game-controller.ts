@@ -8,6 +8,7 @@ import {
   startGame,
   tick,
 } from '../logic/game-rules';
+import { createGameSave } from '../logic/game-save';
 import {
   type ILeaderboardInsert,
   insertEntry,
@@ -16,10 +17,12 @@ import {
   normalizePlayerName,
 } from '../logic/leaderboard';
 import type { GameStore } from '../state/game-store';
+import { clearSave, saveGame } from '../storage/game-save-storage';
 import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from '../storage/leaderboard-storage';
 import type {
   Clock,
   Difficulty,
+  IGameSave,
   IGameState,
   ILeaderboardEntry,
   IngredientId,
@@ -27,8 +30,8 @@ import type {
 } from '../types/game';
 
 /**
- * Turns the player's actions into new states through the game rules, and keeps
- * the countdown running while a game is on.
+ * Turns the player's actions into new states through the game rules, keeps the
+ * countdown running while a game is on and saves the unfinished game.
  */
 export class GameController {
   readonly #store: GameStore;
@@ -40,6 +43,23 @@ export class GameController {
     this.#store = store;
     this.#random = random;
     this.#clock = clock;
+    store.subscribe((state: IGameState): void => {
+      this.#saveProgress(state);
+    });
+  }
+
+  /**
+   * Keeps the save in step with the game: every change of a running or paused game
+   * is saved, and a finished game deletes it, so it is never offered again.
+   */
+  #saveProgress(state: IGameState): void {
+    const save: IGameSave | undefined = createGameSave(state, this.#clock());
+
+    if (save) {
+      saveGame(save);
+    } else if (state.status === 'game-over') {
+      clearSave();
+    }
   }
 
   /**
@@ -91,9 +111,11 @@ export class GameController {
   }
 
   /**
-   * Leaves the game, running, paused or finished, for the start screen.
+   * Leaves the game, running, paused or finished, for the start screen. Exit to Menu
+   * gives the game up, so its save is deleted.
    */
   showMenu(): void {
+    clearSave();
     this.#store.setState(createMenuState(this.#store.state.difficulty));
   }
 
