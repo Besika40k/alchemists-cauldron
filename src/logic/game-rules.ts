@@ -49,6 +49,16 @@ export function createMenuState(difficulty: Difficulty = DEFAULT_DIFFICULTY): IG
 }
 
 /**
+ * Picks the difficulty of the next game. Only the start screen can change it; a
+ * running, paused or finished game keeps its own.
+ */
+export function selectDifficulty(state: IGameState, difficulty: Difficulty): IGameState {
+  return state.status === 'menu' && state.difficulty !== difficulty
+    ? createMenuState(difficulty)
+    : state;
+}
+
+/**
  * A new run: a fresh random stock, the lives and time of the difficulty and a
  * random recipe. The countdown starts at `now`.
  */
