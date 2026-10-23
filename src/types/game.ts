@@ -94,6 +94,10 @@ export interface ILeaderboardEntry {
   readonly name: string;
   readonly score: number;
   /**
+   * Every difficulty keeps its own Top-10 list.
+   */
+  readonly difficulty: Difficulty;
+  /**
    * When the result was saved, a `Date.now()` timestamp.
    */
   readonly date: number;
