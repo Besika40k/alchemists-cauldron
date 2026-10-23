@@ -81,6 +81,22 @@ The numbers in these steps are the Medium ones; [Difficulty](#difficulty) lists 
 The difficulty cannot change during a game: Menu is only on the start screen, and Play
 again keeps the difficulty of the finished game.
 
+## Save and Continue Game
+
+The game saves itself while you play, so a reload or a closed tab does not lose it.
+
+- Saved: the difficulty, score, time left, lives, recipe, cauldron, shelf stock and
+  status. The game is saved after every change and on pause; a running clock is saved to
+  the millisecond.
+- **Continue Game** appears on the start screen and in the Menu only when a valid
+  unfinished game is saved. It opens that game paused, with the same stock, recipe and
+  cauldron; **Resume** starts the clock.
+- A finished game is never offered: Game Over deletes the save. **Start Game** overwrites
+  it, and **Exit to Menu** deletes it.
+- Loaded data is checked against the game's own tables (difficulty, recipe, shelf, stock
+  0–15, lives, time, cauldron size). Broken, edited or finished data is deleted and the
+  game starts normally.
+
 The Top-10 lists live in `localStorage`, one per difficulty. The results of Level 1, which
 were all played on Medium, show up in the Medium list. Every read goes through `try/catch` and a check of
 each entry, so broken or edited data is dropped instead of crashing the game.
@@ -108,17 +124,18 @@ shows only the first 4, 6 or 8 ingredients of the catalogue.
 
 ## Controls
 
-| Action              | Mouse or touch              | Keyboard                                                              |
-| ------------------- | --------------------------- | --------------------------------------------------------------------- |
-| Read the rules      | **Help**                    | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>; <kbd>Esc</kbd> closes |
-| Choose a difficulty | **Menu**, then a difficulty | <kbd>Tab</kbd> to it, <kbd>Enter</kbd>                                |
-| Start a game        | **Start Game**              | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
-| Add an ingredient   | Click its card              | <kbd>Tab</kbd> to the card, <kbd>Enter</kbd> or <kbd>Space</kbd>      |
-| Brew the potion     | **Brew**                    | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
-| Pause and resume    | **Pause**, then **Resume**  | <kbd>Tab</kbd> to **Pause**, <kbd>Enter</kbd>; <kbd>Esc</kbd> resumes |
-| Leave a paused game | **Exit to Menu**            | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
-| Leave Game Over     | **Play again**              | <kbd>Esc</kbd> goes to the start screen                               |
-| Save a Top-10 score | Type a name, **Save score** | Type a name, <kbd>Enter</kbd>                                         |
+| Action                | Mouse or touch                     | Keyboard                                                              |
+| --------------------- | ---------------------------------- | --------------------------------------------------------------------- |
+| Read the rules        | **Help**                           | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>; <kbd>Esc</kbd> closes |
+| Choose a difficulty   | **Menu**, then a difficulty        | <kbd>Tab</kbd> to it, <kbd>Enter</kbd>                                |
+| Start a game          | **Start Game**                     | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
+| Continue a saved game | **Continue Game**, then **Resume** | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
+| Add an ingredient     | Click its card                     | <kbd>Tab</kbd> to the card, <kbd>Enter</kbd> or <kbd>Space</kbd>      |
+| Brew the potion       | **Brew**                           | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
+| Pause and resume      | **Pause**, then **Resume**         | <kbd>Tab</kbd> to **Pause**, <kbd>Enter</kbd>; <kbd>Esc</kbd> resumes |
+| Leave a paused game   | **Exit to Menu**                   | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
+| Leave Game Over       | **Play again**                     | <kbd>Esc</kbd> goes to the start screen                               |
+| Save a Top-10 score   | Type a name, **Save score**        | Type a name, <kbd>Enter</kbd>                                         |
 
 ## Look and feel
 
@@ -146,9 +163,9 @@ small fire, and ink-outlined ingredient drawings in earthy colors.
   - [x] US 1.4 Timer and game over
   - [x] US 1.5 Pause
   - [x] US 1.6 Leaderboard
-- [ ] Level 2: Extended
+- [x] Level 2: Extended, complete
   - [x] US 2.1 Difficulty selection
-  - [ ] US 2.2 Auto-save and Continue Game
+  - [x] US 2.2 Auto-save and Continue Game
 - [ ] Level 3: Full game
 
 ## Deployment
