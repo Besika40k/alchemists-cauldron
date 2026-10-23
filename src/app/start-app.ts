@@ -32,6 +32,9 @@ export function startApp(root: HTMLElement): void {
     onResume: (): void => {
       controller.resume();
     },
+    onSelectDifficulty: (difficulty: Difficulty): void => {
+      controller.selectDifficulty(difficulty);
+    },
     getLeaderboard: (difficulty: Difficulty) => controller.getLeaderboard(difficulty),
     clearLeaderboard: (difficulty: Difficulty): void => {
       controller.clearLeaderboard(difficulty);

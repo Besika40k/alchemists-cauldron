@@ -1,10 +1,10 @@
-import { DEFAULT_DIFFICULTY } from '../data/difficulty';
 import {
   addIngredient,
   brew,
   createMenuState,
   pauseGame,
   resumeGame,
+  selectDifficulty,
   startGame,
   tick,
 } from '../logic/game-rules';
@@ -61,9 +61,16 @@ export class GameController {
     this.#frameId = requestAnimationFrame(step);
   }
 
+  /**
+   * A new game on the difficulty chosen on the start screen; Play again keeps it.
+   */
   startGame(): void {
-    this.#store.setState(startGame(DEFAULT_DIFFICULTY, this.#random, this.#clock()));
+    this.#store.setState(startGame(this.#store.state.difficulty, this.#random, this.#clock()));
     this.#runTimer();
+  }
+
+  selectDifficulty(difficulty: Difficulty): void {
+    this.#store.setState(selectDifficulty(this.#store.state, difficulty));
   }
 
   addIngredient(id: IngredientId): void {

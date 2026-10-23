@@ -6,8 +6,10 @@ import { CauldronView } from './cauldron-view';
 import { ConfirmDialog } from './confirm-dialog';
 import { createElement } from './dom';
 import { GameOverDialog } from './game-over-dialog';
+import { HelpDialog } from './help-dialog';
 import { HudView } from './hud-view';
 import { LeaderboardDialog } from './leaderboard-dialog';
+import { MenuDialog } from './menu-dialog';
 import { PauseDialog } from './pause-dialog';
 import { RecipeView } from './recipe-view';
 import { type IngredientHandler, ShelfView } from './shelf-view';
@@ -20,6 +22,7 @@ export interface IGameScreenHandlers {
   readonly onShowMenu: () => void;
   readonly onPause: () => void;
   readonly onResume: () => void;
+  readonly onSelectDifficulty: (difficulty: Difficulty) => void;
   readonly getLeaderboard: (difficulty: Difficulty) => readonly ILeaderboardEntry[];
   readonly clearLeaderboard: (difficulty: Difficulty) => void;
   readonly canEnterLeaderboard: () => boolean;
@@ -39,6 +42,8 @@ export class GameScreen {
   readonly #pause: PauseDialog;
   readonly #confirm: ConfirmDialog;
   readonly #leaderboard: LeaderboardDialog;
+  readonly #help: HelpDialog;
+  readonly #menu: MenuDialog;
   readonly #root: HTMLElement;
   readonly #actions: ActionsView;
   #difficulty: Difficulty = DEFAULT_DIFFICULTY;
@@ -67,18 +72,34 @@ export class GameScreen {
       canEnterLeaderboard: handlers.canEnterLeaderboard,
       onSaveScore: handlers.onSaveScore,
     });
-    this.#actions = new ActionsView({
-      onStart: (): void => {
-        handlers.onStart();
-        // the Start Game button hides itself, so the focus moves on to the shelf
-        this.#shelf.focusFirstCard();
+    const startGame = (): void => {
+      handlers.onStart();
+      // the Start Game button hides itself, so the focus moves on to the shelf
+      this.#shelf.focusFirstCard();
+    };
+
+    this.#help = new HelpDialog();
+    this.#menu = new MenuDialog({
+      onSelectDifficulty: handlers.onSelectDifficulty,
+      onStart: startGame,
+      onShowLeaderboard: (): void => {
+        this.#leaderboard.open(this.#difficulty);
       },
+    });
+    this.#actions = new ActionsView({
+      onStart: startGame,
       onBrew: (): void => {
         handlers.onBrew();
         // Brew turns disabled with an empty cauldron, so the focus goes back to the shelf
         this.#shelf.focusFirstCard();
       },
       onPause: handlers.onPause,
+      onShowHelp: (): void => {
+        this.#help.open();
+      },
+      onShowMenu: (): void => {
+        this.#menu.open();
+      },
       onShowLeaderboard: (): void => {
         this.#leaderboard.open(this.#difficulty);
       },
@@ -103,6 +124,8 @@ export class GameScreen {
       this.#actions.element,
       this.#gameOver.element,
       this.#pause.element,
+      this.#help.element,
+      this.#menu.element,
       this.#leaderboard.element,
       this.#confirm.element,
     );
@@ -118,6 +141,7 @@ export class GameScreen {
     this.#actions.render(state);
     this.#gameOver.render(state);
     this.#pause.render(state);
+    this.#menu.render(state);
     // the paused field is blurred, so the player cannot plan the next moves
     this.#root.classList.toggle('game--paused', state.status === 'paused');
   }
