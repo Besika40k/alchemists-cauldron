@@ -1,4 +1,5 @@
-import type { IGameState, ILeaderboardEntry } from '../types/game';
+import { DEFAULT_DIFFICULTY } from '../data/difficulty';
+import type { Difficulty, IGameState, ILeaderboardEntry } from '../types/game';
 import { ActionsView } from './actions-view';
 import { BarsView } from './bars-view';
 import { CauldronView } from './cauldron-view';
@@ -19,8 +20,8 @@ export interface IGameScreenHandlers {
   readonly onShowMenu: () => void;
   readonly onPause: () => void;
   readonly onResume: () => void;
-  readonly getLeaderboard: () => readonly ILeaderboardEntry[];
-  readonly clearLeaderboard: () => void;
+  readonly getLeaderboard: (difficulty: Difficulty) => readonly ILeaderboardEntry[];
+  readonly clearLeaderboard: (difficulty: Difficulty) => void;
   readonly canEnterLeaderboard: () => boolean;
   readonly onSaveScore: (name: string) => number;
 }
@@ -40,6 +41,7 @@ export class GameScreen {
   readonly #leaderboard: LeaderboardDialog;
   readonly #root: HTMLElement;
   readonly #actions: ActionsView;
+  #difficulty: Difficulty = DEFAULT_DIFFICULTY;
 
   constructor(root: HTMLElement, handlers: IGameScreenHandlers) {
     this.#root = root;
@@ -60,7 +62,7 @@ export class GameScreen {
       },
       onDismiss: handlers.onShowMenu,
       onShowLeaderboard: (): void => {
-        this.#leaderboard.open();
+        this.#leaderboard.open(this.#difficulty);
       },
       canEnterLeaderboard: handlers.canEnterLeaderboard,
       onSaveScore: handlers.onSaveScore,
@@ -78,7 +80,7 @@ export class GameScreen {
       },
       onPause: handlers.onPause,
       onShowLeaderboard: (): void => {
-        this.#leaderboard.open();
+        this.#leaderboard.open(this.#difficulty);
       },
     });
     this.#pause = new PauseDialog({
@@ -107,6 +109,7 @@ export class GameScreen {
   }
 
   render(state: IGameState): void {
+    this.#difficulty = state.difficulty;
     this.#hud.render(state);
     this.#shelf.render(state);
     this.#cauldron.render(state);

@@ -19,6 +19,7 @@ import type { GameStore } from '../state/game-store';
 import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from '../storage/leaderboard-storage';
 import type {
   Clock,
+  Difficulty,
   IGameState,
   ILeaderboardEntry,
   IngredientId,
@@ -89,17 +90,20 @@ export class GameController {
     this.#store.setState(createMenuState(this.#store.state.difficulty));
   }
 
-  getLeaderboard(): readonly ILeaderboardEntry[] {
-    return loadLeaderboard();
+  getLeaderboard(difficulty: Difficulty): readonly ILeaderboardEntry[] {
+    return loadLeaderboard(difficulty);
   }
 
   /**
-   * True when the finished game's score makes the Top-10.
+   * True when the finished game's score makes the Top-10 of its difficulty.
    */
   canEnterLeaderboard(): boolean {
     const state: IGameState = this.#store.state;
 
-    return state.status === 'game-over' && isLeaderboardScore(loadLeaderboard(), state.score);
+    return (
+      state.status === 'game-over' &&
+      isLeaderboardScore(loadLeaderboard(state.difficulty), state.score)
+    );
   }
 
   /**
@@ -111,17 +115,19 @@ export class GameController {
       return 0;
     }
 
+    const { difficulty, score }: IGameState = this.#store.state;
     const entry: ILeaderboardEntry = {
       name: normalizePlayerName(name),
-      score: this.#store.state.score,
+      score,
+      difficulty,
       date: this.#clock(),
     };
-    const result: ILeaderboardInsert = insertEntry(loadLeaderboard(), entry);
+    const result: ILeaderboardInsert = insertEntry(loadLeaderboard(difficulty), entry);
 
-    saveLeaderboard(result.entries);
+    saveLeaderboard(difficulty, result.entries);
 
     // reading it back tells whether the browser really kept it
-    const isKept: boolean = loadLeaderboard().some(
+    const isKept: boolean = loadLeaderboard(difficulty).some(
       (saved: ILeaderboardEntry): boolean =>
         saved.date === entry.date && saved.name === entry.name && saved.score === entry.score,
     );
@@ -129,7 +135,7 @@ export class GameController {
     return isKept ? result.rank : 0;
   }
 
-  clearLeaderboard(): void {
-    clearLeaderboard();
+  clearLeaderboard(difficulty: Difficulty): void {
+    clearLeaderboard(difficulty);
   }
 }

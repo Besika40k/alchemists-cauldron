@@ -1,3 +1,4 @@
+import { DIFFICULTY_LABELS } from '../data/difficulty';
 import { isValidPlayerName } from '../logic/leaderboard';
 import type { GameOverReason, IGameState } from '../types/game';
 import { setDialogOpen } from './dialog';
@@ -46,6 +47,7 @@ export class GameOverDialog {
   readonly #reason: HTMLParagraphElement;
   readonly #score: HTMLElement;
   readonly #form: HTMLFormElement;
+  readonly #nameLabel: HTMLLabelElement;
   readonly #nameInput: HTMLInputElement;
   readonly #nameError: HTMLParagraphElement;
   readonly #saved: HTMLParagraphElement;
@@ -59,6 +61,10 @@ export class GameOverDialog {
       attributes: { id: 'game-over-reason' },
     });
     this.#score = createElement('strong', { className: 'game-over__score' });
+    this.#nameLabel = createElement('label', {
+      className: 'name-form__label',
+      attributes: { for: 'player-name' },
+    });
     this.#nameInput = createElement('input', {
       className: 'name-form__input',
       attributes: {
@@ -121,11 +127,7 @@ export class GameOverDialog {
       'form',
       { className: 'name-form', attributes: { novalidate: '' } },
       [
-        createElement('label', {
-          className: 'name-form__label',
-          text: 'Your score made the Top-10! Enter your name',
-          attributes: { for: 'player-name' },
-        }),
+        this.#nameLabel,
         this.#nameInput,
         createElement('p', {
           className: 'name-form__hint',
@@ -186,6 +188,8 @@ export class GameOverDialog {
     if (this.#isGameOver && !this.element.open) {
       this.#reason.textContent = state.gameOverReason ? REASON_TEXTS[state.gameOverReason] : '';
       this.#score.textContent = String(state.score);
+      // every difficulty has its own Top-10, so the form names the list
+      this.#nameLabel.textContent = `Your score made the ${DIFFICULTY_LABELS[state.difficulty]} Top-10! Enter your name`;
       this.#resetForm();
     }
 
