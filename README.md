@@ -35,12 +35,17 @@ Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-schoo
 
 ## How to play
 
+The numbers in these steps are the Medium ones; [Difficulty](#difficulty) lists all three.
+
 1. Before the first run the shelf and the cauldron are empty, the score and the time are 0
-   and there are no lives yet. Press **Start Game** in the center. The shelf fills with the
-   first 6 ingredients of the catalogue, and each one gets a random stock from 2 to 15 (the
-   number on the round sticker). The recipe panel
-   shows a random recipe, you have 3 lives, and the clock starts at 02:30. The time bar
-   shrinks with it, and under 15 seconds the timer turns red and pulses.
+   and there are no lives yet. Under the centered **Start Game** the start screen names the
+   difficulty of the next game. **Help** opens the rules, and **Menu** lets you choose
+   **Easy**, **Medium** or **Hard** before the game starts.
+   Press **Start Game**. The shelf fills with the first 6 ingredients of the catalogue,
+   and each one gets a random stock from 2 to 15 (the number on the round sticker). The
+   recipe panel shows a random recipe of the difficulty, you have 3 lives, and the clock
+   starts at 02:30. The time bar shrinks with it, and under 15 seconds the timer turns red
+   and pulses.
 2. Click an ingredient, or reach it with <kbd>Tab</kbd> and press <kbd>Enter</kbd> or
    <kbd>Space</kbd>, to put one portion into the cauldron. Its stock drops by 1. The card
    shows the ingredient's Temperature (T), Density (D) and Magic Power (MP).
@@ -65,22 +70,48 @@ Task description: [Alchemist's Cauldron](https://github.com/rolling-scopes-schoo
    both empty (**Out of ingredients**). The Game Over screen shows the reason and the final
    score; **Play again** starts a new game, and <kbd>Esc</kbd> goes back to the start
    screen.
-9. A score that makes the Top-10 asks for your name on the Game Over screen (2–15
-   characters: letters, digits, space, `_` and `-`). The **Leaderboard**, open from the
-   start screen and from Game Over, lists rank, name, score and date (`DD.MM.YYYY HH:MM`),
-   higher scores first; on equal scores the earlier result stays higher. **Clear
-   Leaderboard** asks first in the game's own dialog.
+9. Every difficulty has its own Top-10. A score that makes the list of its difficulty asks
+   for your name on the Game Over screen (2–15 characters: letters, digits, space, `_` and
+   `-`). The **Leaderboard**, open from the start screen, the Menu and Game Over, shows
+   one list at a time with Easy, Medium and Hard buttons on top; it lists rank, name,
+   difficulty, score and date (`DD.MM.YYYY HH:MM`), higher scores first; on equal scores
+   the earlier result stays higher. **Clear Leaderboard** clears the shown list and asks
+   first in the game's own dialog.
 
-The Top-10 lives in `localStorage`. Every read goes through `try/catch` and a check of
+The difficulty cannot change during a game: Menu is only on the start screen, and Play
+again keeps the difficulty of the finished game.
+
+The Top-10 lists live in `localStorage`, one per difficulty. The results of Level 1, which
+were all played on Medium, show up in the Medium list. Every read goes through `try/catch` and a check of
 each entry, so broken or edited data is dropped instead of crashing the game.
 
 The timer is computed from `Date.now()` timestamps, not by counting ticks, so it stays
 right when the browser slows down a background tab.
 
+## Difficulty
+
+The game reads every number from one `DIFFICULTY_SETTINGS` object, the difficulty table of
+the task. Medium is the Level 1 rule set.
+
+| Setting                     | Easy  | Medium | Hard  |
+| --------------------------- | :---: | :----: | :---: |
+| Ingredients on the shelf    |   4   |   6    |   8   |
+| Ingredients in the cauldron |   4   |   4    |   5   |
+| Start time                  | 180 s | 150 s  | 150 s |
+| Brew tolerance              |  ±12  |   ±8   |  ±5   |
+| Lives                       |   5   |   3    |   3   |
+| Score per brew              |  100  |  200   |  300  |
+| Time bonus per brew         | +15 s | +10 s  | +5 s  |
+
+Each difficulty draws its recipes from its own rows of the recipe table, and the shelf
+shows only the first 4, 6 or 8 ingredients of the catalogue.
+
 ## Controls
 
 | Action              | Mouse or touch              | Keyboard                                                              |
 | ------------------- | --------------------------- | --------------------------------------------------------------------- |
+| Read the rules      | **Help**                    | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>; <kbd>Esc</kbd> closes |
+| Choose a difficulty | **Menu**, then a difficulty | <kbd>Tab</kbd> to it, <kbd>Enter</kbd>                                |
 | Start a game        | **Start Game**              | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
 | Add an ingredient   | Click its card              | <kbd>Tab</kbd> to the card, <kbd>Enter</kbd> or <kbd>Space</kbd>      |
 | Brew the potion     | **Brew**                    | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
@@ -116,6 +147,8 @@ small fire, and ink-outlined ingredient drawings in earthy colors.
   - [x] US 1.5 Pause
   - [x] US 1.6 Leaderboard
 - [ ] Level 2: Extended
+  - [x] US 2.1 Difficulty selection
+  - [ ] US 2.2 Auto-save and Continue Game
 - [ ] Level 3: Full game
 
 ## Deployment
