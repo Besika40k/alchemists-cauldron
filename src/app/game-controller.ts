@@ -8,7 +8,7 @@ import {
   startGame,
   tick,
 } from '../logic/game-rules';
-import { createGameSave } from '../logic/game-save';
+import { createGameSave, restoreGame } from '../logic/game-save';
 import {
   type ILeaderboardInsert,
   insertEntry,
@@ -17,7 +17,7 @@ import {
   normalizePlayerName,
 } from '../logic/leaderboard';
 import type { GameStore } from '../state/game-store';
-import { clearSave, saveGame } from '../storage/game-save-storage';
+import { clearSave, loadGame, saveGame } from '../storage/game-save-storage';
 import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from '../storage/leaderboard-storage';
 import type {
   Clock,
@@ -63,6 +63,20 @@ export class GameController {
   }
 
   /**
+   * The saved unfinished game, paused. A save that is broken, edited or already
+   * finished is deleted, so the game starts normally.
+   */
+  #loadSavedGame(): IGameState | undefined {
+    const savedGame: IGameState | undefined = restoreGame(loadGame());
+
+    if (!savedGame) {
+      clearSave();
+    }
+
+    return savedGame;
+  }
+
+  /**
    * Checks the clock on every animation frame while the game runs. The rules only
    * change the state when the shown second changes or the time is up.
    */
@@ -87,6 +101,25 @@ export class GameController {
   startGame(): void {
     this.#store.setState(startGame(this.#store.state.difficulty, this.#random, this.#clock()));
     this.#runTimer();
+  }
+
+  /**
+   * True on the start screen while a valid unfinished game is saved.
+   */
+  canContinue(): boolean {
+    return this.#store.state.status === 'menu' && this.#loadSavedGame() !== undefined;
+  }
+
+  /**
+   * Opens the saved game paused, with its stock as it was saved; Resume starts the clock.
+   */
+  continueGame(): void {
+    const savedGame: IGameState | undefined =
+      this.#store.state.status === 'menu' ? this.#loadSavedGame() : undefined;
+
+    if (savedGame) {
+      this.#store.setState(savedGame);
+    }
   }
 
   selectDifficulty(difficulty: Difficulty): void {
