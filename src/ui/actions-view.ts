@@ -1,6 +1,8 @@
-import { canBrew } from '../logic/game-rules';
+import { DIFFICULTY_LABELS } from '../data/difficulty';
+import { canBrew, getSettings } from '../logic/game-rules';
 import type { IGameState } from '../types/game';
 import { createElement } from './dom';
+import { describeDifficulty } from './format';
 
 export interface IActionHandlers {
   readonly onStart: () => void;
@@ -29,10 +31,11 @@ function createActionButton(
 
 /**
  * The action bar under the play field. Before the first run Start Game sits alone in
- * the center, with Help, Menu and Leaderboard in a row under it; during a run Pause
- * and Brew.
+ * the center with the chosen difficulty under it, and Help, Menu and Leaderboard in a
+ * row below; during a run Pause and Brew.
  */
 export class ActionsView {
+  readonly #difficultyNote: HTMLParagraphElement;
   readonly #menuRow: HTMLDivElement;
   readonly #startButton: HTMLButtonElement;
   readonly #pauseButton: HTMLButtonElement;
@@ -43,6 +46,7 @@ export class ActionsView {
     this.#startButton = createActionButton('Start Game', handlers.onStart);
     this.#pauseButton = createActionButton('Pause', handlers.onPause, 'button button--large');
     this.#brewButton = createActionButton('Brew', handlers.onBrew);
+    this.#difficultyNote = createElement('p', { className: 'actions__note' });
     this.#menuRow = createElement('div', { className: 'actions__row' }, [
       createActionButton('Help', handlers.onShowHelp, 'button'),
       createActionButton('Menu', handlers.onShowMenu, 'button'),
@@ -54,6 +58,7 @@ export class ActionsView {
         this.#pauseButton,
         this.#brewButton,
       ]),
+      this.#difficultyNote,
       this.#menuRow,
     ]);
   }
@@ -69,6 +74,8 @@ export class ActionsView {
     const isMenu: boolean = state.status === 'menu';
 
     this.#menuRow.hidden = !isMenu;
+    this.#difficultyNote.hidden = !isMenu;
+    this.#difficultyNote.textContent = `${DIFFICULTY_LABELS[state.difficulty]}: ${describeDifficulty(getSettings(state))}`;
     this.#startButton.hidden = !isMenu;
     this.#pauseButton.hidden = state.status !== 'playing' && state.status !== 'paused';
     this.#brewButton.hidden = isMenu;

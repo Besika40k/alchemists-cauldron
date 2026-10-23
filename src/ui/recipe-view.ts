@@ -1,3 +1,4 @@
+import { DIFFICULTY_LABELS } from '../data/difficulty';
 import { getSettings, isCauldronFull } from '../logic/game-rules';
 import type { IGameState, IRecipe, IRecipeRange, ParameterName } from '../types/game';
 import { createElement } from './dom';
@@ -69,7 +70,7 @@ export class RecipeView {
     this.#name.classList.toggle('recipe__name--empty', !recipe);
     this.#rangeList.hidden = !recipe;
     this.#tolerance.hidden = !recipe;
-    this.#tolerance.textContent = `Brew tolerance ±${String(getSettings(state).tolerance)}`;
+    this.#tolerance.textContent = `${DIFFICULTY_LABELS[state.difficulty]}: brew tolerance ±${String(getSettings(state).tolerance)}`;
 
     for (const row of RANGE_ROWS) {
       const range: IRecipeRange | undefined = recipe?.[row.parameter];
