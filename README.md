@@ -46,9 +46,12 @@ The numbers in these steps are the Medium ones; [Difficulty](#difficulty) lists 
    recipe panel shows a random recipe of the difficulty, you have 3 lives, and the clock
    starts at 02:30. The time bar shrinks with it, and under 15 seconds the timer turns red
    and pulses.
-2. Click an ingredient, or reach it with <kbd>Tab</kbd> and press <kbd>Enter</kbd> or
-   <kbd>Space</kbd>, to put one portion into the cauldron. Its stock drops by 1. The card
-   shows the ingredient's Temperature (T), Density (D) and Magic Power (MP).
+2. Click an ingredient, drag it onto the cauldron with the mouse, or reach it with
+   <kbd>Tab</kbd> and press <kbd>Enter</kbd> or <kbd>Space</kbd>, to put one portion into
+   the cauldron. Its stock drops by 1. While a card that can go in is dragged over the
+   cauldron, the cauldron lights up; an empty card, a full cauldron or a paused game
+   takes no drop. The card shows the ingredient's Temperature (T), Density (D) and Magic
+   Power (MP).
 3. The cauldron holds up to 4 ingredients and keeps the order they went in. The recipe
    panel counts them (**Ingredients: 2 / 4**); at 4 / 4 the counter lights up and the shelf
    ignores new ingredients.
@@ -124,18 +127,18 @@ shows only the first 4, 6 or 8 ingredients of the catalogue.
 
 ## Controls
 
-| Action                | Mouse or touch                     | Keyboard                                                              |
-| --------------------- | ---------------------------------- | --------------------------------------------------------------------- |
-| Read the rules        | **Help**                           | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>; <kbd>Esc</kbd> closes |
-| Choose a difficulty   | **Menu**, then a difficulty        | <kbd>Tab</kbd> to it, <kbd>Enter</kbd>                                |
-| Start a game          | **Start Game**                     | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
-| Continue a saved game | **Continue Game**, then **Resume** | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
-| Add an ingredient     | Click its card                     | <kbd>Tab</kbd> to the card, <kbd>Enter</kbd> or <kbd>Space</kbd>      |
-| Brew the potion       | **Brew**                           | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
-| Pause and resume      | **Pause**, then **Resume**         | <kbd>Tab</kbd> to **Pause**, <kbd>Enter</kbd>; <kbd>Esc</kbd> resumes |
-| Leave a paused game   | **Exit to Menu**                   | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
-| Leave Game Over       | **Play again**                     | <kbd>Esc</kbd> goes to the start screen                               |
-| Save a Top-10 score   | Type a name, **Save score**        | Type a name, <kbd>Enter</kbd>                                         |
+| Action                | Mouse or touch                              | Keyboard                                                              |
+| --------------------- | ------------------------------------------- | --------------------------------------------------------------------- |
+| Read the rules        | **Help**                                    | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>; <kbd>Esc</kbd> closes |
+| Choose a difficulty   | **Menu**, then a difficulty                 | <kbd>Tab</kbd> to it, <kbd>Enter</kbd>                                |
+| Start a game          | **Start Game**                              | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
+| Continue a saved game | **Continue Game**, then **Resume**          | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
+| Add an ingredient     | Click its card or drag it onto the cauldron | <kbd>Tab</kbd> to the card, <kbd>Enter</kbd> or <kbd>Space</kbd>      |
+| Brew the potion       | **Brew**                                    | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
+| Pause and resume      | **Pause**, then **Resume**                  | <kbd>Tab</kbd> to **Pause**, <kbd>Enter</kbd>; <kbd>Esc</kbd> resumes |
+| Leave a paused game   | **Exit to Menu**                            | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
+| Leave Game Over       | **Play again**                              | <kbd>Esc</kbd> goes to the start screen                               |
+| Save a Top-10 score   | Type a name, **Save score**                 | Type a name, <kbd>Enter</kbd>                                         |
 
 ## Look and feel
 
@@ -167,6 +170,7 @@ small fire, and ink-outlined ingredient drawings in earthy colors.
   - [x] US 2.1 Difficulty selection
   - [x] US 2.2 Auto-save and Continue Game
 - [ ] Level 3: Full game
+  - [x] US 3.1 Drag and drop
 
 ## Deployment
 
