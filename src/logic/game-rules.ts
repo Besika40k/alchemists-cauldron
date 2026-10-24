@@ -187,6 +187,39 @@ export function clearCauldron(state: IGameState): IGameState {
   return { ...state, cauldronIngredients: [] };
 }
 
+/**
+ * Pour Out costs this many seconds of the clock.
+ */
+export const POUR_OUT_PENALTY_SECONDS: number = 10;
+
+export function canPourOut(state: IGameState): boolean {
+  return state.status === 'playing' && state.cauldronIngredients.length > 0;
+}
+
+/**
+ * Throws a wrong mix away without losing a life: the cauldron empties, its ingredients
+ * stay spent and the clock loses 10 seconds. Nothing else changes, but running out of
+ * time or of every ingredient ends the game.
+ */
+export function pourOut(state: IGameState, now: number = Date.now()): IGameState {
+  if (!canPourOut(state)) {
+    return state;
+  }
+
+  const penalty: number = secondsToMilliseconds(POUR_OUT_PENALTY_SECONDS);
+  const endTime: number | undefined =
+    state.endTime === undefined ? undefined : state.endTime - penalty;
+
+  return endGameIfOver({
+    ...clearCauldron(state),
+    endTime,
+    timeLeft:
+      endTime === undefined
+        ? Math.max(state.timeLeft - penalty, 0)
+        : getRemainingTime(endTime, now),
+  });
+}
+
 export function canBrew(state: IGameState): boolean {
   return (
     state.status === 'playing' &&
