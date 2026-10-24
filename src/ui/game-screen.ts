@@ -20,6 +20,7 @@ export interface IGameScreenHandlers {
   readonly canContinue: () => boolean;
   readonly onAddIngredient: IngredientHandler;
   readonly onBrew: () => void;
+  readonly onPourOut: () => void;
   readonly onPlayAgain: () => void;
   readonly onShowMenu: () => void;
   readonly onPause: () => void;
@@ -97,6 +98,11 @@ export class GameScreen {
       onBrew: (): void => {
         handlers.onBrew();
         // Brew turns disabled with an empty cauldron, so the focus goes back to the shelf
+        this.#shelf.focusFirstCard();
+      },
+      onPourOut: (): void => {
+        handlers.onPourOut();
+        // Pour Out turns disabled with an empty cauldron, so the focus goes back to the shelf
         this.#shelf.focusFirstCard();
       },
       onPause: handlers.onPause,
