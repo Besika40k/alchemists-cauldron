@@ -127,7 +127,7 @@ export class GameController {
   }
 
   addIngredient(id: IngredientId): void {
-    this.#store.setState(addIngredient(this.#store.state, id));
+    this.#store.setState(addIngredient(this.#store.state, id, this.#clock()));
   }
 
   brew(): void {
