@@ -86,6 +86,30 @@ The numbers in these steps are the Medium ones; [Difficulty](#difficulty) lists 
 The difficulty cannot change during a game: Menu is only on the start screen, and Play
 again keeps the difficulty of the finished game.
 
+## Chemical reactions
+
+Some ingredient combinations react in the cauldron. Easy has none, Medium uses 2 and Hard
+uses 3 of the 15 reactions of the task's reaction table, kept as a typed `IReaction[]`:
+
+| Difficulty | Reaction     | Trigger                                             | Effect                                     |
+| ---------- | ------------ | --------------------------------------------------- | ------------------------------------------ |
+| Medium     | Bubbling     | Fairy Dust + Caustic Acid                           | Magic Power +50%, −10 s once               |
+| Medium     | Solar Frost  | Dragon Tears + Frost Lotus                          | Temperature set to 0, Density +20%         |
+| Hard       | Volatile Mix | Phoenix Feather + Essence of the Void               | Lose 1 life and the cauldron empties, once |
+| Hard       | Magma Flux   | Total Temperature 60 or more                        | Magic Power +20%, Density −10%             |
+| Hard       | Steam Burst  | Dragon Tears + Caustic Acid, total Temperature ≥ 35 | Temperature +10, −5 s once                 |
+
+- The cauldron values are worked out from the ingredient list every time: the sums of
+  the ingredients, then every active reaction of the difficulty in the order of the
+  table. The bars and the Brew check use these values. Percentages are rounded to whole
+  numbers.
+- A reaction fires only when it changes from not active to active: its message appears
+  and its one-time cost (time, or a life and the cauldron) is taken. While the same
+  combination stays in the cauldron it does not fire again.
+- The active reactions are listed as tags under the cauldron, and Help lists all of them.
+- The subsets were chosen so that every recipe of the difficulty can still be brewed:
+  Annihilation or Void Resonance would make some recipes impossible.
+
 ## Save and Continue Game
 
 The game saves itself while you play, so a reload or a closed tab does not lose it.
@@ -174,6 +198,7 @@ small fire, and ink-outlined ingredient drawings in earthy colors.
 - [ ] Level 3: Full game
   - [x] US 3.1 Drag and drop
   - [x] US 3.2 Ingredient tooltip
+  - [x] US 3.3 Chemical reactions
 
 ## Deployment
 
