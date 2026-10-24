@@ -1,6 +1,5 @@
 import { isInRange, widenRange } from '../logic/brew-check';
-import { calculateCauldron } from '../logic/calculate-cauldron';
-import { getSettings } from '../logic/game-rules';
+import { getCauldronValues, getSettings } from '../logic/game-rules';
 import type {
   ICauldronValues,
   IGameState,
@@ -170,7 +169,7 @@ export class BarsView {
   }
 
   render(state: IGameState): void {
-    const values: ICauldronValues = calculateCauldron(state.cauldronIngredients);
+    const values: ICauldronValues = getCauldronValues(state);
     const recipe: IRecipe | undefined = state.activeRecipe;
     const tolerance: number = getSettings(state).tolerance;
 

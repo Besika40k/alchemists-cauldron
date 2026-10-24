@@ -143,6 +143,7 @@ export interface IGameState {
   readonly shelfStock: ShelfStock;
   readonly cauldronIngredients: readonly IIngredient[];
   readonly lastBrew: IBrewResult | undefined;
+  readonly lastReaction: IReactionEvent | undefined;
 }
 
 /**

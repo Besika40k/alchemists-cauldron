@@ -4,15 +4,20 @@ import type {
   Difficulty,
   GameOverReason,
   IBrewResult,
+  ICauldronValues,
   IDifficultySettings,
   IGameState,
   IIngredient,
   IngredientId,
+  IReaction,
+  IReactionEvent,
   IRecipe,
   RandomSource,
+  ReactionId,
 } from '../types/game';
 import { isBrewSuccessful } from './brew-check';
 import { calculateCauldron } from './calculate-cauldron';
+import { findStartedReactions, getReactions } from './reactions';
 import { pickRecipe } from './recipe-generator';
 import { createStock, getStock, isShelfEmpty, takeFromStock } from './stock';
 import { addTimeBonus, getRemainingTime, secondsToMilliseconds, toDisplaySeconds } from './timer';
@@ -45,6 +50,7 @@ export function createMenuState(difficulty: Difficulty = DEFAULT_DIFFICULTY): IG
     shelfStock: {},
     cauldronIngredients: [],
     lastBrew: undefined,
+    lastReaction: undefined,
   };
 }
 
@@ -81,6 +87,7 @@ export function startGame(
     shelfStock: createStock(getShelfIngredients(difficulty), random),
     cauldronIngredients: [],
     lastBrew: undefined,
+    lastReaction: undefined,
   };
 }
 
@@ -93,21 +100,84 @@ export function canAddIngredient(state: IGameState, id: IngredientId): boolean {
 }
 
 /**
- * Moves one portion from the shelf to the end of the cauldron. Returns the same
- * state when the move is not allowed, so a blocked click changes nothing.
+ * The values the bars show and Brew checks: the ingredient sums changed by the active
+ * reactions of the difficulty.
  */
-export function addIngredient(state: IGameState, id: IngredientId): IGameState {
+export function getCauldronValues(state: IGameState): ICauldronValues {
+  return calculateCauldron(state.cauldronIngredients, getReactions(state.difficulty));
+}
+
+/**
+ * The one-time effects of the reactions that just started: the lost seconds, and for
+ * an explosion a lost life and an empty cauldron. Any of them can end the game.
+ */
+function applyStartedReactions(
+  state: IGameState,
+  reactions: readonly IReaction[],
+  now: number,
+): IGameState {
+  let penaltySeconds: number = 0;
+
+  for (const reaction of reactions) {
+    penaltySeconds += reaction.timePenaltySeconds;
+  }
+
+  const penalty: number = secondsToMilliseconds(penaltySeconds);
+  const endTime: number | undefined =
+    state.endTime === undefined ? undefined : state.endTime - penalty;
+  const isExplosive: boolean = reactions.some(
+    (reaction: IReaction): boolean => reaction.isExplosive,
+  );
+  const lastReaction: IReactionEvent = {
+    id: (state.lastReaction?.id ?? 0) + 1,
+    reactionIds: reactions.map((reaction: IReaction): ReactionId => reaction.id),
+  };
+
+  return endGameIfOver({
+    ...state,
+    endTime,
+    timeLeft:
+      endTime === undefined
+        ? Math.max(state.timeLeft - penalty, 0)
+        : getRemainingTime(endTime, now),
+    lives: isExplosive ? Math.max(state.lives - 1, 0) : state.lives,
+    cauldronIngredients: isExplosive ? [] : state.cauldronIngredients,
+    lastReaction,
+  });
+}
+
+/**
+ * Moves one portion from the shelf to the end of the cauldron. Returns the same
+ * state when the move is not allowed, so a blocked click changes nothing. A reaction
+ * that starts with this ingredient fires its one-time effects; one that was already
+ * active does not fire again.
+ */
+export function addIngredient(
+  state: IGameState,
+  id: IngredientId,
+  now: number = Date.now(),
+): IGameState {
   const ingredient: IIngredient | undefined = INGREDIENTS.find(
     (item: IIngredient): boolean => item.id === id,
   );
 
-  return ingredient && canAddIngredient(state, id)
-    ? {
-        ...state,
-        shelfStock: takeFromStock(state.shelfStock, id),
-        cauldronIngredients: [...state.cauldronIngredients, ingredient],
-      }
-    : state;
+  if (!ingredient || !canAddIngredient(state, id)) {
+    return state;
+  }
+
+  const cauldronIngredients: readonly IIngredient[] = [...state.cauldronIngredients, ingredient];
+  const added: IGameState = {
+    ...state,
+    shelfStock: takeFromStock(state.shelfStock, id),
+    cauldronIngredients,
+  };
+  const started: readonly IReaction[] = findStartedReactions(
+    state.cauldronIngredients,
+    cauldronIngredients,
+    getReactions(state.difficulty),
+  );
+
+  return started.length > 0 ? applyStartedReactions(added, started, now) : added;
 }
 
 /**
@@ -223,11 +293,7 @@ export function brew(
     return endGameIfOver({ ...state, timeLeft });
   }
 
-  const isSuccess: boolean = isBrewSuccessful(
-    calculateCauldron(state.cauldronIngredients),
-    recipe,
-    settings.tolerance,
-  );
+  const isSuccess: boolean = isBrewSuccessful(getCauldronValues(state), recipe, settings.tolerance);
   const lastBrew: IBrewResult = {
     id: (state.lastBrew?.id ?? 0) + 1,
     isSuccess,
