@@ -1,9 +1,20 @@
 import { getSettings, isCauldronFull } from '../logic/game-rules';
-import type { IBrewResult, IGameState, IIngredient } from '../types/game';
+import { findReaction, getActiveReactions, getReactions } from '../logic/reactions';
+import type {
+  IBrewResult,
+  IGameState,
+  IIngredient,
+  IReaction,
+  IReactionEvent,
+} from '../types/game';
 import { createElement } from './dom';
 import { createCauldronArt, createIngredientIcon } from './icons';
 import { findIngredient, INGREDIENT_DRAG_TYPE, isIngredientDrag } from './ingredient-drag';
 import type { IngredientHandler } from './shelf-view';
+
+type MessageKind = 'success' | 'failure' | 'reaction';
+
+const MESSAGE_KINDS: readonly MessageKind[] = ['success', 'failure', 'reaction'];
 
 function describeBrew(brewResult: IBrewResult, scorePerBrew: number): string {
   return brewResult.isSuccess
@@ -12,13 +23,38 @@ function describeBrew(brewResult: IBrewResult, scorePerBrew: number): string {
 }
 
 /**
- * The cauldron drawing, the added ingredients in the order they went in and the
- * result of the last brew. A shelf card can be dropped onto it.
+ * "Bubbling! Magic Power +50%, −10 s once." for every reaction that just started.
+ */
+function describeReactions(reactionEvent: IReactionEvent): string {
+  const parts: string[] = [];
+
+  for (const id of reactionEvent.reactionIds) {
+    const reaction: IReaction | undefined = findReaction(id);
+
+    if (reaction) {
+      parts.push(`${reaction.name}! ${reaction.effect}.`);
+    }
+  }
+
+  return parts.join(' ');
+}
+
+function createReactionChip(reaction: IReaction): HTMLLIElement {
+  return createElement('li', { className: 'reaction-chip', text: reaction.name });
+}
+
+/**
+ * The cauldron drawing, the added ingredients in the order they went in, the active
+ * reactions and the news of the last brew or reaction. A shelf card can be dropped
+ * onto it.
  */
 export class CauldronView {
   readonly #contents: HTMLOListElement;
+  readonly #reactions: HTMLUListElement;
   readonly #message: HTMLParagraphElement;
   #shownIngredients: readonly IIngredient[] | undefined;
+  #shownBrewId: number | undefined;
+  #shownReactionId: number | undefined;
   #canDrop: boolean = false;
   readonly element: HTMLElement;
 
@@ -27,7 +63,11 @@ export class CauldronView {
       className: 'cauldron__contents',
       attributes: { 'aria-label': 'Ingredients in the cauldron' },
     });
-    // a status region, so screen readers announce every brew result
+    this.#reactions = createElement('ul', {
+      className: 'cauldron__reactions',
+      attributes: { 'aria-label': 'Active reactions' },
+    });
+    // a status region, so screen readers announce every brew result and reaction
     this.#message = createElement('p', {
       className: 'cauldron__message',
       attributes: { role: 'status' },
@@ -43,6 +83,7 @@ export class CauldronView {
         }),
         createElement('div', { className: 'cauldron__stage' }, [createCauldronArt()]),
         this.#contents,
+        this.#reactions,
         this.#message,
       ],
     );
@@ -92,20 +133,44 @@ export class CauldronView {
     });
   }
 
-  render(state: IGameState): void {
-    const brewResult: IBrewResult | undefined = state.lastBrew;
+  #setMessage(text: string, kind: MessageKind | undefined): void {
+    this.#message.textContent = text;
 
+    for (const name of MESSAGE_KINDS) {
+      this.#message.classList.toggle(`cauldron__message--${name}`, name === kind);
+    }
+  }
+
+  /**
+   * The message tells the newest event: a reaction that just started or the last brew.
+   * A new game has neither and starts with an empty message.
+   */
+  #renderMessage(state: IGameState): void {
+    const { lastBrew, lastReaction }: IGameState = state;
+
+    if (lastReaction && lastReaction.id !== this.#shownReactionId) {
+      this.#setMessage(describeReactions(lastReaction), 'reaction');
+    } else if (lastBrew && lastBrew.id !== this.#shownBrewId) {
+      this.#setMessage(
+        describeBrew(lastBrew, getSettings(state).scorePerBrew),
+        lastBrew.isSuccess ? 'success' : 'failure',
+      );
+    } else if (!lastBrew && !lastReaction) {
+      this.#setMessage('', undefined);
+    }
+
+    this.#shownBrewId = lastBrew?.id;
+    this.#shownReactionId = lastReaction?.id;
+  }
+
+  render(state: IGameState): void {
     this.#canDrop = state.status === 'playing' && !isCauldronFull(state);
 
     if (!this.#canDrop) {
       this.element.classList.remove('cauldron--drop-target');
     }
 
-    this.#message.textContent = brewResult
-      ? describeBrew(brewResult, getSettings(state).scorePerBrew)
-      : '';
-    this.#message.classList.toggle('cauldron__message--success', brewResult?.isSuccess === true);
-    this.#message.classList.toggle('cauldron__message--failure', brewResult?.isSuccess === false);
+    this.#renderMessage(state);
 
     // the timer redraws the screen every second; the contents change only with ingredients
     if (state.cauldronIngredients === this.#shownIngredients) {
@@ -117,6 +182,15 @@ export class CauldronView {
     const capacity: number = getSettings(state).maxCauldronIngredients;
     const freeSlots: number = Math.max(capacity - state.cauldronIngredients.length, 0);
 
+    const activeReactions: readonly IReaction[] = getActiveReactions(
+      state.cauldronIngredients,
+      getReactions(state.difficulty),
+    );
+
+    this.#reactions.hidden = activeReactions.length === 0;
+    this.#reactions.replaceChildren(
+      ...activeReactions.map((reaction: IReaction): HTMLLIElement => createReactionChip(reaction)),
+    );
     this.#contents.style.setProperty('--cauldron-capacity', String(capacity));
     this.#contents.replaceChildren(
       ...state.cauldronIngredients.map((ingredient: IIngredient): HTMLLIElement =>
