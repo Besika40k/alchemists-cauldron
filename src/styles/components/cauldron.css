@@ -3,6 +3,7 @@
   align-content: center;
   justify-items: center;
   gap: var(--space-4);
+  transition: box-shadow var(--duration-fast);
 }
 
 /* smaller on phones, so the shelf stays close below it */
@@ -159,4 +160,17 @@
 
 .cauldron__message--failure {
   color: var(--color-danger);
+}
+
+/* a card that can go in is dragged over the cauldron */
+.cauldron--drop-target {
+  box-shadow:
+    var(--shadow-panel),
+    0 0 0 4px var(--color-mustard),
+    0 0 24px 8px rgb(212 165 55 / 55%);
+
+  & .cauldron__item--free {
+    border-color: var(--color-mustard);
+    background-color: rgb(212 165 55 / 18%);
+  }
 }

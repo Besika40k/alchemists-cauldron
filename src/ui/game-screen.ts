@@ -56,7 +56,7 @@ export class GameScreen {
     this.#handlers = handlers;
     this.#hud = new HudView();
     this.#shelf = new ShelfView(handlers.onAddIngredient);
-    this.#cauldron = new CauldronView();
+    this.#cauldron = new CauldronView(handlers.onAddIngredient);
     this.#recipe = new RecipeView();
     this.#bars = new BarsView();
     this.#confirm = new ConfirmDialog();

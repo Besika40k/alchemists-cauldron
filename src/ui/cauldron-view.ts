@@ -1,7 +1,9 @@
-import { getSettings } from '../logic/game-rules';
+import { getSettings, isCauldronFull } from '../logic/game-rules';
 import type { IBrewResult, IGameState, IIngredient } from '../types/game';
 import { createElement } from './dom';
 import { createCauldronArt, createIngredientIcon } from './icons';
+import { findIngredient, INGREDIENT_DRAG_TYPE, isIngredientDrag } from './ingredient-drag';
+import type { IngredientHandler } from './shelf-view';
 
 function describeBrew(brewResult: IBrewResult, scorePerBrew: number): string {
   return brewResult.isSuccess
@@ -11,15 +13,16 @@ function describeBrew(brewResult: IBrewResult, scorePerBrew: number): string {
 
 /**
  * The cauldron drawing, the added ingredients in the order they went in and the
- * result of the last brew.
+ * result of the last brew. A shelf card can be dropped onto it.
  */
 export class CauldronView {
   readonly #contents: HTMLOListElement;
   readonly #message: HTMLParagraphElement;
   #shownIngredients: readonly IIngredient[] | undefined;
+  #canDrop: boolean = false;
   readonly element: HTMLElement;
 
-  constructor() {
+  constructor(onDrop: IngredientHandler) {
     this.#contents = createElement('ol', {
       className: 'cauldron__contents',
       attributes: { 'aria-label': 'Ingredients in the cauldron' },
@@ -43,10 +46,60 @@ export class CauldronView {
         this.#message,
       ],
     );
+    this.#listenToDrops(onDrop);
+  }
+
+  /**
+   * The cauldron lights up while a card that can go in is dragged over it. A paused
+   * game or a full cauldron takes no drop, and the rules check every add again.
+   */
+  #listenToDrops(onDrop: IngredientHandler): void {
+    this.element.addEventListener('dragover', (event: DragEvent): void => {
+      if (!this.#canDrop || !isIngredientDrag(event)) {
+        return;
+      }
+
+      // cancelling dragover is what allows the drop
+      event.preventDefault();
+
+      if (event.dataTransfer) {
+        event.dataTransfer.dropEffect = 'copy';
+      }
+
+      this.element.classList.add('cauldron--drop-target');
+    });
+    this.element.addEventListener('dragleave', (event: DragEvent): void => {
+      const { relatedTarget }: DragEvent = event;
+
+      // moving between the parts of the cauldron is not leaving it
+      if (relatedTarget instanceof Node && this.element.contains(relatedTarget)) {
+        return;
+      }
+
+      this.element.classList.remove('cauldron--drop-target');
+    });
+    this.element.addEventListener('drop', (event: DragEvent): void => {
+      const ingredient: IIngredient | undefined = findIngredient(
+        event.dataTransfer?.getData(INGREDIENT_DRAG_TYPE),
+      );
+
+      event.preventDefault();
+      this.element.classList.remove('cauldron--drop-target');
+
+      if (ingredient && this.#canDrop) {
+        onDrop(ingredient.id);
+      }
+    });
   }
 
   render(state: IGameState): void {
     const brewResult: IBrewResult | undefined = state.lastBrew;
+
+    this.#canDrop = state.status === 'playing' && !isCauldronFull(state);
+
+    if (!this.#canDrop) {
+      this.element.classList.remove('cauldron--drop-target');
+    }
 
     this.#message.textContent = brewResult
       ? describeBrew(brewResult, getSettings(state).scorePerBrew)
