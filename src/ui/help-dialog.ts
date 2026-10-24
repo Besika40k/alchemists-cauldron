@@ -1,5 +1,6 @@
 import { DIFFICULTIES, DIFFICULTY_LABELS, DIFFICULTY_SETTINGS } from '../data/difficulty';
-import type { Difficulty, IDifficultySettings } from '../types/game';
+import { getReactions } from '../logic/reactions';
+import type { Difficulty, IDifficultySettings, IReaction } from '../types/game';
 import { createElement } from './dom';
 
 interface ISettingRow {
@@ -43,6 +44,11 @@ const SETTING_ROWS: readonly ISettingRow[] = [
     label: 'Time bonus per brew',
     format: (settings: IDifficultySettings): string => `+${String(settings.timeBonusSeconds)} s`,
   },
+  {
+    label: 'Reactions',
+    format: (settings: IDifficultySettings): string =>
+      settings.reactionCount === 0 ? 'none' : String(settings.reactionCount),
+  },
 ];
 
 function createHeaderRow(): HTMLTableRowElement {
@@ -81,8 +87,43 @@ function createDifficultyTable(): HTMLTableElement {
   ]);
 }
 
+function createReactionItem(reaction: IReaction): HTMLLIElement {
+  return createElement('li', { className: 'help__reaction' }, [
+    createElement('strong', { text: reaction.name }),
+    ` (${reaction.trigger}): ${reaction.effect}.`,
+  ]);
+}
+
 /**
- * The rules of the game and the difficulty table, opened from the start screen.
+ * The reactions of Medium and Hard; Easy has none.
+ */
+function createReactionLists(): HTMLElement[] {
+  const lists: HTMLElement[] = [];
+
+  for (const difficulty of DIFFICULTIES) {
+    const reactions: readonly IReaction[] = getReactions(difficulty);
+
+    if (reactions.length > 0) {
+      lists.push(
+        createElement('p', {
+          className: 'help__reaction-heading',
+          text: DIFFICULTY_LABELS[difficulty],
+        }),
+        createElement(
+          'ul',
+          { className: 'help__reactions' },
+          reactions.map((reaction: IReaction): HTMLLIElement => createReactionItem(reaction)),
+        ),
+      );
+    }
+  }
+
+  return lists;
+}
+
+/**
+ * The rules of the game, the difficulty table and the reactions, opened from the start
+ * screen.
  */
 export class HelpDialog {
   readonly element: HTMLDialogElement;
@@ -121,6 +162,12 @@ export class HelpDialog {
         ),
         createElement('h3', { className: 'help__heading', text: 'Difficulty' }),
         createElement('div', { className: 'help__table-scroll' }, [createDifficultyTable()]),
+        createElement('h3', { className: 'help__heading', text: 'Reactions' }),
+        createElement('p', {
+          className: 'help__note',
+          text: 'Some ingredients react in the cauldron. While a reaction is active it changes the values on the bars; lost time or a lost life happens once, when it starts. Easy has no reactions.',
+        }),
+        ...createReactionLists(),
         createElement('div', { className: 'dialog__actions' }, [backButton]),
       ],
     );

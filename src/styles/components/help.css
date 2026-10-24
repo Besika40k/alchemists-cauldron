@@ -63,3 +63,20 @@
     white-space: nowrap;
   }
 }
+
+.help__note {
+  margin-bottom: var(--space-2);
+}
+
+.help__reaction-heading {
+  margin-top: var(--space-2);
+  font-family: var(--font-heading);
+  font-weight: 800;
+}
+
+.help__reactions {
+  display: grid;
+  gap: var(--space-1);
+  padding-left: var(--space-5);
+  list-style: disc;
+}
