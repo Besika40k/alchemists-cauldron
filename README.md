@@ -66,7 +66,9 @@ The numbers in these steps are the Medium ones; [Difficulty](#difficulty) lists 
    added ingredients, must be inside the recipe range widened by the tolerance of ±8. A
    good potion gives 200 score, 10 extra seconds (never above the start time of 02:30)
    and a new recipe; a wrong mixture costs a life. Either way the cauldron empties, and
-   the used ingredients are spent.
+   the used ingredients are spent. **Pour Out** throws a wrong mix away without losing a
+   life: the cauldron empties, its ingredients stay spent and the clock loses 10 seconds.
+   It is disabled while the cauldron is empty.
 6. An ingredient with no stock left becomes an empty, dimmed slot that cannot be used.
 7. **Pause** stops the clock, blurs the play field and opens a dialog: **Resume** (or
    <kbd>Esc</kbd>) continues the same game, **Exit to Menu** leaves it for the start screen.
@@ -160,6 +162,7 @@ shows only the first 4, 6 or 8 ingredients of the catalogue.
 | Start a game          | **Start Game**                              | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
 | Continue a saved game | **Continue Game**, then **Resume**          | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
 | Add an ingredient     | Click its card or drag it onto the cauldron | <kbd>Tab</kbd> to the card, <kbd>Enter</kbd> or <kbd>Space</kbd>      |
+| Pour the mix out      | **Pour Out**                                | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
 | Brew the potion       | **Brew**                                    | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
 | Pause and resume      | **Pause**, then **Resume**                  | <kbd>Tab</kbd> to **Pause**, <kbd>Enter</kbd>; <kbd>Esc</kbd> resumes |
 | Leave a paused game   | **Exit to Menu**                            | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
@@ -199,6 +202,7 @@ small fire, and ink-outlined ingredient drawings in earthy colors.
   - [x] US 3.1 Drag and drop
   - [x] US 3.2 Ingredient tooltip
   - [x] US 3.3 Chemical reactions
+  - [x] US 3.4 Pour Out
 
 ## Deployment
 
