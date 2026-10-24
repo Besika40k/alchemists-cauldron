@@ -1,5 +1,6 @@
 /*
- * The numbers of an ingredient on a little paper note, next to its card.
+ * The numbers of an ingredient on a little paper note. It opens to the right and down;
+ * near the right edge to the left, near the bottom upward.
  */
 .ingredient-card__tooltip {
   position: absolute;
@@ -21,6 +22,16 @@
   .ingredient-card:is(:hover, :focus-visible) > & {
     display: grid;
     animation: tooltip-in var(--duration-fast) ease-out;
+  }
+
+  .ingredient-card--tooltip-left > & {
+    right: calc(100% + 10px);
+    left: auto;
+  }
+
+  .ingredient-card--tooltip-up > & {
+    top: auto;
+    bottom: 0;
   }
 }
 
