@@ -60,6 +60,61 @@ export interface IDifficultySettings {
   readonly reactionCount: number;
 }
 
+export type ReactionId =
+  | 'bubbling'
+  | 'volatile-mix'
+  | 'solar-frost'
+  | 'rooted-steam'
+  | 'ashen-bloom'
+  | 'annihilation'
+  | 'pressure-spike'
+  | 'magma-flux'
+  | 'deep-freeze'
+  | 'arcane-saturation'
+  | 'steam-burst'
+  | 'black-ice'
+  | 'heavy-spark'
+  | 'burning-root'
+  | 'void-resonance';
+
+/**
+ * One row of the reaction table. While it is active it changes the cauldron values;
+ * when it starts it can also cost time, or a life and the cauldron, once.
+ */
+export interface IReaction {
+  readonly id: ReactionId;
+  readonly name: string;
+  /**
+   * When it is active, as the reaction table says it.
+   */
+  readonly trigger: string;
+  /**
+   * What it does, for the message when it fires and for the help.
+   */
+  readonly effect: string;
+  readonly isActive: (ingredients: readonly IIngredient[]) => boolean;
+  readonly apply: (values: ICauldronValues) => ICauldronValues;
+  /**
+   * Seconds taken once, when the reaction starts.
+   */
+  readonly timePenaltySeconds: number;
+  /**
+   * An explosion costs a life and empties the cauldron once, when it starts.
+   */
+  readonly isExplosive: boolean;
+}
+
+/**
+ * The reactions that started with the last added ingredient.
+ */
+export interface IReactionEvent {
+  /**
+   * Grows with every event, so the screen can tell two in a row apart.
+   */
+  readonly id: number;
+  readonly reactionIds: readonly ReactionId[];
+}
+
 export interface IBrewResult {
   /**
    * Grows with every brew, so the screen can tell two results in a row apart.
