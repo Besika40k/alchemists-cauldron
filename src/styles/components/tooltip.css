@@ -52,6 +52,11 @@
   }
 }
 
+/* a paused game hides every tooltip */
+.game--paused .ingredient-card > .ingredient-card__tooltip {
+  display: none;
+}
+
 .tooltip-row {
   display: flex;
   justify-content: space-between;
