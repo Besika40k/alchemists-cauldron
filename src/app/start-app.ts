@@ -30,6 +30,9 @@ export function startApp(root: HTMLElement): void {
     onShowMenu: (): void => {
       controller.showMenu();
     },
+    onPourOut: (): void => {
+      controller.pourOut();
+    },
     onPause: (): void => {
       controller.pause();
     },
