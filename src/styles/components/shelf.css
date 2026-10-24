@@ -59,6 +59,11 @@
     transform: scale(0.98);
   }
 
+  /* a card with stock can be dragged into the cauldron */
+  &[draggable='true'] {
+    cursor: grab;
+  }
+
   /* the cauldron is full: the card keeps its focus but ignores clicks */
   &[aria-disabled='true'] {
     opacity: 0.6;

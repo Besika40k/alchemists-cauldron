@@ -5,6 +5,7 @@ import type { IGameState, IIngredient, IngredientId } from '../types/game';
 import { createElement } from './dom';
 import { formatSignedNumber } from './format';
 import { createIngredientIcon } from './icons';
+import { findIngredient, INGREDIENT_DRAG_TYPE } from './ingredient-drag';
 
 export type IngredientHandler = (id: IngredientId) => void;
 
@@ -49,6 +50,12 @@ function createStat(stat: IStatDescription): HTMLSpanElement {
   ]);
 }
 
+function findCard(target: EventTarget | null): HTMLButtonElement | undefined {
+  return target instanceof Element
+    ? (target.closest<HTMLButtonElement>('.ingredient-card') ?? undefined)
+    : undefined;
+}
+
 /**
  * The ingredient shelf: one button per ingredient with its numbers and its stock badge.
  */
@@ -80,18 +87,29 @@ export class ShelfView {
     );
 
     this.#list.addEventListener('click', (event: MouseEvent): void => {
-      const button: HTMLButtonElement | undefined =
-        event.target instanceof Element
-          ? (event.target.closest<HTMLButtonElement>('.ingredient-card') ?? undefined)
-          : undefined;
-      const id: string | undefined = button?.dataset['ingredientId'];
-      const ingredient: IIngredient | undefined = INGREDIENTS.find(
-        (item: IIngredient): boolean => item.id === id,
+      const ingredient: IIngredient | undefined = findIngredient(
+        findCard(event.target)?.dataset['ingredientId'],
       );
 
       if (ingredient) {
         onAdd(ingredient.id);
       }
+    });
+
+    // a card carries its ingredient id to the cauldron, where the drop adds it like a click
+    this.#list.addEventListener('dragstart', (event: DragEvent): void => {
+      const card: HTMLButtonElement | undefined = findCard(event.target);
+      const id: string | undefined = card?.draggable ? card.dataset['ingredientId'] : undefined;
+
+      if (!id || !event.dataTransfer) {
+        event.preventDefault();
+
+        return;
+      }
+
+      event.dataTransfer.setData(INGREDIENT_DRAG_TYPE, id);
+      event.dataTransfer.setData('text/plain', id);
+      event.dataTransfer.effectAllowed = 'copy';
     });
   }
 
@@ -173,6 +191,8 @@ export class ShelfView {
       card.button.classList.toggle('ingredient-card--empty', isEmpty);
       // a blocked shelf keeps its focus, it only ignores the clicks
       card.button.setAttribute('aria-disabled', String(isBlocked && !isEmpty));
+      // an empty slot, a full cauldron or a stopped game cannot start a drag
+      card.button.draggable = !isEmpty && !isBlocked;
     }
 
     this.element.classList.toggle('shelf--blocked', isFull);
