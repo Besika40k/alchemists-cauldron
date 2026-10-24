@@ -20,6 +20,11 @@ interface IStatDescription {
   readonly value: number;
 }
 
+// the tooltip size before it was ever shown, and the gap between it and its card
+const TOOLTIP_WIDTH: number = 180;
+const TOOLTIP_HEIGHT: number = 100;
+const TOOLTIP_GAP: number = 10;
+
 function describeStats(ingredient: IIngredient): readonly IStatDescription[] {
   return [
     { modifier: 'temperature', name: 'Temperature', value: ingredient.temperature },
@@ -54,6 +59,28 @@ function createTooltip(ingredient: IIngredient): HTMLSpanElement {
     describeStats(ingredient).map((stat: IStatDescription): HTMLSpanElement =>
       createTooltipRow(stat),
     ),
+  );
+}
+
+/**
+ * A card near the right edge opens its tooltip to the left, a card near the bottom
+ * opens it upward. The tooltip is measured, because phones show a narrower one.
+ */
+function placeTooltip(card: HTMLButtonElement): void {
+  const tooltip: HTMLElement | undefined =
+    card.querySelector<HTMLElement>('.ingredient-card__tooltip') ?? undefined;
+  const width: number = tooltip?.offsetWidth ?? 0;
+  const height: number = tooltip?.offsetHeight ?? 0;
+  const box: DOMRect = card.getBoundingClientRect();
+
+  card.classList.toggle(
+    'ingredient-card--tooltip-left',
+    box.right + TOOLTIP_GAP + (width > 0 ? width : TOOLTIP_WIDTH) >
+      document.documentElement.clientWidth,
+  );
+  card.classList.toggle(
+    'ingredient-card--tooltip-up',
+    box.top + (height > 0 ? height : TOOLTIP_HEIGHT) > innerHeight,
   );
 }
 
@@ -101,6 +128,22 @@ export class ShelfView {
 
       if (ingredient) {
         onAdd(ingredient.id);
+      }
+    });
+
+    // the tooltip side is chosen when the pointer or the keyboard focus reaches a card
+    this.#list.addEventListener('mouseover', (event: MouseEvent): void => {
+      const card: HTMLButtonElement | undefined = findCard(event.target);
+
+      if (card) {
+        placeTooltip(card);
+      }
+    });
+    this.#list.addEventListener('focusin', (event: FocusEvent): void => {
+      const card: HTMLButtonElement | undefined = findCard(event.target);
+
+      if (card) {
+        placeTooltip(card);
       }
     });
 
