@@ -50,8 +50,10 @@ The numbers in these steps are the Medium ones; [Difficulty](#difficulty) lists 
    <kbd>Tab</kbd> and press <kbd>Enter</kbd> or <kbd>Space</kbd>, to put one portion into
    the cauldron. Its stock drops by 1. While a card that can go in is dragged over the
    cauldron, the cauldron lights up; an empty card, a full cauldron or a paused game
-   takes no drop. The card shows the ingredient's Temperature (T), Density (D) and Magic
-   Power (MP).
+   takes no drop. A card shows the ingredient's icon, name and stock; hovering it, or
+   reaching it with <kbd>Tab</kbd>, opens a tooltip with its Temperature, Density and Magic
+   Power (`+` for positive, `−` for negative values). A card near the right edge opens the
+   tooltip to the left, a card near the bottom opens it upward, and a paused game hides it.
 3. The cauldron holds up to 4 ingredients and keeps the order they went in. The recipe
    panel counts them (**Ingredients: 2 / 4**); at 4 / 4 the counter lights up and the shelf
    ignores new ingredients.
@@ -171,6 +173,7 @@ small fire, and ink-outlined ingredient drawings in earthy colors.
   - [x] US 2.2 Auto-save and Continue Game
 - [ ] Level 3: Full game
   - [x] US 3.1 Drag and drop
+  - [x] US 3.2 Ingredient tooltip
 
 ## Deployment
 
