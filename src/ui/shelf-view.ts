@@ -16,38 +16,45 @@ interface IShelfCard {
 
 interface IStatDescription {
   readonly modifier: string;
-  readonly shortName: string;
-  readonly fullName: string;
+  readonly name: string;
   readonly value: number;
 }
 
 function describeStats(ingredient: IIngredient): readonly IStatDescription[] {
   return [
-    {
-      modifier: 'temperature',
-      shortName: 'T',
-      fullName: 'Temperature',
-      value: ingredient.temperature,
-    },
-    { modifier: 'density', shortName: 'D', fullName: 'Density', value: ingredient.density },
-    {
-      modifier: 'magic-power',
-      shortName: 'MP',
-      fullName: 'Magic Power',
-      value: ingredient.magicPower,
-    },
+    { modifier: 'temperature', name: 'Temperature', value: ingredient.temperature },
+    { modifier: 'density', name: 'Density', value: ingredient.density },
+    { modifier: 'magic-power', name: 'Magic Power', value: ingredient.magicPower },
   ];
 }
 
 /**
- * "T +25", read by screen readers as "Temperature +25".
+ * One line of the tooltip: "Temperature +25", with a real minus sign for negative values.
  */
-function createStat(stat: IStatDescription): HTMLSpanElement {
-  return createElement('span', { className: `stat stat--${stat.modifier}` }, [
-    createElement('span', { text: stat.shortName, attributes: { 'aria-hidden': 'true' } }),
-    createElement('span', { className: 'visually-hidden', text: stat.fullName }),
-    ` ${formatSignedNumber(stat.value)}`,
+function createTooltipRow(stat: IStatDescription): HTMLSpanElement {
+  return createElement('span', { className: `tooltip-row tooltip-row--${stat.modifier}` }, [
+    createElement('span', { className: 'tooltip-row__name', text: stat.name }),
+    createElement('span', {
+      className: 'tooltip-row__value',
+      text: formatSignedNumber(stat.value),
+    }),
   ]);
+}
+
+/**
+ * The base numbers of an ingredient, shown while its card is hovered or focused.
+ */
+function createTooltip(ingredient: IIngredient): HTMLSpanElement {
+  return createElement(
+    'span',
+    {
+      className: 'ingredient-card__tooltip',
+      attributes: { id: `tooltip-${ingredient.id}`, role: 'tooltip' },
+    },
+    describeStats(ingredient).map((stat: IStatDescription): HTMLSpanElement =>
+      createTooltipRow(stat),
+    ),
+  );
 }
 
 function findCard(target: EventTarget | null): HTMLButtonElement | undefined {
@@ -57,7 +64,8 @@ function findCard(target: EventTarget | null): HTMLButtonElement | undefined {
 }
 
 /**
- * The ingredient shelf: one button per ingredient with its numbers and its stock badge.
+ * The ingredient shelf: one button per ingredient with its icon, name and stock badge;
+ * its numbers are in a tooltip.
  */
 export class ShelfView {
   readonly #list: HTMLUListElement;
@@ -124,22 +132,20 @@ export class ShelfView {
           'button',
           {
             className: 'ingredient-card',
-            attributes: { type: 'button', 'data-ingredient-id': ingredient.id },
+            attributes: {
+              type: 'button',
+              'data-ingredient-id': ingredient.id,
+              'aria-describedby': `tooltip-${ingredient.id}`,
+            },
           },
           [
             createIngredientIcon(ingredient.id, 'ingredient-card__icon'),
             createElement('span', { className: 'ingredient-card__name', text: ingredient.name }),
-            createElement(
-              'span',
-              { className: 'ingredient-card__stats' },
-              describeStats(ingredient).map((stat: IStatDescription): HTMLSpanElement =>
-                createStat(stat),
-              ),
-            ),
             createElement('span', { className: 'ingredient-card__stock' }, [
               createElement('span', { className: 'visually-hidden', text: 'Stock: ' }),
               stock,
             ]),
+            createTooltip(ingredient),
           ],
         );
 
