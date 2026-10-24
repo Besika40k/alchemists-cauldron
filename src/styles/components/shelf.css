@@ -28,8 +28,7 @@
   display: grid;
   grid-template-areas:
     'icon'
-    'name'
-    'stats';
+    'name';
   justify-items: center;
   gap: var(--space-1);
   width: 100%;
@@ -100,14 +99,6 @@
   line-height: 1.15;
 }
 
-.ingredient-card__stats {
-  display: flex;
-  flex-wrap: wrap;
-  grid-area: stats;
-  justify-content: center;
-  gap: 3px;
-}
-
 /* the stock is a little price sticker on the card */
 .ingredient-card__stock {
   position: absolute;
@@ -133,9 +124,7 @@
 @container (width >= 240px) {
   .ingredient-card {
     grid-template-columns: 48px minmax(0, 1fr);
-    grid-template-areas:
-      'icon name'
-      'icon stats';
+    grid-template-areas: 'icon name';
     align-items: center;
     justify-items: start;
     column-gap: var(--space-3);
@@ -143,38 +132,9 @@
     text-align: left;
   }
 
-  .ingredient-card__stats {
-    justify-content: flex-start;
-  }
-
   .ingredient-card__stock {
     top: 50%;
     right: var(--space-3);
     translate: 0 -50%;
   }
-}
-
-/* hand-drawn tags; the outline is a shadow, so it takes no room and three tags fit on a phone card */
-.stat {
-  padding: 0 3px;
-  border-radius: var(--radius-small);
-  box-shadow: inset 0 0 0 1.5px currentcolor;
-  background-color: rgb(255 255 255 / 45%);
-  font-family: var(--font-number);
-  font-size: var(--font-size-small);
-  font-weight: 700;
-  line-height: 1.5;
-  white-space: nowrap;
-}
-
-.stat--temperature {
-  color: var(--color-temperature);
-}
-
-.stat--density {
-  color: var(--color-density);
-}
-
-.stat--magic-power {
-  color: var(--color-magic-power);
 }
