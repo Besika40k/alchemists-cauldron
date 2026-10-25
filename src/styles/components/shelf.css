@@ -138,3 +138,20 @@
     translate: 0 -50%;
   }
 }
+
+/* the number key that adds the card during a game */
+.ingredient-card__key {
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  min-width: 18px;
+  padding: 0 3px;
+  border: 1.5px solid var(--color-ink-soft);
+  border-radius: 4px;
+  background-color: var(--color-paper);
+  color: var(--color-ink-soft);
+  font-family: var(--font-number);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
