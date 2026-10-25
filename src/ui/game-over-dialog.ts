@@ -1,5 +1,9 @@
 import { DIFFICULTY_LABELS } from '../data/difficulty';
-import { isValidPlayerName } from '../logic/leaderboard';
+import {
+  isValidPlayerName,
+  PLAYER_NAME_MAX_LENGTH,
+  PLAYER_NAME_MIN_LENGTH,
+} from '../logic/leaderboard';
 import type { GameOverReason, IGameState } from '../types/game';
 import { setDialogOpen } from './dialog';
 import { createElement } from './dom';
@@ -24,7 +28,8 @@ const REASON_TEXTS: Readonly<Record<GameOverReason, string>> = {
   ingredients: 'Out of ingredients',
 };
 
-const NAME_HINT: string = '2–15 characters: letters, digits, space, _ and -';
+// the limits come from the leaderboard rules, so the hint always tells the real ones
+const NAME_HINT: string = `${String(PLAYER_NAME_MIN_LENGTH)}–${String(PLAYER_NAME_MAX_LENGTH)} characters: letters, digits, space, _ and -`;
 
 function createButton(text: string, className: string, onClick: () => void): HTMLButtonElement {
   const button: HTMLButtonElement = createElement('button', {
@@ -72,7 +77,7 @@ export class GameOverDialog {
         name: 'player-name',
         type: 'text',
         autocomplete: 'nickname',
-        maxlength: '15',
+        maxlength: String(PLAYER_NAME_MAX_LENGTH),
         'aria-describedby': 'player-name-hint player-name-error',
       },
     });
