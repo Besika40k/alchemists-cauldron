@@ -158,19 +158,40 @@ shows only the first 4, 6 or 8 ingredients of the catalogue.
 
 ## Controls
 
-| Action                | Mouse or touch                              | Keyboard                                                              |
-| --------------------- | ------------------------------------------- | --------------------------------------------------------------------- |
-| Read the rules        | **Help**                                    | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>; <kbd>Esc</kbd> closes |
-| Choose a difficulty   | **Menu**, then a difficulty                 | <kbd>Tab</kbd> to it, <kbd>Enter</kbd>                                |
-| Start a game          | **Start Game**                              | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
-| Continue a saved game | **Continue Game**, then **Resume**          | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
-| Add an ingredient     | Click its card or drag it onto the cauldron | <kbd>Tab</kbd> to the card, <kbd>Enter</kbd> or <kbd>Space</kbd>      |
-| Pour the mix out      | **Pour Out**                                | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
-| Brew the potion       | **Brew**                                    | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
-| Pause and resume      | **Pause**, then **Resume**                  | <kbd>Tab</kbd> to **Pause**, <kbd>Enter</kbd>; <kbd>Esc</kbd> resumes |
-| Leave a paused game   | **Exit to Menu**                            | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                        |
-| Leave Game Over       | **Play again**                              | <kbd>Esc</kbd> goes to the start screen                               |
-| Save a Top-10 score   | Type a name, **Save score**                 | Type a name, <kbd>Enter</kbd>                                         |
+| Action                | Mouse or touch                              | Keyboard                                                                                          |
+| --------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Read the rules        | **Help**                                    | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>; <kbd>Esc</kbd> closes                             |
+| Choose a difficulty   | **Menu**, then a difficulty                 | <kbd>Tab</kbd> to it, <kbd>Enter</kbd>                                                            |
+| Start a game          | **Start Game**                              | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                                                    |
+| Continue a saved game | **Continue Game**, then **Resume**          | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                                                    |
+| Add an ingredient     | Click its card or drag it onto the cauldron | <kbd>1</kbd>–<kbd>8</kbd>, or <kbd>Tab</kbd> to the card and <kbd>Enter</kbd> or <kbd>Space</kbd> |
+| Pour the mix out      | **Pour Out**                                | <kbd>O</kbd>, or <kbd>Tab</kbd> to the button and <kbd>Enter</kbd>                                |
+| Brew the potion       | **Brew**                                    | <kbd>B</kbd>, or <kbd>Tab</kbd> to the button and <kbd>Enter</kbd>                                |
+| Pause and resume      | **Pause**, then **Resume**                  | <kbd>P</kbd> or <kbd>Esc</kbd> pauses; <kbd>Esc</kbd> on the pause screen resumes                 |
+| Leave a paused game   | **Exit to Menu**                            | <kbd>Tab</kbd> to the button, <kbd>Enter</kbd>                                                    |
+| Leave Game Over       | **Play again**                              | <kbd>Esc</kbd> goes to the start screen                                                           |
+| Save a Top-10 score   | Type a name, **Save score**                 | Type a name, <kbd>Enter</kbd>                                                                     |
+
+## Keyboard shortcuts
+
+During a running game:
+
+| Key                                       | Action                                                                    |
+| ----------------------------------------- | ------------------------------------------------------------------------- |
+| <kbd>1</kbd>–<kbd>8</kbd> (or the numpad) | Add the ingredient in that place on the shelf (its card shows the number) |
+| <kbd>B</kbd>                              | Brew                                                                      |
+| <kbd>O</kbd>                              | Pour Out                                                                  |
+| <kbd>P</kbd> or <kbd>Esc</kbd>            | Pause                                                                     |
+
+- One `keydown` handler (`src/app/keyboard-shortcuts.ts`) checks the game state first and
+  runs only while the game is `playing`. On the start screen, the pause screen and Game
+  Over the keyboard works the usual browser way: <kbd>Tab</kbd>, <kbd>Enter</kbd> and
+  <kbd>Space</kbd> on the real buttons, and <kbd>Esc</kbd> on the pause screen resumes
+  through the dialog's own behaviour.
+- The shortcuts never fire while typing in a field, with <kbd>Ctrl</kbd>, <kbd>Alt</kbd>
+  or <kbd>Meta</kbd> held, or on a held-down key.
+- They read the physical key, so they also work with other keyboard layouts.
+- Help lists the keys, and the buttons announce them with `aria-keyshortcuts`.
 
 ## Look and feel
 
@@ -201,12 +222,13 @@ small fire, and ink-outlined ingredient drawings in earthy colors.
 - [x] Level 2: Extended, complete
   - [x] US 2.1 Difficulty selection
   - [x] US 2.2 Auto-save and Continue Game
-- [ ] Level 3: Full game
+- [x] Level 3: Full game, complete
   - [x] US 3.1 Drag and drop
   - [x] US 3.2 Ingredient tooltip
   - [x] US 3.3 Chemical reactions
   - [x] US 3.4 Pour Out
   - [x] US 3.5 Visual feedback
+  - [x] US 3.6 Keyboard shortcuts
 
 ## Deployment
 
