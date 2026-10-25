@@ -66,7 +66,10 @@ The numbers in these steps are the Medium ones; [Difficulty](#difficulty) lists 
    added ingredients, must be inside the recipe range widened by the tolerance of ±8. A
    good potion gives 200 score, 10 extra seconds (never above the start time of 02:30)
    and a new recipe; a wrong mixture costs a life. Either way the cauldron empties, and
-   the used ingredients are spent. **Pour Out** throws a wrong mix away without losing a
+   the used ingredients are spent. A good potion plays a golden burst with a
+   "Delicious!" stamp and a floating "+10 s"; a wrong one explodes in smoke puffs with a
+   "Boom!" stamp and a short shake of the play field. The added ingredients float on the
+   stew in the cauldron. All of these are CSS animations. **Pour Out** throws a wrong mix away without losing a
    life: the cauldron empties, its ingredients stay spent and the clock loses 10 seconds.
    It is disabled while the cauldron is empty.
 6. An ingredient with no stock left becomes an empty, dimmed slot that cannot be used.
@@ -203,6 +206,7 @@ small fire, and ink-outlined ingredient drawings in earthy colors.
   - [x] US 3.2 Ingredient tooltip
   - [x] US 3.3 Chemical reactions
   - [x] US 3.4 Pour Out
+  - [x] US 3.5 Visual feedback
 
 ## Deployment
 
