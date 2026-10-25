@@ -176,3 +176,61 @@
     transform: rotate(var(--puff-angle)) translateX(130%) scale(1.3);
   }
 }
+
+/*
+ * A failed brew shakes the play field for a moment. The two class names alternate,
+ * so a second failure in a row shakes again; the dialogs stay still.
+ */
+.game--shake-odd > :not(dialog) {
+  animation: shake 0.45s ease-in-out;
+}
+
+.game--shake-even > :not(dialog) {
+  animation: shake-again 0.45s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  20% {
+    translate: -8px 2px;
+  }
+
+  40% {
+    translate: 7px -2px;
+  }
+
+  60% {
+    translate: -5px 1px;
+  }
+
+  80% {
+    translate: 3px 0;
+  }
+}
+
+@keyframes shake-again {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  20% {
+    translate: -8px 2px;
+  }
+
+  40% {
+    translate: 7px -2px;
+  }
+
+  60% {
+    translate: -5px 1px;
+  }
+
+  80% {
+    translate: 3px 0;
+  }
+}
