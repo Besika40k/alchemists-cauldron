@@ -100,6 +100,8 @@ export class GameScreen {
         handlers.onBrew();
         // Brew turns disabled with an empty cauldron, so the focus goes back to the shelf
         this.#shelf.focusFirstCard();
+        // on a phone the result plays far above the shelf, so the page scrolls up to it
+        this.#cauldron.bringIntoView();
       },
       onPourOut: (): void => {
         handlers.onPourOut();

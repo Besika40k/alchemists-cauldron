@@ -194,6 +194,29 @@ export class CauldronView {
     }
   }
 
+  /**
+   * On a phone the shelf lies far below the cauldron, so after a brew the page scrolls up
+   * to its result. When the drawing and the message are already in sight, nothing moves.
+   */
+  bringIntoView(): void {
+    const stage: DOMRect = this.#stage.getBoundingClientRect();
+    const message: DOMRect = this.#message.getBoundingClientRect();
+    // the scroll margin is the room the sticky actions take at the bottom of the screen
+    const margin: CSSStyleValue | undefined = this.element
+      .computedStyleMap()
+      .get('scroll-margin-bottom');
+    const visibleBottom: number = innerHeight - (margin instanceof CSSUnitValue ? margin.value : 0);
+
+    if (stage.top >= 0 && message.bottom <= visibleBottom) {
+      return;
+    }
+
+    this.element.scrollIntoView({
+      block: 'end',
+      behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+  }
+
   render(state: IGameState): void {
     this.#canDrop = state.status === 'playing' && !isCauldronFull(state);
 
