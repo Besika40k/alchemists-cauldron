@@ -3,6 +3,7 @@ import { GameStore } from '../state/game-store';
 import type { Difficulty, IGameState, IngredientId } from '../types/game';
 import { GameScreen } from '../ui/game-screen';
 import { GameController } from './game-controller';
+import { listenToShortcuts } from './keyboard-shortcuts';
 
 /**
  * Connects the store, the controller and the screen, and shows the start screen.
@@ -55,6 +56,22 @@ export function startApp(root: HTMLElement): void {
     if (document.hidden) {
       controller.pause();
     }
+  });
+
+  listenToShortcuts({
+    getState: (): IGameState => store.state,
+    addIngredient: (id: IngredientId): void => {
+      controller.addIngredient(id);
+    },
+    brew: (): void => {
+      controller.brew();
+    },
+    pourOut: (): void => {
+      controller.pourOut();
+    },
+    pause: (): void => {
+      controller.pause();
+    },
   });
 
   store.subscribe((state: IGameState): void => {
