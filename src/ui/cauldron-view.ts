@@ -7,6 +7,7 @@ import type {
   IReaction,
   IReactionEvent,
 } from '../types/game';
+import { createFloatingIcons } from './brew-effects';
 import { createElement } from './dom';
 import { createCauldronArt, createIngredientIcon } from './icons';
 import { findIngredient, INGREDIENT_DRAG_TYPE, isIngredientDrag } from './ingredient-drag';
@@ -49,6 +50,8 @@ function createReactionChip(reaction: IReaction): HTMLLIElement {
  * onto it.
  */
 export class CauldronView {
+  readonly #stage: HTMLDivElement;
+  readonly #floaters: HTMLDivElement;
   readonly #contents: HTMLOListElement;
   readonly #reactions: HTMLUListElement;
   readonly #message: HTMLParagraphElement;
@@ -59,6 +62,14 @@ export class CauldronView {
   readonly element: HTMLElement;
 
   constructor(onDrop: IngredientHandler) {
+    this.#floaters = createElement('div', {
+      className: 'cauldron__floaters',
+      attributes: { 'aria-hidden': 'true' },
+    });
+    this.#stage = createElement('div', { className: 'cauldron__stage' }, [
+      createCauldronArt(),
+      this.#floaters,
+    ]);
     this.#contents = createElement('ol', {
       className: 'cauldron__contents',
       attributes: { 'aria-label': 'Ingredients in the cauldron' },
@@ -81,7 +92,7 @@ export class CauldronView {
           text: 'Cauldron',
           attributes: { id: 'cauldron-title' },
         }),
-        createElement('div', { className: 'cauldron__stage' }, [createCauldronArt()]),
+        this.#stage,
         this.#contents,
         this.#reactions,
         this.#message,
@@ -187,6 +198,7 @@ export class CauldronView {
       getReactions(state.difficulty),
     );
 
+    this.#floaters.replaceChildren(...createFloatingIcons(state.cauldronIngredients));
     this.#reactions.hidden = activeReactions.length === 0;
     this.#reactions.replaceChildren(
       ...activeReactions.map((reaction: IReaction): HTMLLIElement => createReactionChip(reaction)),

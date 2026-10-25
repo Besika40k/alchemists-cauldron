@@ -1,0 +1,38 @@
+/* everything that happens over the cauldron drawing sits on its stage */
+.cauldron__stage {
+  position: relative;
+}
+
+.cauldron__floaters {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* the added ingredients bob on the stew; its surface is at about a third of the drawing */
+.cauldron__floater {
+  position: absolute;
+  top: 30%;
+  left: calc(22% + (var(--float-index) + 0.5) * 56% / var(--float-count));
+  width: 13%;
+  translate: -50% -50%;
+  animation: float-bob 2.4s ease-in-out infinite alternate;
+  animation-delay: calc(var(--float-index) * -0.7s);
+}
+
+.cauldron__floater-icon {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 2px 0 rgb(42 33 27 / 40%));
+}
+
+@keyframes float-bob {
+  from {
+    transform: translateY(-8%) rotate(-8deg);
+  }
+
+  to {
+    transform: translateY(12%) rotate(8deg);
+  }
+}
