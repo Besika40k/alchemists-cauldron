@@ -167,10 +167,12 @@ export class ShelfView {
   #buildCards(shelf: readonly IIngredient[]): void {
     this.#cards.clear();
     this.#list.replaceChildren(
-      ...shelf.map((ingredient: IIngredient): HTMLLIElement => {
+      ...shelf.map((ingredient: IIngredient, index: number): HTMLLIElement => {
         const stock: HTMLSpanElement = createElement('span', {
           className: 'ingredient-card__stock-value',
         });
+        // the number key of the card's place on the shelf adds it during a game
+        const shortcut: string = String(index + 1);
         const button: HTMLButtonElement = createElement(
           'button',
           {
@@ -179,9 +181,15 @@ export class ShelfView {
               type: 'button',
               'data-ingredient-id': ingredient.id,
               'aria-describedby': `tooltip-${ingredient.id}`,
+              'aria-keyshortcuts': shortcut,
             },
           },
           [
+            createElement('kbd', {
+              className: 'ingredient-card__key',
+              text: shortcut,
+              attributes: { 'aria-hidden': 'true' },
+            }),
             createIngredientIcon(ingredient.id, 'ingredient-card__icon'),
             createElement('span', { className: 'ingredient-card__name', text: ingredient.name }),
             createElement('span', { className: 'ingredient-card__stock' }, [
