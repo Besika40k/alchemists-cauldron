@@ -88,8 +88,15 @@ function createDifficultyTable(): HTMLTableElement {
   ]);
 }
 
+// the number keys reach as far as the biggest shelf of all difficulties
+const LARGEST_SHELF_SIZE: number = Math.max(
+  ...DIFFICULTIES.map(
+    (difficulty: Difficulty): number => DIFFICULTY_SETTINGS[difficulty].shelfSize,
+  ),
+);
+
 const SHORTCUTS: readonly (readonly [string, string])[] = [
-  ['1–8', 'add the ingredient in that place on the shelf'],
+  [`1–${String(LARGEST_SHELF_SIZE)}`, 'add the ingredient in that place on the shelf'],
   ['B', 'Brew'],
   ['O', 'Pour Out'],
   ['P or Esc', 'Pause; Esc on the pause screen resumes'],
