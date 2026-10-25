@@ -1,4 +1,5 @@
 import { DIFFICULTIES, DIFFICULTY_LABELS, DIFFICULTY_SETTINGS } from '../data/difficulty';
+import { POUR_OUT_PENALTY_SECONDS } from '../logic/game-rules';
 import { getReactions } from '../logic/reactions';
 import type { Difficulty, IDifficultySettings, IReaction } from '../types/game';
 import { createElement } from './dom';
@@ -12,7 +13,7 @@ const RULES: readonly string[] = [
   'Press Start Game. The shelf fills with ingredients, each with a few portions in stock.',
   'Click an ingredient or drag it onto the cauldron. Hover it to see how it changes Temperature, Density and Magic Power.',
   'Move all three values into the recipe ranges. The green zones on the bars show them, and the tolerance of the difficulty widens them a little.',
-  'Press Brew. A good potion gives score, extra time and a new recipe; a wrong mix costs a life. Pour Out throws a wrong mix away for 10 seconds instead of a life.',
+  `Press Brew. A good potion gives score, extra time and a new recipe; a wrong mix costs a life. Pour Out throws a wrong mix away for ${String(POUR_OUT_PENALTY_SECONDS)} seconds instead of a life.`,
   'The game ends when the time runs out, when no lives are left, or when the shelf and the cauldron are both empty.',
   'Pause stops the clock. A score that makes the Top-10 of its difficulty asks for your name.',
 ];
