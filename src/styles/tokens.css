@@ -48,6 +48,11 @@
   --space-5: 24px;
   --space-6: 32px;
 
+  /* sizes: the sticky actions hold one row of large buttons between their padding */
+  --button-height-large: 56px;
+  --actions-padding: var(--space-3);
+  --actions-height: calc(var(--button-height-large) + 2 * var(--actions-padding));
+
   /* shapes: uneven corners look drawn by hand */
   --radius-small: 5px 7px 4px 6px;
   --radius-medium: 9px 12px 8px 11px;
