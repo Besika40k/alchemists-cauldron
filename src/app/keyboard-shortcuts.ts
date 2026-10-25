@@ -19,8 +19,9 @@ const ACTION_KEYS: Readonly<Record<string, ShortcutAction>> = {
   Escape: 'pause',
 };
 
-// Digit1 or Numpad1 is the first ingredient on the shelf, up to 8 on Hard
-const INGREDIENT_KEY_PATTERN: RegExp = /^(?:Digit|Numpad)([1-8])$/;
+// Digit1 or Numpad1 is the first ingredient on the shelf; the shelf size decides how
+// many digits add something, so a digit past the last place does nothing
+const INGREDIENT_KEY_PATTERN: RegExp = /^(?:Digit|Numpad)(\d)$/;
 
 function isTyping(target: EventTarget | null): boolean {
   return (
@@ -40,7 +41,7 @@ function findIngredientForKey(code: string, state: IGameState): IIngredient | un
 }
 
 /**
- * The keys of a running game, all in one handler: 1–8 add the ingredient in that
+ * The keys of a running game, all in one handler: a digit adds the ingredient in that
  * place, B brews, O pours out, P or Esc pauses. They work only while the game is
  * playing, so the start screen, the pause dialog and Game Over keep the normal
  * browser keys, and they never fire while the player types in a field.
