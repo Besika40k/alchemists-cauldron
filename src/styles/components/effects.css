@@ -36,3 +36,143 @@
     transform: translateY(12%) rotate(8deg);
   }
 }
+
+/* the result of a brew plays once over the cauldron; the element is new every time */
+.brew-effect {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.brew-effect__stamp {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  padding: 2px 14px;
+  border: 4px solid currentcolor;
+  border-radius: 10px 14px 9px 12px;
+  background-color: rgb(243 231 207 / 92%);
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  translate: -50% 0;
+  rotate: -8deg;
+  animation: stamp 1.8s ease-out forwards;
+}
+
+@keyframes stamp {
+  0% {
+    opacity: 0;
+    scale: 2.2;
+  }
+
+  15% {
+    opacity: 1;
+    scale: 1;
+  }
+
+  75% {
+    opacity: 1;
+    scale: 1;
+  }
+
+  100% {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+/* a good brew: a golden glow bursts out of the pot, "+10 s" floats up */
+.brew-effect--success .brew-effect__stamp {
+  color: var(--color-success);
+}
+
+.brew-effect__burst {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  width: 80%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgb(212 165 55 / 80%) 0 25%,
+    rgb(232 161 74 / 40%) 50%,
+    transparent 70%
+  );
+  translate: -50% -50%;
+  animation: burst 0.9s ease-out forwards;
+}
+
+@keyframes burst {
+  from {
+    opacity: 0.9;
+    scale: 0.2;
+  }
+
+  to {
+    opacity: 0;
+    scale: 1.4;
+  }
+}
+
+.brew-effect__bonus {
+  position: absolute;
+  top: 30%;
+  right: 10%;
+  color: var(--color-success);
+  font-family: var(--font-number);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-shadow: 0 1px 0 var(--color-paper);
+  animation: bonus-rise 1.6s ease-out forwards;
+}
+
+@keyframes bonus-rise {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    translate: 0 -40px;
+  }
+}
+
+/* a failed brew: the mix explodes in smoke puffs */
+.brew-effect--failure .brew-effect__stamp {
+  color: var(--color-danger);
+  rotate: 6deg;
+}
+
+.brew-effect__puff {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  width: 22%;
+  aspect-ratio: 1;
+  margin: -11% 0 0 -11%;
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #9a8d80, #4a4038 70%);
+  animation: puff 0.9s ease-out forwards;
+}
+
+@keyframes puff {
+  from {
+    opacity: 1;
+    transform: rotate(var(--puff-angle)) translateX(0) scale(0.3);
+  }
+
+  to {
+    opacity: 0;
+    transform: rotate(var(--puff-angle)) translateX(130%) scale(1.3);
+  }
+}
