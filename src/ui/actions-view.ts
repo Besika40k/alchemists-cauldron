@@ -31,6 +31,11 @@ function createActionButton(
   return button;
 }
 
+function setShortcut(button: HTMLButtonElement, keys: string, label: string): void {
+  button.setAttribute('aria-keyshortcuts', keys);
+  button.title = `${button.textContent} (${label})`;
+}
+
 /**
  * The action bar under the play field. Before the first run Start Game sits alone in
  * the center with the chosen difficulty under it, Continue Game above it when a game
@@ -56,6 +61,10 @@ export class ActionsView {
       'button button--large',
     );
     this.#brewButton = createActionButton('Brew', handlers.onBrew);
+    // the keyboard shortcuts of a running game, for screen readers and as a hover hint
+    setShortcut(this.#pauseButton, 'P Escape', 'P or Esc');
+    setShortcut(this.#pourOutButton, 'O', 'O');
+    setShortcut(this.#brewButton, 'B', 'B');
     this.#continueRow = createElement('div', { className: 'actions__row' }, [
       createActionButton('Continue Game', handlers.onContinue),
     ]);
