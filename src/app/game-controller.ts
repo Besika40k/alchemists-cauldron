@@ -3,6 +3,7 @@ import {
   brew,
   createMenuState,
   pauseGame,
+  pourOut,
   resumeGame,
   selectDifficulty,
   startGame,
@@ -127,11 +128,15 @@ export class GameController {
   }
 
   addIngredient(id: IngredientId): void {
-    this.#store.setState(addIngredient(this.#store.state, id));
+    this.#store.setState(addIngredient(this.#store.state, id, this.#clock()));
   }
 
   brew(): void {
     this.#store.setState(brew(this.#store.state, this.#random, this.#clock()));
+  }
+
+  pourOut(): void {
+    this.#store.setState(pourOut(this.#store.state, this.#clock()));
   }
 
   pause(): void {

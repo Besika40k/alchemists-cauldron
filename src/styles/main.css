@@ -5,7 +5,9 @@
 @import './components/button.css';
 @import './components/icons.css';
 @import './components/shelf.css';
+@import './components/tooltip.css';
 @import './components/cauldron.css';
+@import './components/effects.css';
 @import './components/hud.css';
 @import './components/recipe.css';
 @import './components/bars.css';

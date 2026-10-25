@@ -1,0 +1,236 @@
+/* everything that happens over the cauldron drawing sits on its stage */
+.cauldron__stage {
+  position: relative;
+}
+
+.cauldron__floaters {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* the added ingredients bob on the stew; its surface is at about a third of the drawing */
+.cauldron__floater {
+  position: absolute;
+  top: 30%;
+  left: calc(22% + (var(--float-index) + 0.5) * 56% / var(--float-count));
+  width: 13%;
+  translate: -50% -50%;
+  animation: float-bob 2.4s ease-in-out infinite alternate;
+  animation-delay: calc(var(--float-index) * -0.7s);
+}
+
+.cauldron__floater-icon {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 2px 0 rgb(42 33 27 / 40%));
+}
+
+@keyframes float-bob {
+  from {
+    transform: translateY(-8%) rotate(-8deg);
+  }
+
+  to {
+    transform: translateY(12%) rotate(8deg);
+  }
+}
+
+/* the result of a brew plays once over the cauldron; the element is new every time */
+.brew-effect {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.brew-effect__stamp {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  padding: 2px 14px;
+  border: 4px solid currentcolor;
+  border-radius: 10px 14px 9px 12px;
+  background-color: rgb(243 231 207 / 92%);
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  translate: -50% 0;
+  rotate: -8deg;
+  animation: stamp 1.8s ease-out forwards;
+}
+
+@keyframes stamp {
+  0% {
+    opacity: 0;
+    scale: 2.2;
+  }
+
+  15% {
+    opacity: 1;
+    scale: 1;
+  }
+
+  75% {
+    opacity: 1;
+    scale: 1;
+  }
+
+  100% {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+/* a good brew: a golden glow bursts out of the pot, "+10 s" floats up */
+.brew-effect--success .brew-effect__stamp {
+  color: var(--color-success);
+}
+
+.brew-effect__burst {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  width: 80%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgb(212 165 55 / 80%) 0 25%,
+    rgb(232 161 74 / 40%) 50%,
+    transparent 70%
+  );
+  translate: -50% -50%;
+  animation: burst 0.9s ease-out forwards;
+}
+
+@keyframes burst {
+  from {
+    opacity: 0.9;
+    scale: 0.2;
+  }
+
+  to {
+    opacity: 0;
+    scale: 1.4;
+  }
+}
+
+.brew-effect__bonus {
+  position: absolute;
+  top: 30%;
+  right: 10%;
+  color: var(--color-success);
+  font-family: var(--font-number);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-shadow: 0 1px 0 var(--color-paper);
+  animation: bonus-rise 1.6s ease-out forwards;
+}
+
+@keyframes bonus-rise {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    translate: 0 -40px;
+  }
+}
+
+/* a failed brew: the mix explodes in smoke puffs */
+.brew-effect--failure .brew-effect__stamp {
+  color: var(--color-danger);
+  rotate: 6deg;
+}
+
+.brew-effect__puff {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  width: 22%;
+  aspect-ratio: 1;
+  margin: -11% 0 0 -11%;
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #9a8d80, #4a4038 70%);
+  animation: puff 0.9s ease-out forwards;
+}
+
+@keyframes puff {
+  from {
+    opacity: 1;
+    transform: rotate(var(--puff-angle)) translateX(0) scale(0.3);
+  }
+
+  to {
+    opacity: 0;
+    transform: rotate(var(--puff-angle)) translateX(130%) scale(1.3);
+  }
+}
+
+/*
+ * A failed brew shakes the play field for a moment. The two class names alternate,
+ * so a second failure in a row shakes again; the dialogs stay still.
+ */
+.game--shake-odd > :not(dialog) {
+  animation: shake 0.45s ease-in-out;
+}
+
+.game--shake-even > :not(dialog) {
+  animation: shake-again 0.45s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  20% {
+    translate: -8px 2px;
+  }
+
+  40% {
+    translate: 7px -2px;
+  }
+
+  60% {
+    translate: -5px 1px;
+  }
+
+  80% {
+    translate: 3px 0;
+  }
+}
+
+@keyframes shake-again {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  20% {
+    translate: -8px 2px;
+  }
+
+  40% {
+    translate: 7px -2px;
+  }
+
+  60% {
+    translate: -5px 1px;
+  }
+
+  80% {
+    translate: 3px 0;
+  }
+}

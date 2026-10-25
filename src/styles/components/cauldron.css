@@ -3,6 +3,10 @@
   align-content: center;
   justify-items: center;
   gap: var(--space-4);
+
+  /* a scroll to the cauldron stops above the sticky actions, so its message stays visible */
+  scroll-margin-bottom: calc(var(--actions-height) + var(--space-4));
+  transition: box-shadow var(--duration-fast);
 }
 
 /* smaller on phones, so the shelf stays close below it */
@@ -159,4 +163,39 @@
 
 .cauldron__message--failure {
   color: var(--color-danger);
+}
+
+/* a card that can go in is dragged over the cauldron */
+.cauldron--drop-target {
+  box-shadow:
+    var(--shadow-panel),
+    0 0 0 4px var(--color-mustard),
+    0 0 24px 8px rgb(212 165 55 / 55%);
+
+  & .cauldron__item--free {
+    border-color: var(--color-mustard);
+    background-color: rgb(212 165 55 / 18%);
+  }
+}
+
+/* the reactions that are active right now, as little tags under the cauldron */
+.cauldron__reactions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.reaction-chip {
+  padding: 0 var(--space-2);
+  border: var(--border-width) solid var(--color-plum);
+  border-radius: var(--radius-medium);
+  background-color: rgb(122 90 140 / 12%);
+  color: var(--color-magic-power);
+  font-family: var(--font-note);
+  font-size: 1.0625rem;
+}
+
+.cauldron__message--reaction {
+  color: var(--color-magic-power);
 }

@@ -172,6 +172,7 @@ export function restoreGame(data: unknown): IGameState | undefined {
     shelfStock,
     cauldronIngredients,
     lastBrew: undefined,
+    lastReaction: undefined,
   };
 
   // a game whose shelf and cauldron are both empty is already over

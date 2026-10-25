@@ -1,4 +1,4 @@
-import type { Difficulty, IDifficultySettings } from '../types/game';
+import type { Difficulty, IDifficultySettings, ReactionId } from '../types/game';
 
 /**
  * The difficulty table of the task README, the single source of these numbers.
@@ -34,6 +34,17 @@ export const DIFFICULTY_SETTINGS: Readonly<Record<Difficulty, IDifficultySetting
     timeBonusSeconds: 5,
     reactionCount: 3,
   },
+};
+
+/**
+ * The reactions of each difficulty, as many as its `reactionCount`. They were chosen so
+ * that every recipe of the difficulty can still be brewed: Annihilation and Void
+ * Resonance would make some recipes impossible.
+ */
+export const DIFFICULTY_REACTIONS: Readonly<Record<Difficulty, readonly ReactionId[]>> = {
+  easy: [],
+  medium: ['bubbling', 'solar-frost'],
+  hard: ['volatile-mix', 'magma-flux', 'steam-burst'],
 };
 
 /**

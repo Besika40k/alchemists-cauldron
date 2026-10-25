@@ -20,6 +20,7 @@ export interface IGameScreenHandlers {
   readonly canContinue: () => boolean;
   readonly onAddIngredient: IngredientHandler;
   readonly onBrew: () => void;
+  readonly onPourOut: () => void;
   readonly onPlayAgain: () => void;
   readonly onShowMenu: () => void;
   readonly onPause: () => void;
@@ -50,13 +51,14 @@ export class GameScreen {
   readonly #actions: ActionsView;
   readonly #handlers: IGameScreenHandlers;
   #difficulty: Difficulty = DEFAULT_DIFFICULTY;
+  #shakenBrewId: number | undefined;
 
   constructor(root: HTMLElement, handlers: IGameScreenHandlers) {
     this.#root = root;
     this.#handlers = handlers;
     this.#hud = new HudView();
     this.#shelf = new ShelfView(handlers.onAddIngredient);
-    this.#cauldron = new CauldronView();
+    this.#cauldron = new CauldronView(handlers.onAddIngredient);
     this.#recipe = new RecipeView();
     this.#bars = new BarsView();
     this.#confirm = new ConfirmDialog();
@@ -98,6 +100,13 @@ export class GameScreen {
         handlers.onBrew();
         // Brew turns disabled with an empty cauldron, so the focus goes back to the shelf
         this.#shelf.focusFirstCard();
+        // on a phone the result plays far above the shelf, so the page scrolls up to it
+        this.#cauldron.bringIntoView();
+      },
+      onPourOut: (): void => {
+        handlers.onPourOut();
+        // Pour Out turns disabled with an empty cauldron, so the focus goes back to the shelf
+        this.#shelf.focusFirstCard();
       },
       onPause: handlers.onPause,
       onShowHelp: (): void => {
@@ -137,6 +146,25 @@ export class GameScreen {
     );
   }
 
+  /**
+   * A failed brew shakes the play field for a moment. The class name alternates, so a
+   * second failure in a row shakes again; a new game drops it.
+   */
+  #renderShake(state: IGameState): void {
+    const { lastBrew }: IGameState = state;
+
+    if (lastBrew?.id === this.#shakenBrewId) {
+      return;
+    }
+
+    const isFailure: boolean = lastBrew?.isSuccess === false;
+    const isEven: boolean = (lastBrew?.id ?? 0) % 2 === 0;
+
+    this.#shakenBrewId = lastBrew?.id;
+    this.#root.classList.toggle('game--shake-even', isFailure && isEven);
+    this.#root.classList.toggle('game--shake-odd', isFailure && !isEven);
+  }
+
   render(state: IGameState): void {
     // Continue Game is offered on the start screen while a valid unfinished game is saved
     const canContinue: boolean = state.status === 'menu' && this.#handlers.canContinue();
@@ -151,6 +179,7 @@ export class GameScreen {
     this.#gameOver.render(state);
     this.#pause.render(state);
     this.#menu.render(state, canContinue);
+    this.#renderShake(state);
     // the paused field is blurred, so the player cannot plan the next moves
     this.#root.classList.toggle('game--paused', state.status === 'paused');
   }
