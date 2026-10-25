@@ -80,3 +80,20 @@
   padding-left: var(--space-5);
   list-style: disc;
 }
+
+.help__shortcuts {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.help__shortcut kbd {
+  display: inline-block;
+  min-width: 2.5em;
+  padding: 0 var(--space-1);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: 5px;
+  background-color: var(--color-card);
+  font-family: var(--font-number);
+  font-weight: 700;
+  text-align: center;
+}

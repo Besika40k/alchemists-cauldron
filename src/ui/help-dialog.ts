@@ -10,9 +10,9 @@ interface ISettingRow {
 
 const RULES: readonly string[] = [
   'Press Start Game. The shelf fills with ingredients, each with a few portions in stock.',
-  'Click an ingredient to put it into the cauldron. Every one changes Temperature, Density and Magic Power.',
+  'Click an ingredient or drag it onto the cauldron. Hover it to see how it changes Temperature, Density and Magic Power.',
   'Move all three values into the recipe ranges. The green zones on the bars show them, and the tolerance of the difficulty widens them a little.',
-  'Press Brew. A good potion gives score, extra time and a new recipe; a wrong mix costs a life. Either way the cauldron empties.',
+  'Press Brew. A good potion gives score, extra time and a new recipe; a wrong mix costs a life. Pour Out throws a wrong mix away for 10 seconds instead of a life.',
   'The game ends when the time runs out, when no lives are left, or when the shelf and the cauldron are both empty.',
   'Pause stops the clock. A score that makes the Top-10 of its difficulty asks for your name.',
 ];
@@ -84,6 +84,20 @@ function createDifficultyTable(): HTMLTableElement {
       {},
       SETTING_ROWS.map((row: ISettingRow): HTMLTableRowElement => createSettingRow(row)),
     ),
+  ]);
+}
+
+const SHORTCUTS: readonly (readonly [string, string])[] = [
+  ['1–8', 'add the ingredient in that place on the shelf'],
+  ['B', 'Brew'],
+  ['O', 'Pour Out'],
+  ['P or Esc', 'Pause; Esc on the pause screen resumes'],
+];
+
+function createShortcutItem([keys, action]: readonly [string, string]): HTMLLIElement {
+  return createElement('li', { className: 'help__shortcut' }, [
+    createElement('kbd', { text: keys }),
+    ` ${action}`,
   ]);
 }
 
@@ -168,6 +182,18 @@ export class HelpDialog {
           text: 'Some ingredients react in the cauldron. While a reaction is active it changes the values on the bars; lost time or a lost life happens once, when it starts. Easy has no reactions.',
         }),
         ...createReactionLists(),
+        createElement('h3', { className: 'help__heading', text: 'Keyboard' }),
+        createElement('p', {
+          className: 'help__note',
+          text: 'The keys work while a game runs; on the other screens the keyboard works as usual.',
+        }),
+        createElement(
+          'ul',
+          { className: 'help__shortcuts' },
+          SHORTCUTS.map((shortcut: readonly [string, string]): HTMLLIElement =>
+            createShortcutItem(shortcut),
+          ),
+        ),
         createElement('div', { className: 'dialog__actions' }, [backButton]),
       ],
     );
