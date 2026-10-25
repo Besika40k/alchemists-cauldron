@@ -7,7 +7,7 @@ import type {
   IReaction,
   IReactionEvent,
 } from '../types/game';
-import { createFloatingIcons } from './brew-effects';
+import { createBrewEffect, createFloatingIcons } from './brew-effects';
 import { createElement } from './dom';
 import { createCauldronArt, createIngredientIcon } from './icons';
 import { findIngredient, INGREDIENT_DRAG_TYPE, isIngredientDrag } from './ingredient-drag';
@@ -58,6 +58,7 @@ export class CauldronView {
   #shownIngredients: readonly IIngredient[] | undefined;
   #shownBrewId: number | undefined;
   #shownReactionId: number | undefined;
+  #effectBrewId: number | undefined;
   #canDrop: boolean = false;
   readonly element: HTMLElement;
 
@@ -174,6 +175,25 @@ export class CauldronView {
     this.#shownReactionId = lastReaction?.id;
   }
 
+  /**
+   * A new brew result plays its effect over the cauldron once; a new game removes the
+   * old one.
+   */
+  #renderEffect(state: IGameState): void {
+    const { lastBrew }: IGameState = state;
+
+    if (lastBrew?.id === this.#effectBrewId) {
+      return;
+    }
+
+    this.#effectBrewId = lastBrew?.id;
+    this.#stage.querySelector('.brew-effect')?.remove();
+
+    if (lastBrew) {
+      this.#stage.append(createBrewEffect(lastBrew, getSettings(state).timeBonusSeconds));
+    }
+  }
+
   render(state: IGameState): void {
     this.#canDrop = state.status === 'playing' && !isCauldronFull(state);
 
@@ -182,6 +202,7 @@ export class CauldronView {
     }
 
     this.#renderMessage(state);
+    this.#renderEffect(state);
 
     // the timer redraws the screen every second; the contents change only with ingredients
     if (state.cauldronIngredients === this.#shownIngredients) {
