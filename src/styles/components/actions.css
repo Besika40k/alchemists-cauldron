@@ -5,7 +5,7 @@
   z-index: 1;
   display: grid;
   gap: var(--space-3);
-  padding-block: var(--space-3);
+  padding-block: var(--actions-padding);
   background: linear-gradient(transparent, var(--color-stone) 35%);
 }
 

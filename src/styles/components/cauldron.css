@@ -4,8 +4,8 @@
   justify-items: center;
   gap: var(--space-4);
 
-  /* a scroll to the cauldron stops above the sticky actions (80 px), so its message stays visible */
-  scroll-margin-bottom: calc(80px + var(--space-4));
+  /* a scroll to the cauldron stops above the sticky actions, so its message stays visible */
+  scroll-margin-bottom: calc(var(--actions-height) + var(--space-4));
   transition: box-shadow var(--duration-fast);
 }
 
