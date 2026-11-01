@@ -49,6 +49,7 @@ export function startApp(root: HTMLElement): void {
     },
     canEnterLeaderboard: (): boolean => controller.canEnterLeaderboard(),
     onSaveScore: (name: string): number => controller.saveScore(name),
+    onSubmitOnlineScore: () => controller.submitOnlineScore(),
   });
 
   // a hidden tab pauses the game, so no time runs out unseen

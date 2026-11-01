@@ -1,5 +1,6 @@
 import { DEFAULT_DIFFICULTY } from '../data/difficulty';
 import type { Difficulty, IGameState, ILeaderboardEntry } from '../types/game';
+import type { OnlineScoreResult } from '../types/online';
 import { ActionsView } from './actions-view';
 import { BarsView } from './bars-view';
 import { CauldronView } from './cauldron-view';
@@ -30,6 +31,7 @@ export interface IGameScreenHandlers {
   readonly clearLeaderboard: (difficulty: Difficulty) => void;
   readonly canEnterLeaderboard: () => boolean;
   readonly onSaveScore: (name: string) => number;
+  readonly onSubmitOnlineScore: () => Promise<OnlineScoreResult>;
 }
 
 /**
@@ -77,6 +79,7 @@ export class GameScreen {
       },
       canEnterLeaderboard: handlers.canEnterLeaderboard,
       onSaveScore: handlers.onSaveScore,
+      onSubmitOnlineScore: handlers.onSubmitOnlineScore,
     });
     const startGame = (): void => {
       handlers.onStart();

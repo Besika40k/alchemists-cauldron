@@ -17,6 +17,7 @@ import {
   isValidPlayerName,
   normalizePlayerName,
 } from '../logic/leaderboard';
+import { submitScore } from '../online/online-records';
 import type { GameStore } from '../state/game-store';
 import { clearSave, loadGame, saveGame } from '../storage/game-save-storage';
 import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from '../storage/leaderboard-storage';
@@ -29,6 +30,7 @@ import type {
   IngredientId,
   RandomSource,
 } from '../types/game';
+import type { OnlineScoreResult } from '../types/online';
 
 /**
  * Turns the player's actions into new states through the game rules, keeps the
@@ -204,5 +206,17 @@ export class GameController {
 
   clearLeaderboard(difficulty: Difficulty): void {
     clearLeaderboard(difficulty);
+  }
+
+  /**
+   * Sends the finished game's score to MiniGames as the best score of the player
+   * signed in there.
+   */
+  submitOnlineScore(): Promise<OnlineScoreResult> {
+    const { status, difficulty, score }: IGameState = this.#store.state;
+
+    return status === 'game-over'
+      ? submitScore(difficulty, score)
+      : Promise.resolve({ status: 'skipped' });
   }
 }
