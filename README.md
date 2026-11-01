@@ -209,6 +209,30 @@ small fire, and ink-outlined ingredient drawings in earthy colors.
 - Text on paper has a contrast of at least 4.5:1. The steam and the fire rest when the
   system asks for reduced motion.
 
+## MiniGames records
+
+Alchemist's Cauldron is also a game of [MiniGames](https://besika40k.github.io/minigames/),
+the game library of the course, and shares its Firebase project.
+
+- Both sites live on `besika40k.github.io`, and the game starts Firebase with the same
+  config and the default app name. Firebase keeps the signed-in user in the site's
+  IndexedDB under the API key and the app name, so a player who logged in on MiniGames is
+  signed in here too. The game has no sign-in of its own.
+- When a game ends with a score, Game Over sends it to the MiniGames Firestore as the
+  player's best score on that difficulty: one record per player and difficulty,
+  `games/alchemists-cauldron/records/{userId}_{difficulty}`. A lower or equal score
+  leaves the best one as it is.
+- Game Over tells what happened: a new best, the best that stays, or a link to log in on
+  MiniGames for a guest. The local Top-10 works as before, signed in or not.
+- MiniGames shows the three best records in the game's details and each player's
+  records on their profile page.
+- Firebase loads only when the first game ends, in a chunk of its own, so the game
+  starts as fast as before. When MiniGames cannot be reached, Game Over says so and
+  the game goes on.
+- The MiniGames Firestore rules (`firestore.rules` in the MiniGames repo) accept a
+  record only from its own signed-in player, with a whole score of at most 1,000,000
+  and the server's time, and an update only when the score is higher.
+
 ## Implemented so far
 
 - [x] Precondition: repository, tooling, structure and deployment
@@ -229,17 +253,21 @@ small fire, and ink-outlined ingredient drawings in earthy colors.
   - [x] US 3.4 Pour Out
   - [x] US 3.5 Visual feedback
   - [x] US 3.6 Keyboard shortcuts
+- [x] Creative extension: best scores sent to MiniGames
 
 ## Deployment
 
 The game is deployed to GitHub Pages: https://besika40k.github.io/alchemists-cauldron/
 
 A GitHub Actions workflow (`.github/workflows/deploy.yml`) checks the lint and formatting,
-builds the game and publishes `dist/` on every push to the current story branch.
+builds the game and publishes `dist/` on every push to `creative-extension`. The build
+reads the MiniGames Firebase config from the repository variables (see `.env.example`).
 
 ## Tech stack
 
-- TypeScript in strict mode, no frameworks and no runtime libraries
+- TypeScript in strict mode, no frameworks
+- Firebase (Authentication and Firestore Lite), the only runtime library, for the
+  MiniGames records
 - Vite for the development server and the production build
 - Plain CSS with custom properties and native nesting, fonts from Google Fonts
 - ESLint, Prettier, Husky and commitlint for code quality
@@ -252,6 +280,10 @@ Requirements: Node.js 22.13 or newer (ESLint and commitlint need it) and npm.
 npm install
 npm run dev
 ```
+
+The MiniGames records need the Firebase config: copy `.env.example` to `.env.local` and
+fill in the values of the MiniGames Firebase project. Without it the game works, and
+Game Over says that MiniGames could not be reached.
 
 ## Scripts
 
@@ -280,6 +312,7 @@ src/
   assets/        icons and other files imported by the code
   data/          fixed game data: ingredients, recipes, difficulty settings, reactions
   logic/         pure game rules: cauldron values, brew check, stock, timer, leaderboard
+  online/        Firebase: the MiniGames sign-in and the records of the players
   state/         the one game state object and its updates
   storage/       safe localStorage access: save, continue and leaderboard
   types/         shared TypeScript types and interfaces
