@@ -1,10 +1,12 @@
 import { DIFFICULTY_LABELS } from '../data/difficulty';
+import { MINIGAMES_URL } from '../data/online';
 import {
   isValidPlayerName,
   PLAYER_NAME_MAX_LENGTH,
   PLAYER_NAME_MIN_LENGTH,
 } from '../logic/leaderboard';
-import type { GameOverReason, IGameState } from '../types/game';
+import type { Difficulty, GameOverReason, IGameState } from '../types/game';
+import type { OnlineScoreResult } from '../types/online';
 import { setDialogOpen } from './dialog';
 import { createElement } from './dom';
 
@@ -20,6 +22,10 @@ export interface IGameOverHandlers {
    * Saves the score under the name and returns its place, or 0 when it was not saved.
    */
   readonly onSaveScore: (name: string) => number;
+  /**
+   * Sends the score to MiniGames, the best score of the player signed in there.
+   */
+  readonly onSubmitOnlineScore: () => Promise<OnlineScoreResult>;
 }
 
 const REASON_TEXTS: Readonly<Record<GameOverReason, string>> = {
@@ -30,6 +36,40 @@ const REASON_TEXTS: Readonly<Record<GameOverReason, string>> = {
 
 // the limits come from the leaderboard rules, so the hint always tells the real ones
 const NAME_HINT: string = `${String(PLAYER_NAME_MIN_LENGTH)}–${String(PLAYER_NAME_MAX_LENGTH)} characters: letters, digits, space, _ and -`;
+
+/**
+ * The line about the score on MiniGames. A guest gets a link to log in there.
+ */
+function createOnlineContent(result: OnlineScoreResult, difficulty: Difficulty): (Node | string)[] {
+  const label: string = DIFFICULTY_LABELS[difficulty];
+
+  switch (result.status) {
+    case 'guest': {
+      return [
+        createElement('a', {
+          className: 'game-over__online-link',
+          text: 'Log in on MiniGames',
+          attributes: { href: MINIGAMES_URL },
+        }),
+        ' to keep your best scores on your profile.',
+      ];
+    }
+    case 'saved': {
+      return [`New best on ${label}, saved to the MiniGames profile of ${result.playerName}.`];
+    }
+    case 'kept': {
+      return [
+        `Your best on ${label} stays ${String(result.best)} on the MiniGames profile of ${result.playerName}.`,
+      ];
+    }
+    case 'failed': {
+      return ['MiniGames could not be reached, so this score was not sent there.'];
+    }
+    case 'skipped': {
+      return [];
+    }
+  }
+}
 
 function createButton(text: string, className: string, onClick: () => void): HTMLButtonElement {
   const button: HTMLButtonElement = createElement('button', {
@@ -56,6 +96,12 @@ export class GameOverDialog {
   readonly #nameInput: HTMLInputElement;
   readonly #nameError: HTMLParagraphElement;
   readonly #saved: HTMLParagraphElement;
+  readonly #online: HTMLParagraphElement;
+  /**
+   * Grows with every Game Over, so an answer from MiniGames about an earlier game
+   * is not shown.
+   */
+  #onlineRequestId: number = 0;
   #isGameOver: boolean = false;
   readonly element: HTMLDialogElement;
 
@@ -90,6 +136,10 @@ export class GameOverDialog {
       className: 'game-over__saved',
       attributes: { role: 'status' },
     });
+    this.#online = createElement('p', {
+      className: 'game-over__online',
+      attributes: { role: 'status' },
+    });
 
     this.element = createElement(
       'dialog',
@@ -112,6 +162,7 @@ export class GameOverDialog {
         ]),
         this.#form,
         this.#saved,
+        this.#online,
         createElement('div', { className: 'dialog__actions' }, [
           createButton('Leaderboard', 'button button--large', handlers.onShowLeaderboard),
           createButton('Play again', 'button button--primary button--large', handlers.onPlayAgain),
@@ -187,6 +238,21 @@ export class GameOverDialog {
     this.#saved.textContent = '';
   }
 
+  /**
+   * Sends the score to MiniGames while the dialog is open and tells what became of it.
+   */
+  #submitOnline(difficulty: Difficulty): void {
+    this.#onlineRequestId += 1;
+    const requestId: number = this.#onlineRequestId;
+
+    this.#online.replaceChildren();
+    void this.#handlers.onSubmitOnlineScore().then((result: OnlineScoreResult): void => {
+      if (requestId === this.#onlineRequestId) {
+        this.#online.replaceChildren(...createOnlineContent(result, difficulty));
+      }
+    });
+  }
+
   render(state: IGameState): void {
     this.#isGameOver = state.status === 'game-over';
 
@@ -196,6 +262,7 @@ export class GameOverDialog {
       // every difficulty has its own Top-10, so the form names the list
       this.#nameLabel.textContent = `Your score made the ${DIFFICULTY_LABELS[state.difficulty]} Top-10! Enter your name`;
       this.#resetForm();
+      this.#submitOnline(state.difficulty);
     }
 
     setDialogOpen(this.element, this.#isGameOver);

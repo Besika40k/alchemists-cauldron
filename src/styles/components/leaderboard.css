@@ -52,6 +52,22 @@
   }
 }
 
+/* what became of the score on MiniGames */
+.game-over__online {
+  margin-top: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-body);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.game-over__online-link {
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
 .leaderboard {
   width: min(100% - 2 * var(--space-4), 640px);
 }
